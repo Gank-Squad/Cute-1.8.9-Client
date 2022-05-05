@@ -2,6 +2,7 @@ package cute.modules.enums;
 
 import java.awt.Color;
 
+
 public enum Category 
 {
 	CLIENT  ("Client"	    , new Color(234, 71, 71 ), 0),

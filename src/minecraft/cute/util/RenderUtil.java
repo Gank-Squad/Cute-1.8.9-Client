@@ -33,6 +33,8 @@ import java.awt.Color;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
+import cute.util.types.VirtualBlock;
+
 
 
 public class RenderUtil 

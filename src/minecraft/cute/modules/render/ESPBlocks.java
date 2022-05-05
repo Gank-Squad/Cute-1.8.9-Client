@@ -14,9 +14,8 @@ import cute.settings.Checkbox;
 import cute.settings.ListSelection;
 import cute.settings.Slider;
 import cute.settings.enums.ListType;
-import cute.util.VirtualBlock;
 import cute.util.RenderUtil;
-
+import cute.util.types.VirtualBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -184,7 +183,7 @@ public class ESPBlocks extends Module
                     if (bId == Blocks.air)
                         continue;
 
-                    for (VirtualBlock block : VirtualBlock.Blocks) 
+                    for (VirtualBlock block : VirtualBlock.vBlocks) 
                     {
                         if (!block.enabled || block.block != bId)
                         	continue;

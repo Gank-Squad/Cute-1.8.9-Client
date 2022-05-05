@@ -1,8 +1,8 @@
 package cute.ui.components;
 
-
 import java.awt.Color;
 import java.util.ArrayList;
+
 
 public class Component 
 {

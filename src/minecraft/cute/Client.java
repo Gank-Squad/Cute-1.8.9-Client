@@ -1,11 +1,18 @@
 package cute;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.input.Keyboard;
 
 import cute.eventapi.EventManager;
 import cute.managers.ModuleManager;
 import cute.modules.render.Fullbright;
-import cute.util.VirtualBlock;
+import cute.util.Cache;
+import cute.util.types.BlockInfo;
+import cute.util.types.VirtualBlock;
+import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
 
 public class Client 
 {
@@ -35,7 +42,17 @@ public class Client
 		ModuleManager.getModules().get(4).setKeyCode(Keyboard.KEY_4);
 		ModuleManager.getModules().get(5).setKeyCode(Keyboard.KEY_5);
 		
-		VirtualBlock.setStandardList();
+//		VirtualBlock.setStandardList();
+		
+		Cache.loadCache();
+		List<BlockInfo> i = Cache.searchForBlock("end portal");
+
+		for(BlockInfo in : i)
+		{
+			System.out.println(in.block);
+			System.out.println(in.displayName);
+		}
+		
 	}
 	
 	public void shutdown()
