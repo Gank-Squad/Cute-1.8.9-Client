@@ -53,7 +53,7 @@ public class Fullbright extends Module
 	
 	
 	public void enable(int mode) 
-	{
+	{		
 		switch(mode)
 		{
 			case 0:
@@ -88,3 +88,9 @@ public class Fullbright extends Module
 		}
 	}
 }
+
+
+
+
+
+

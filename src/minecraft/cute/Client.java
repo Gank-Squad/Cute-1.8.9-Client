@@ -28,6 +28,7 @@ public class Client
 	public void init()
 	{
 		EventManager.register(ModuleManager.INSTANCE);
+		ModuleManager.getModules().get(0).setKeyCode(Keyboard.KEY_RSHIFT);
 		ModuleManager.getModules().get(1).setKeyCode(Keyboard.KEY_1);
 		ModuleManager.getModules().get(2).setKeyCode(Keyboard.KEY_2);
 		ModuleManager.getModules().get(3).setKeyCode(Keyboard.KEY_3);

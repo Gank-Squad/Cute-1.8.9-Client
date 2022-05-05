@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import cute.modules.enums.Category;
+import cute.modules.gui.ClickGUI;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
 import cute.modules.render.Fullbright;
@@ -32,8 +33,8 @@ public class ModuleManager extends BaseManager
 	
 	public static List<Module> modules = Arrays.asList
 				(
-					new TestModule(),
-//					new ClickGUI(),
+//					new TestModule(),
+					new ClickGUI(),
 //					
 					new ESPBlocks(),
 					new ESPEntity(),
