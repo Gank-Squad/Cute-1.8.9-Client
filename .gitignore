@@ -1,10 +1,10 @@
+*.dat
 jars/crash-reports
 jars/saves
 jars/logs
 jars/saves
 jars/resourcepacks
 jars/shaderpacks
-jars/versions
 jars/assets
 
 logs/
