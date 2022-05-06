@@ -11,6 +11,7 @@ import cute.modules.gui.ClickGUI;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
 import cute.modules.render.Fullbright;
+import cute.modules.render.NoRender;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
 import cute.modules.test.TestModule;
@@ -40,8 +41,8 @@ public class ModuleManager extends BaseManager
 					new ESPEntity(),
 					new Fullbright(),
 					new Tracers(),
-					new ProjectileTracer()
-//					new NoRender(),
+					new ProjectileTracer(),
+					new NoRender()
 //					
 //					new AntiPotion()
 				);

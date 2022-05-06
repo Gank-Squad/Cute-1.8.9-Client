@@ -5,6 +5,7 @@ import com.google.common.base.Predicates;
 import com.google.gson.JsonSyntaxException;
 
 import cute.eventapi.EventManager;
+import cute.events.EntityViewRenderEvent;
 import cute.events.RenderEvent;
 import cute.events.RenderWorldLastEvent;
 
@@ -1689,36 +1690,48 @@ public class EntityRenderer implements IResourceManagerReloadListener
         GlStateManager.pushMatrix();
         GlStateManager.disableAlpha();
 
-        if (flag)
+        
+        EntityViewRenderEvent.RenderSolid renderSOLID_event = new EntityViewRenderEvent.RenderSolid(this, entity, null, partialTicks);
+        EventManager.call(renderSOLID_event);
+        
+        if(!renderSOLID_event.isCancelled())
         {
-            ShadersRender.beginTerrainSolid();
+        	if (flag)
+            {
+                ShadersRender.beginTerrainSolid();
+            }
+
+            renderglobal.renderBlockLayer(EnumWorldBlockLayer.SOLID, (double)partialTicks, pass, entity);
+            GlStateManager.enableAlpha();
+
+            if (flag)
+            {
+                ShadersRender.beginTerrainCutoutMipped();
+            }
+
+            this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, this.mc.gameSettings.mipmapLevels > 0);
+            renderglobal.renderBlockLayer(EnumWorldBlockLayer.CUTOUT_MIPPED, (double)partialTicks, pass, entity);
+            this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
+            this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);
+
+            if (flag)
+            {
+                ShadersRender.beginTerrainCutout();
+            }
+
+            renderglobal.renderBlockLayer(EnumWorldBlockLayer.CUTOUT, (double)partialTicks, pass, entity);
+            this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
+
+            if (flag)
+            {
+                ShadersRender.endTerrain();
+            }
         }
-
-        renderglobal.renderBlockLayer(EnumWorldBlockLayer.SOLID, (double)partialTicks, pass, entity);
-        GlStateManager.enableAlpha();
-
-        if (flag)
+        else 
         {
-            ShadersRender.beginTerrainCutoutMipped();
+        	GlStateManager.enableAlpha();
         }
-
-        this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, this.mc.gameSettings.mipmapLevels > 0);
-        renderglobal.renderBlockLayer(EnumWorldBlockLayer.CUTOUT_MIPPED, (double)partialTicks, pass, entity);
-        this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
-        this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);
-
-        if (flag)
-        {
-            ShadersRender.beginTerrainCutout();
-        }
-
-        renderglobal.renderBlockLayer(EnumWorldBlockLayer.CUTOUT, (double)partialTicks, pass, entity);
-        this.mc.getTextureManager().getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
-
-        if (flag)
-        {
-            ShadersRender.endTerrain();
-        }
+        
 
         Lagometer.timerTerrain.end();
         GlStateManager.shadeModel(7424);
@@ -1862,18 +1875,26 @@ public class EntityRenderer implements IResourceManagerReloadListener
         GlStateManager.shadeModel(7425);
         this.mc.mcProfiler.endStartSection("translucent");
 
-        if (flag)
+        
+        EntityViewRenderEvent.RenderWater event = new EntityViewRenderEvent.RenderWater(this, entity, null, partialTicks);
+        EventManager.call(event);
+        
+        if(!event.isCancelled())
         {
-            Shaders.beginWater();
+        	if (flag)
+            {
+                Shaders.beginWater();
+            }
+
+            renderglobal.renderBlockLayer(EnumWorldBlockLayer.TRANSLUCENT, (double)partialTicks, pass, entity);
+
+            if (flag)
+            {
+                Shaders.endWater();
+            }
+
         }
-
-        renderglobal.renderBlockLayer(EnumWorldBlockLayer.TRANSLUCENT, (double)partialTicks, pass, entity);
-
-        if (flag)
-        {
-            Shaders.endWater();
-        }
-
+        
         if (Reflector.ForgeHooksClient_setRenderPass.exists() && !this.debugView)
         {
             RenderHelper.enableStandardItemLighting();
@@ -2447,43 +2468,59 @@ public class EntityRenderer implements IResourceManagerReloadListener
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         Block block = ActiveRenderInfo.getBlockAtEntityViewpoint(this.mc.theWorld, entity, partialTicks);
         float f = -1.0F;
-
+        
         if (Reflector.ForgeHooksClient_getFogDensity.exists())
         {
             f = Reflector.callFloat(Reflector.ForgeHooksClient_getFogDensity, new Object[] {this, entity, block, Float.valueOf(partialTicks), Float.valueOf(0.1F)});
         }
-
+        
+        
+        EntityViewRenderEvent.RenderFogEvent event = new EntityViewRenderEvent.RenderFogEvent(this, entity, block, partialTicks, startCoords, this.farPlaneDistance);
+        EventManager.call(event);
+        
+        // cancel all fog events, the callback controls fog 
+        if(event.isCancelled())
+        {
+        }
+        else
         if (f >= 0.0F)
         {
             GlStateManager.setFogDensity(f);
         }
         else if (entity instanceof EntityLivingBase && ((EntityLivingBase)entity).isPotionActive(Potion.blindness))
         {
-            float f4 = 5.0F;
-            int i = ((EntityLivingBase)entity).getActivePotionEffect(Potion.blindness).getDuration();
-
-            if (i < 20)
-            {
-                f4 = 5.0F + (this.farPlaneDistance - 5.0F) * (1.0F - (float)i / 20.0F);
-            }
-
-            GlStateManager.setFog(9729);
-
-            if (startCoords == -1)
-            {
-                GlStateManager.setFogStart(0.0F);
-                GlStateManager.setFogEnd(f4 * 0.8F);
-            }
-            else
-            {
-                GlStateManager.setFogStart(f4 * 0.25F);
-                GlStateManager.setFogEnd(f4);
-            }
-
-            if (GLContext.getCapabilities().GL_NV_fog_distance && Config.isFogFancy())
-            {
-                GL11.glFogi(34138, 34139);
-            }
+        	EntityViewRenderEvent.RenderBlindnessFogEvent fevent = new EntityViewRenderEvent.RenderBlindnessFogEvent(this, entity, block, partialTicks, startCoords, this.farPlaneDistance);
+        	EventManager.call(fevent);
+        	
+        	if(!fevent.isCancelled())
+        	{
+	        	float f4 = 5.0F;
+	            int i = ((EntityLivingBase)entity).getActivePotionEffect(Potion.blindness).getDuration();
+	
+	            if (i < 20)
+	            {
+	                f4 = 5.0F + (this.farPlaneDistance - 5.0F) * (1.0F - (float)i / 20.0F);
+	            }
+	
+	            GlStateManager.setFog(9729);
+	
+	            if (startCoords == -1)
+	            {
+	                GlStateManager.setFogStart(0.0F);
+	                GlStateManager.setFogEnd(f4 * 0.8F);
+	            }
+	            else
+	            {
+	                GlStateManager.setFogStart(f4 * 0.25F);
+	                GlStateManager.setFogEnd(f4);
+	            }
+	
+	            if (GLContext.getCapabilities().GL_NV_fog_distance && Config.isFogFancy())
+	            {
+	                GL11.glFogi(34138, 34139);
+	            }
+        	}
+            
         }
         else if (this.cloudFog)
         {

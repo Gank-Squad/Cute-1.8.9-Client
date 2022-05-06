@@ -2,6 +2,9 @@ package cute.modules.render;
 
 import java.awt.Color;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL32;
+
 import cute.modules.enums.Category;
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
@@ -76,8 +79,23 @@ public class ESPEntity extends Module
 		if(nullCheck())
 			return;
 		
-		RenderUtil.beginRenderHitbox((float)lineWidth.getValue());
+//		RenderUtil.beginRenderHitbox((float)lineWidth.getValue());
+		
+		GL11.glPushMatrix();
+		
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glDepthMask(false);
 
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+		GL11.glEnable(GL11.GL_LINE_SMOOTH);
+		GL11.glEnable(GL32.GL_DEPTH_CLAMP);
+		
+		GL11.glLineWidth((float)lineWidth.getValue());
+//        GL11.glBegin(1);
+        
         for(Entity entity : this.mc.theWorld.loadedEntityList) 
 		{
         	// to add 
@@ -146,7 +164,19 @@ public class ESPEntity extends Module
         	}
 		}
         
-        RenderUtil.endRenderHitbox();
+//        RenderUtil.endRenderHitbox();
+
+		GL11.glDisable(GL32.GL_DEPTH_CLAMP);
+		GL11.glDisable(GL11.GL_LINE_SMOOTH);
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		GL11.glDisable(GL11.GL_BLEND);
+		
+		GL11.glDepthMask(true);
+		GL11.glPopMatrix();	
+        GL11.glClear(256);
     }
 }
 

@@ -47,7 +47,6 @@ public class Button extends Component
 			switch(s.getSettingType())
 			{
 				default:
-					System.out.println(s.getName());
 					last = null;
 					continue;
 				case LIST:
@@ -74,16 +73,10 @@ public class Button extends Component
 					break;
 			}
 			
-			if(last == null)
-				continue;
-			
 			opY2 = opY;
 			
 			for(SubSetting ss : s.getSubSettings())
 			{
-				System.out.println(last);
-//				System.out.println(lastgetName() + " adding color pickekr");
-				System.out.println(s.getName() + " adding color pickekr");
 				last.subcomponents.add(new ColorPickerButton((ColorPicker)ss, this, opY2));	
 				opY2 += this.height;
 			}
