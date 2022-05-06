@@ -5,6 +5,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.Gson;
+
+import cute.managers.ModuleManager;
+import cute.modules.Module;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -285,8 +289,13 @@ public class GameSettings
     private static final int[] OF_DYNAMIC_LIGHTS = new int[] {3, 1, 2};
     private static final String[] KEYS_DYNAMIC_LIGHTS = new String[] {"options.off", "options.graphics.fast", "options.graphics.fancy"};
     public KeyBinding ofKeyBindZoom;
-    private File optionsFileOF;
-
+    private File optionsFileOF;   
+    
+    public void registerKeybind(KeyBinding key)
+    {
+		this.mc = (KeyBinding[])((KeyBinding[])ArrayUtils.add(this.mc, key));
+    }
+    
     public GameSettings(Minecraft mcIn, File optionsFileIn)
     {
         this.mc = (KeyBinding[])((KeyBinding[])ArrayUtils.addAll(new KeyBinding[] {this.keyBindPickBlock, this.keyBindDrop, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindSprint, this.keyBindInventory, this.keyBindAttack, this.keyBindUseItem, this.keyBindPlayerList, this.keyBindCommand, this.keyBindChat, this.keyBindScreenshot, this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindFullscreen, this.keyBindStreamPauseUnpause, this.keyBindStreamCommercials, this.keyBindStreamToggleMic, this.keyBindsHotbar, this.keyBindSpectatorOutlines, this.keyBindStreamStartStop}, this.keyBindings));
@@ -327,6 +336,14 @@ public class GameSettings
         this.renderDistanceChunks = 8;
         this.loadOptions();
         Config.initGameSettings(this);
+        
+        
+        // very important you do this here, if you don't, goodluck with keybinds
+        // otherwise opening the controls menu crashes the game ???
+        for(Module CUTE_MOD : ModuleManager.getModules())
+        {
+        	this.registerKeybind(CUTE_MOD.initKeybinding());
+        }
     }
 
     public GameSettings()
@@ -337,6 +354,11 @@ public class GameSettings
         this.gammaSetting = 70.0F;
         this.forceUnicodeFont = "en_US";
         this.logger = false;
+        
+        for(Module CUTE_MOD : ModuleManager.getModules())
+        {
+        	this.registerKeybind(CUTE_MOD.initKeybinding());
+        }
     }
 
     /**

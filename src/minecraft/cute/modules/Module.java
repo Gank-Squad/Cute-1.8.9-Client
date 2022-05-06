@@ -3,6 +3,7 @@ package cute.modules;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import cute.Client;
@@ -40,14 +41,31 @@ public class Module
 		this._opened = false;
 		this._drawn = true;
 
-		this._key = new KeyBinding(name, Keyboard.KEY_NONE, Client.NAME + " Keybind");
+		// VERY IMPORTANT YOU KEEP THIS NULL
+		// if you don't use the 'initKeybinding' function below 
+		// from within 'net.minecraft.client.settings.GameSettings' constructor
+		// the game will crash if you open the control menu
+		this._key = null; // new KeyBinding(name, Keyboard.KEY_NONE, Client.NAME + " Keybind");
 		
-		// WTF i just spent like 2 hours wondering why the fucking keycode wasn't updating
-		// and it gets set to 0 if oyu register it and it just doesn't work wt
-		// ClientRegistry.registerKeyBinding(this._key);
 		this.setup();	
 	}
 
+	
+	// i would make this final and put it in the constructor but 
+	// it's annoying to have to init modules in the gameSettings class
+	// and i want to init them in the module manager instead
+	private boolean __hasinitbindings = false;
+	
+	public KeyBinding initKeybinding()
+	{
+		if(this.__hasinitbindings)
+			return null;
+		
+		this.__hasinitbindings = true;
+		this._key = new KeyBinding(this._name, Keyboard.KEY_NONE, Client.NAME + " Keybind");
+		return this._key;
+	}
+	
 	public boolean nullCheck() 
 	{
 		return mc.theWorld == null || 

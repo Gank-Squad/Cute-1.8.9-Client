@@ -40,7 +40,7 @@ public class Button extends Component
 		int opY  = offset + this.height;
 		int opY2 = offset + this.height;
 		
-		Component last ;
+		Component last = null;
 		
 		for(Setting s : mod.getSettings())
 		{
@@ -48,6 +48,7 @@ public class Button extends Component
 			{
 				default:
 					System.out.println(s.getName());
+					last = null;
 					continue;
 				case LIST:
 					last = new DropDownButton((ListSelection)s, this, opY);
@@ -62,7 +63,7 @@ public class Button extends Component
 					
 				case SLIDER:
 					last = new SliderButton((Slider)s, this, opY);
-					this.subcomponents.add(new SliderButton((Slider)s, this, opY));
+					this.subcomponents.add(last);
 					opY += this.height;
 					break;
 					
@@ -73,10 +74,16 @@ public class Button extends Component
 					break;
 			}
 			
+			if(last == null)
+				continue;
+			
 			opY2 = opY;
 			
 			for(SubSetting ss : s.getSubSettings())
 			{
+				System.out.println(last);
+//				System.out.println(lastgetName() + " adding color pickekr");
+				System.out.println(s.getName() + " adding color pickekr");
 				last.subcomponents.add(new ColorPickerButton((ColorPicker)ss, this, opY2));	
 				opY2 += this.height;
 			}

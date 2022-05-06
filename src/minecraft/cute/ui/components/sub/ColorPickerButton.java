@@ -39,6 +39,7 @@ public class ColorPickerButton extends Component
 	
 	public ColorPickerButton(ColorPicker set, Button button, int offset) 
 	{
+		System.out.println(set);
 		this.setting = set;
 		this.parent = button;
 		this.x = button.parent.getX() + button.parent.getWidth();
@@ -62,6 +63,7 @@ public class ColorPickerButton extends Component
 	{
 		this.offset = newOff;
 	}
+
 
 	
 
@@ -195,7 +197,10 @@ public class ColorPickerButton extends Component
 		if(this.isMouseOnButtonBlue(mouseX, mouseY))
 		{
 			this.dragging = 3;
+			return;
 		}
+		
+		this.dragging = 0;
 	}	
 	
 	@Override

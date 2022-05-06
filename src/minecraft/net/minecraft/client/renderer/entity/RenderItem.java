@@ -178,7 +178,7 @@ public class RenderItem implements IResourceManagerReloadListener
     public void renderItem(ItemStack stack, IBakedModel model)
     {
         if (stack != null)
-        {
+        {        	
             GlStateManager.pushMatrix();
             GlStateManager.scale(0.5F, 0.5F, 0.5F);
 
@@ -198,12 +198,12 @@ public class RenderItem implements IResourceManagerReloadListener
                 {
                     model = CustomItems.getCustomItemModel(stack, model, this.modelLocation, false);
                 }
-
                 this.renderModelHasEmissive = false;
                 this.renderModel(model, stack);
-
+                
                 if (this.renderModelHasEmissive)
                 {
+                	
                     float f = OpenGlHelper.lastBrightnessX;
                     float f1 = OpenGlHelper.lastBrightnessY;
                     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0F, f1);
@@ -211,14 +211,15 @@ public class RenderItem implements IResourceManagerReloadListener
                     this.renderModel(model, stack);
                     this.renderModelEmissive = false;
                     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, f, f1);
+                    
                 }
-
+                
                 if (stack.hasEffect() && (!Config.isCustomItems() || !CustomItems.renderCustomEffect(this, stack, model)))
                 {
                     this.renderEffect(model);
                 }
             }
-
+            
             GlStateManager.popMatrix();
         }
     }

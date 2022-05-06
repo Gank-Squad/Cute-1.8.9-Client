@@ -118,6 +118,7 @@ public class ModuleManager extends BaseManager
 		}
 	}
 	
+
 	@EventTarget
 	public void keyDownEvent(KeyDownEvent event)
 	{
@@ -152,7 +153,6 @@ public class ModuleManager extends BaseManager
 			m.setKeyDown(false);
 		}
 	}
-	
 }
 
 

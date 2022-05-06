@@ -73,12 +73,13 @@ public class Cache
 	
 	
 	
-	public static List<BlockInfo> searchForBlock(String lookup)
+	public static BlockInfo[] searchForBlock(String lookup)
 	{
 		Stream<BlockInfo> s = BLOCKS.stream().
 				filter(x -> x.displayName.toLowerCase().contains(lookup));
 		
-		return s.toList();
+		
+		return (BlockInfo[]) s.toArray();
 		
 	}
 }

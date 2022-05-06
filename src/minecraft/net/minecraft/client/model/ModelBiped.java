@@ -104,6 +104,7 @@ public class ModelBiped extends ModelBase
         }
         else
         {
+        	
             if (entityIn.isSneaking())
             {
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);
@@ -116,6 +117,7 @@ public class ModelBiped extends ModelBase
             this.bipedRightLeg.render(scale);
             this.bipedLeftLeg.render(scale);
             this.bipedHeadwear.render(scale);
+            
         }
 
         GlStateManager.popMatrix();

@@ -1,6 +1,8 @@
 package cute.events;
 
-public class KeyboardEvent
+import cute.eventapi.events.Event;
+
+public class KeyboardEvent implements Event
 {
 	private final int keyCode;
 	

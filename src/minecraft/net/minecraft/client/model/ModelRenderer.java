@@ -332,7 +332,7 @@ public class ModelRenderer
             }
 
             GlStateManager.callList(this.displayList);
-
+            
             if (this.childModels != null)
             {
                 for (int j = 0; j < this.childModels.size(); ++j)

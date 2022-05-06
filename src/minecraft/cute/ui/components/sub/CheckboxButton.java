@@ -106,7 +106,7 @@ public class CheckboxButton extends Component
 		this.y = parent.parent.getY() + offset;
 		this.x = parent.parent.getX();
 		
-		if(this.subcomponents.isEmpty())
+		if(!this.isOpen() || this.subcomponents.isEmpty())
 			return;
 		
 		for(Component comp : this.subcomponents) 
@@ -119,6 +119,9 @@ public class CheckboxButton extends Component
 	@Override
 	public void mouseReleased(int mouseX, int mouseY, int mouseButton) 
 	{
+		if(!this.isOpen() || this.subcomponents.isEmpty())
+			return;
+		
 		for(Component comp : this.subcomponents) 
 		{
 			comp.mouseReleased(mouseX, mouseY, mouseButton);
@@ -145,6 +148,8 @@ public class CheckboxButton extends Component
 			}
 		}
 		
+		if(!this.isOpen() || this.subcomponents.isEmpty())
+			return;
 		
 		for(Component comp : this.subcomponents) 
 		{

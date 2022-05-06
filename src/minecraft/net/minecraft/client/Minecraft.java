@@ -411,6 +411,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         try
         {
+            Client.getInstance().preinit();
             this.startGame();
         }
         catch (Throwable throwable)
@@ -479,9 +480,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      * Starts the game: initializes the canvas, the title, the settings, etcetera.
      */
     private void startGame() throws LWJGLException, IOException
-    {
-    	Client.getInstance().preinit();
-    	
+    {    	
         this.gameSettings = new GameSettings(this, this.mcDataDir);
         this.defaultResourcePacks.add(this.mcDefaultResourcePack);
         this.startTimerHackThread();
@@ -587,6 +586,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.displayGuiScreen(new GuiMainMenu());
         }
 
+    	Client.getInstance().init();
+        
         this.renderEngine.deleteTexture(this.mojangLogo);
         this.mojangLogo = null;
         this.loadingScreen = new LoadingScreenRenderer(this);
@@ -607,8 +608,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
         
         this.renderGlobal.makeEntityOutlineShader();
-        
-        Client.getInstance().init();
     }
 
     private void registerMetadataSerializers()
@@ -2080,7 +2079,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                             }
                         }
                     }
+                    
+                	EventManager.call(new KeyDownEvent(k));
                 }
+                else 
+                {
+                	EventManager.call(new KeyUpEvent(k));
+                }
+                
+                EventManager.call(new KeyboardEvent(k));
             }
 
             for (int l = 0; l < 9; ++l)
@@ -3138,15 +3145,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (i != 0 && !Keyboard.isRepeatEvent())
         {
-        	if(Keyboard.getEventKeyState())
-            {
-            	EventManager.call(new KeyDownEvent(i));
-            }
-            else 
-            {
-            	EventManager.call(new KeyUpEvent(i));
-            }
-        	
             if (!(this.currentScreen instanceof GuiControls) || ((GuiControls)this.currentScreen).time <= getSystemTime() - 20L)
             {
                 if (Keyboard.getEventKeyState())

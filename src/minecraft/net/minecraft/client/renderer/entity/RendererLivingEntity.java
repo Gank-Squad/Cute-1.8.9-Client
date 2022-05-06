@@ -185,7 +185,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.enableAlpha();
                 this.mainModel.setLivingAnimations(entity, f6, f5, partialTicks);
                 this.mainModel.setRotationAngles(f6, f5, f8, f2, f7, 0.0625F, entity);
-
+                
                 if (CustomEntityModels.isActive())
                 {
                     this.renderEntity = entity;
@@ -221,9 +221,9 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                     {
                         GlStateManager.pushMatrix();
                     }
-
+                    
                     this.renderModel(entity, f6, f5, f8, f2, f7, 0.0625F);
-
+                    
                     if (this.renderModelPushMatrix)
                     {
                         GlStateManager.popMatrix();
@@ -353,9 +353,9 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.blendFunc(770, 771);
                 GlStateManager.alphaFunc(516, 0.003921569F);
             }
-
+            
             this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
-
+            
             if (flag1)
             {
                 GlStateManager.disableBlend();

@@ -69,8 +69,7 @@ public class ESPEntity extends Module
 			   mc.getRenderManager().options == null;
     }
     
-//	@SideOnly(Side.CLIENT)
-//	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
+
     @EventTarget
 	public void onRenderWorld(RenderWorldLastEvent event) 
 	{
@@ -107,6 +106,7 @@ public class ESPEntity extends Module
         	
         	if(EntityUtil.isHostileMob(entity))
         	{
+//        		System.out.println("MONSTE: " + mobsPicker.getColor().toString());
         		if(mobs.getValue()) 
         		{
         			RenderUtil.setColor(mobsPicker.getColor());
@@ -117,6 +117,7 @@ public class ESPEntity extends Module
         	
         	if(EntityUtil.isPassive(entity)) 
         	{
+//        		System.out.println("ANIMAL: " + animalPicker.getColor().toString());
         		if(animals.getValue()) 
         		{
         			RenderUtil.setColor(animalPicker.getColor());

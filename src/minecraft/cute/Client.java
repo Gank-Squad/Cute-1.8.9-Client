@@ -12,6 +12,7 @@ import cute.util.Cache;
 import cute.util.types.BlockInfo;
 import cute.util.types.VirtualBlock;
 import net.minecraft.block.Block;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 
 public class Client 
@@ -28,31 +29,12 @@ public class Client
 	
 	public void preinit()
 	{
-		System.out.println("Client starting...");
-		System.out.println("Cute " + Client.VERSION);
+		Cache.loadCache();
 	}
 	
 	public void init()
 	{
-		EventManager.register(ModuleManager.INSTANCE);
-		ModuleManager.getModules().get(0).setKeyCode(Keyboard.KEY_RSHIFT);
-		ModuleManager.getModules().get(1).setKeyCode(Keyboard.KEY_1);
-		ModuleManager.getModules().get(2).setKeyCode(Keyboard.KEY_2);
-		ModuleManager.getModules().get(3).setKeyCode(Keyboard.KEY_3);
-		ModuleManager.getModules().get(4).setKeyCode(Keyboard.KEY_4);
-		ModuleManager.getModules().get(5).setKeyCode(Keyboard.KEY_5);
-		
-//		VirtualBlock.setStandardList();
-		
-		Cache.loadCache();
-		List<BlockInfo> i = Cache.searchForBlock("end portal");
-
-		for(BlockInfo in : i)
-		{
-			System.out.println(in.block);
-			System.out.println(in.displayName);
-		}
-		
+		EventManager.register(ModuleManager.INSTANCE);		
 	}
 	
 	public void shutdown()
