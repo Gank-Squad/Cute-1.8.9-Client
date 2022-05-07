@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
 
 import cute.modules.enums.Category;
+import cute.Client;
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
@@ -79,8 +80,6 @@ public class ESPEntity extends Module
 		if(nullCheck())
 			return;
 		
-//		RenderUtil.beginRenderHitbox((float)lineWidth.getValue());
-		
 		GL11.glPushMatrix();
 		
 		GL11.glEnable(GL11.GL_BLEND);
@@ -94,7 +93,7 @@ public class ESPEntity extends Module
 		GL11.glEnable(GL32.GL_DEPTH_CLAMP);
 		
 		GL11.glLineWidth((float)lineWidth.getValue());
-//        GL11.glBegin(1);
+
         
         for(Entity entity : this.mc.theWorld.loadedEntityList) 
 		{
@@ -124,7 +123,6 @@ public class ESPEntity extends Module
         	
         	if(EntityUtil.isHostileMob(entity))
         	{
-//        		System.out.println("MONSTE: " + mobsPicker.getColor().toString());
         		if(mobs.getValue()) 
         		{
         			RenderUtil.setColor(mobsPicker.getColor());
@@ -135,7 +133,6 @@ public class ESPEntity extends Module
         	
         	if(EntityUtil.isPassive(entity)) 
         	{
-//        		System.out.println("ANIMAL: " + animalPicker.getColor().toString());
         		if(animals.getValue()) 
         		{
         			RenderUtil.setColor(animalPicker.getColor());
@@ -163,8 +160,6 @@ public class ESPEntity extends Module
         		}
         	}
 		}
-        
-//        RenderUtil.endRenderHitbox();
 
 		GL11.glDisable(GL32.GL_DEPTH_CLAMP);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
@@ -176,7 +171,9 @@ public class ESPEntity extends Module
 		
 		GL11.glDepthMask(true);
 		GL11.glPopMatrix();	
-        GL11.glClear(256);
+		
+		// prevents hotbar / hand from being messed up by color changes 
+		RenderUtil.resetColor();
     }
 }
 

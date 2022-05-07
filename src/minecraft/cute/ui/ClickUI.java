@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.lwjgl.input.Keyboard;
+
 import cute.ui.components.Component;
 import cute.ui.components.Frame;
 import cute.managers.ModuleManager;
@@ -14,6 +16,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 public class ClickUI extends GuiScreen 
 {
+	public static boolean keyboardInUses = false;
+	
 	public static final Color color = new Color(153, 207, 220);
 	
 	public static ArrayList<Frame> frames;
@@ -94,9 +98,14 @@ public class ClickUI extends GuiScreen
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) 
 	{
+		boolean dontCloseUI = false;
+		
+		if(keyCode == Keyboard.KEY_ESCAPE && this.keyboardInUses)
+			dontCloseUI = true;
+			
 		for(Frame frame : frames) 
 		{
-			if(!frame.isOpen() || keyCode == 1)
+			if(!frame.isOpen())
 				continue;
 			
 			if(frame.getComponents().isEmpty())
@@ -108,8 +117,12 @@ public class ClickUI extends GuiScreen
 			}
 		}
 		
+		if(this.keyboardInUses || dontCloseUI)
+			return;
+
 		if (keyCode == 1 || keyCode == this.closeOnKey) 
 		{
+			ClickUI.keyboardInUses = false;
             this.mc.displayGuiScreen(null);
         }
 	}

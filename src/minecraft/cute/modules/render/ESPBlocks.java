@@ -1,9 +1,11 @@
 package cute.modules.render;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import cute.Client;
 import cute.eventapi.EventManager;
 import cute.eventapi.EventTarget;
 import cute.events.ClientTickEvent;
@@ -14,6 +16,7 @@ import cute.settings.Checkbox;
 import cute.settings.ListSelection;
 import cute.settings.Slider;
 import cute.settings.enums.ListType;
+import cute.ui.components.sub.SearchButton;
 import cute.util.RenderUtil;
 import cute.util.types.VirtualBlock;
 import net.minecraft.block.Block;
@@ -31,7 +34,7 @@ public class ESPBlocks extends Module
 	}
 
 	
-	public static ListSelection blocks = new ListSelection<Block>("Blocks", new ArrayList<Block>(), ListType.BLOCK);
+	public static ListSelection blocks = new ListSelection<VirtualBlock>("Blocks", new ArrayList<VirtualBlock>(), ListType.BLOCK);
 	public static Checkbox IntervalRefresh = new Checkbox("Auto Refresh", false);
 	public static Slider lineWidth         = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
 	public static Slider RefreshInterval   = new Slider("Refresh", 1.0D, 30D, 500D, 1);
@@ -133,11 +136,17 @@ public class ESPBlocks extends Module
         GL11.glTranslated(-doubleX, -doubleY, -doubleZ);
         GL11.glCallList(DisplayListId);
         GL11.glPopMatrix();
+        
+        // prevents hotbar / hand from being messed up by color changes 
+        RenderUtil.resetColor();
     }
 	
 	private void compileDL() 
 	{
 		if(nullCheck())
+			return;
+		
+		if(this.blocks.getSize() == 0)
 			return;
 		
 		WorldClient world = this.mc.theWorld;
@@ -154,6 +163,7 @@ public class ESPBlocks extends Module
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDepthMask(false);
+		
         GL11.glBegin(GL11.GL_ONE);
         
 
@@ -166,6 +176,7 @@ public class ESPBlocks extends Module
         int radiusY = (int)this.SearchRadiusY.getValue();
         
         Block bId;
+        VirtualBlock vb;
         
         // x 
         for (int i = x - radiusX; i <= x + radiusX; ++i) 
@@ -183,14 +194,17 @@ public class ESPBlocks extends Module
                     if (bId == Blocks.air)
                         continue;
 
-                    for (VirtualBlock block : VirtualBlock.vBlocks) 
+//                    for (VirtualBlock block : VirtualBlock.vBlocks)
+                	for (Object _block : this.blocks.getEnabledItems())
                     {
-                        if (!block.enabled || block.block != bId)
+                		vb = (VirtualBlock)_block;
+                		
+                        if (!vb.enabled || vb.block != bId)
                         	continue;
                         
-                        if((block.meta == -1) || (block.meta == bId.getMetaFromState(blockState))) 
+                        if((vb.meta == -1) || (vb.meta == bId.getMetaFromState(blockState))) 
                         {	
-                        	RenderUtil.renderBlock(i, k, j, block);
+                        	RenderUtil.renderBlock(i, k, j, vb);
                             break;
                         }
                     }
@@ -199,10 +213,12 @@ public class ESPBlocks extends Module
         }
 
         GL11.glEnd();
+        
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_BLEND);
+
         GL11.glEndList();
 	}
 }

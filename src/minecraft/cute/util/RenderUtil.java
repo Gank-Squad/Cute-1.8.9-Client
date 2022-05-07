@@ -118,7 +118,10 @@ public class RenderUtil
 	        glColor4d(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f);
 	    }
 	
-	    
+	    public static void resetColor()
+	    {
+	    	glColor4d(1, 1, 1, 1);
+	    }
 	    
 
 		public static void beginRenderHitbox(float lineWidth, Color c) 

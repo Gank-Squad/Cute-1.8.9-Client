@@ -15,7 +15,6 @@ import net.minecraft.client.gui.FontRenderer;
 
 public class Frame 
 {
-
 	public final ArrayList<Component> components;
 	public final Category category;
 	

@@ -1,25 +1,30 @@
 package cute.ui.components.sub;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import cute.ui.components.Button;
-import cute.ui.components.Component;
-import cute.settings.Checkbox;
 import cute.settings.ListSelection;
 import cute.settings.enums.ListType;
+import cute.ui.ClickUI;
+import cute.ui.components.Button;
+import cute.ui.components.Component;
+import cute.util.Cache;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
+import cute.util.types.BlockInfo;
 import cute.util.types.VirtualBlock;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
 
-public class DropDownButton extends Component
+public class SearchButton extends Component  
 {
 	private final Button parent;
-	private final ListSelection setting;
+	
 	private boolean hovered;
+	private boolean binding;
 	
 	private int offset;
 	private int x;
@@ -28,22 +33,26 @@ public class DropDownButton extends Component
 	private int scrollButtonSize = this.height - 3;
 	private int scrollIndex = 0;
 	
+	private Object[] foundSearchTerms = new Object[0];
+	
 	private ListType type;
 	
-	private int listCap = 7;
+	private String searchTerm = "";
 	
-	public DropDownButton(ListSelection setting, Button button, int offset) 
+	ListSelection setting;
+	
+	private int listCap = 10;
+	
+	public SearchButton(Button button, int offset, ListSelection setting)
 	{
-		this.setting = setting;
 		this.parent = button;
 		this.x = button.parent.getX() + button.parent.getWidth();
 		this.y = button.parent.getY() + button.offset;
 		this.offset = offset;
-		
 		this.type = setting.getListType();
+		this.setting = setting;
 	}
 	
-
 	@Override
 	public int getHeight() 
 	{
@@ -53,7 +62,7 @@ public class DropDownButton extends Component
 	
 	public int getListHeight()
 	{
-		return this.height * Math.min(this.listCap, this.setting.getSize()) + this.scrollButtonSize * 2;
+		return this.height * Math.min(this.listCap, this.foundSearchTerms.length) + this.scrollButtonSize * 2;
 	}
 	
 	public int getListY()
@@ -71,9 +80,7 @@ public class DropDownButton extends Component
 	{
 		this.offset = newOff;
 	}
-
 	
-
 	@Override
 	public void renderComponent() 
 	{
@@ -88,9 +95,11 @@ public class DropDownButton extends Component
 		// draw the text for the setting 
 		GL11.glPushMatrix();
 		GL11.glScalef(0.75f,0.75f, 0.75f);
-
+		
+		String text = this.binding ? this.searchTerm : "Search";
+		
 		FontUtil.drawStringWithShadow(
-				this.setting.getName(), 
+				text, 
 				(this.x + 3) * this.tScale + 4, 
 				(this.y + 2) * this.tScale + 2,
 				this.textColorInt);
@@ -99,12 +108,12 @@ public class DropDownButton extends Component
 		
 		
 		// if the block list isn't open we're done here
-		if(!this.isOpen())
+		if(!this.binding)
 			return;
 		
 		int lx = this.getListX();
 		int ly = this.getListY();
-		int range = Math.min(this.setting.getSize(), scrollIndex + this.listCap);
+		int range = Math.min(this.foundSearchTerms.length, scrollIndex + this.listCap);
 		
 		// render background for the list of blocks 
 		RenderUtil.setColor(this.backColor);
@@ -115,7 +124,7 @@ public class DropDownButton extends Component
 		
 		// render up and down arrows for the scroll buttons 
 		FontUtil.drawStringWithShadow(
-				"/\\     " + String.valueOf(scrollIndex) + "-" + String.valueOf(range) + "/" + String.valueOf(this.setting.getSize()), 
+				"/\\     " + String.valueOf(scrollIndex) + "-" + String.valueOf(range) + "/" + String.valueOf(this.foundSearchTerms.length), 
 				lx * this.tScale + 4, 
 				ly * this.tScale + 4, 
 				this.textColorInt);
@@ -130,30 +139,17 @@ public class DropDownButton extends Component
 		// render all the blocks 
 		ly += this.scrollButtonSize;
 		
-		for(int i = scrollIndex; i < Math.min(this.setting.getSize(), scrollIndex + this.listCap); i++)
+		for(int i = scrollIndex; i < Math.min(this.foundSearchTerms.length, scrollIndex + this.listCap); i++)
 		{
 			String display;
-			int textColor = this.textColorInt;
-					
-			// this control is also supposed to work for pots, so need the proper toString
-			if(this.type == ListType.BLOCK)
-			{
-				VirtualBlock vb = ((VirtualBlock)this.setting.getItem(i)); 
-				display = vb.block.getLocalizedName();
-				
-				if(!vb.enabled)
-					textColor = this.textColorIntDisabled;
-			}
-			else
-			{
-				display = ((Potion)this.setting.getItem(i)).getName();
-			}
+			
+			display = ((BlockInfo)this.foundSearchTerms[i]).displayName;
 			
 			FontUtil.drawStringWithShadow(
 					display + " ", 
 					lx * this.tScale + 4, 
 					ly * this.tScale + 4, 
-					textColor);
+					this.textColorInt);
 
 			ly += this.height;
 		}
@@ -161,7 +157,6 @@ public class DropDownButton extends Component
 		GL11.glPopMatrix();
 	}
 	
-
 	@Override
 	public void updateComponent(int mouseX, int mouseY) 
 	{
@@ -169,7 +164,11 @@ public class DropDownButton extends Component
 		this.x = parent.parent.getX();
 	}
 	
-	
+	public int getListHoverIndex(int x, int y)
+	{
+		return (int)((y - this.y) / this.height);
+	}
+
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int button) 
 	{
@@ -181,25 +180,28 @@ public class DropDownButton extends Component
 			if(!isMouseOnButton(mouseX, mouseY))
 				return;
 			
-			this.open = !this.open;
+			this.setBinding(false);
 			return;
 		}
 		
 		if(button == 0)
 		{
+			if(this.isMouseOnButton(mouseX, mouseY))
+			{
+				this.setBinding(true);
+				return;
+			}
+			
 			if(this.isMouseOnList(mouseX, mouseY))
 			{
 				int index = this.getListHoverIndex(mouseX, mouseY);
 				
-				if(index >= 0 && index < this.setting.getSize())
+				if(index >= 0 && index < this.foundSearchTerms.length)
 				{
-					if(this.type == ListType.BLOCK)
-					{
-						VirtualBlock vb = ((VirtualBlock)this.setting.getItem(index)); 
-
-						vb.enabled = !vb.enabled;
-					}
-					System.out.println(this.setting.getItem(index));
+					this.setBinding(false);
+					VirtualBlock vb = new VirtualBlock(((BlockInfo)this.foundSearchTerms[index]).location);
+					vb.enabled = true;
+					this.setting.enableItem(vb);
 				}
 				return;
 			}
@@ -212,27 +214,64 @@ public class DropDownButton extends Component
 			
 			if(this.isMouseOnScrollDown(mouseX, mouseY))
 			{	
-				if(this.setting.getSize() <= this.listCap)
+				if(this.foundSearchTerms.length <= this.listCap)
 					return;
 				
-				this.scrollIndex = Math.min(this.setting.getSize()-this.listCap, this.scrollIndex + 1);
+				this.scrollIndex = Math.min(this.foundSearchTerms.length - this.listCap, this.scrollIndex + 1);
 				return;
 			}
 			
 		}		
 	}	
 	
+	public void setBinding(boolean state)
+	{
+		this.binding = state;
+		ClickUI.keyboardInUses = state;
+	}
+	
 	@Override
-	public void mouseReleased(int mouseX, int mouseY, int mouseButton) 
+	public boolean isOpen()
 	{
+		return this.foundSearchTerms.length != 0;
+	}
+	
+	@Override
+	public void keyTyped(char typedChar, int key) 
+	{
+		if(!this.binding) 
+			return;
 		
+		
+		switch(key)
+		{
+			case Keyboard.KEY_ESCAPE:
+				this.setBinding(false);
+				return;
+				
+			case Keyboard.KEY_BACK:
+				if(this.searchTerm.length() == 0)
+					return;
+				this.searchTerm = this.searchTerm.substring(0, this.searchTerm.length() - 1);
+				return;
+				
+			case Keyboard.KEY_RETURN:
+				this.scrollIndex = 0;
+				this.foundSearchTerms = Cache.searchForBlock(this.searchTerm.toLowerCase());
+				return;
+				
+			default:
+				if(typedChar >= 'a' && typedChar <= 'z' ||
+				   typedChar >= 'A' && typedChar <= 'Z' || 
+				   typedChar == ' ')
+				{
+					this.searchTerm += typedChar;
+				}
+				return;
+		}
 	}
 	
-	public int getListHoverIndex(int x, int y)
-	{
-		return (int)((y - this.y) / this.height);
-	}
-	
+
 	public boolean isMouseOnScrollUp(int x, int y)
 	{
 		if(!this.isOpen())
@@ -285,3 +324,7 @@ public class DropDownButton extends Component
 			   y < this.y + this.height;
 	}
 }
+
+
+
+

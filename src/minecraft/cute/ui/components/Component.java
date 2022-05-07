@@ -19,7 +19,9 @@ public class Component
 	protected Color colorEnabledHover = new Color(156, 0, 100);
 	protected Color colorHover        = new Color(153, 0, 0);
 	protected Color textColor         = new Color(255, 255, 255);
+	protected Color textColorDisabled = new Color(128, 128, 128);
 	protected int   textColorInt      = textColor.getRGB();
+	protected int   textColorIntDisabled= textColorDisabled.getRGB();
 	
 	protected Color checkboxBackground = new Color(136, 153, 153);
 	protected Color checkboxChecked    = new Color(51, 33, 33);

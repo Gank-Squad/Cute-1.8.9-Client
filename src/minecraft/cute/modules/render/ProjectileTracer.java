@@ -348,7 +348,6 @@ public class ProjectileTracer extends Module
 			cylinder.draw(0.2F, 0.0F, 0.0F, 60, 1);
 		}
 			
-		
 
 		// Close Open-GL drawing process
 		GL11.glPopMatrix();
@@ -358,5 +357,7 @@ public class ProjectileTracer extends Module
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		
+		RenderUtil.resetColor();
     }
 }

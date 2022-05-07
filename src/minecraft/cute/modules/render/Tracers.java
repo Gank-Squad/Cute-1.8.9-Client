@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
 
 import cute.modules.enums.Category;
+import cute.Client;
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
@@ -185,5 +186,8 @@ public class Tracers extends Module
 		
 		GL11.glDepthMask(true);
 		GL11.glPopMatrix();
+		
+		// prevents hotbar / hand from being messed up by color changes 
+		RenderUtil.resetColor();
 	}
 }

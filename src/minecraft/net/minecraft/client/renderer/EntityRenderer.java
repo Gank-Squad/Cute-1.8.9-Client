@@ -1924,10 +1924,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, new Object[] {renderglobal, Float.valueOf(partialTicks)});
         }
 
+        this.mc.mcProfiler.endStartSection("cute_render_last");
+        EventManager.call(new RenderWorldLastEvent(renderglobal, partialTicks));
+
         this.mc.mcProfiler.endStartSection("hand");
 
-        EventManager.call(new RenderWorldLastEvent(renderglobal, partialTicks));
-        
         if (this.renderHand && !Shaders.isShadowPass)
         {
             if (flag)

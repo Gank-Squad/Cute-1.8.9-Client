@@ -1,5 +1,6 @@
 package cute;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,11 @@ public class Client
 	public static final String NAME    = "Cute";
 	
 	private static final Client INSTANCE = new Client();
+	
+	public static class GlobalColors 
+	{
+		public static Color White = new Color(255, 255, 255, 255);
+	}
 	
 	public static final Client getInstance()
 	{

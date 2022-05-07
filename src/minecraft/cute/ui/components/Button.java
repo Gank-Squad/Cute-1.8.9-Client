@@ -9,6 +9,7 @@ import cute.ui.components.sub.ColorPickerButton;
 import cute.ui.components.sub.DropDownButton;
 import cute.ui.components.sub.KeybindButton;
 import cute.ui.components.sub.ModeButton;
+import cute.ui.components.sub.SearchButton;
 import cute.ui.components.sub.SliderButton;
 import cute.modules.Module;
 import cute.settings.Checkbox;
@@ -18,6 +19,7 @@ import cute.settings.Setting;
 import cute.settings.Slider;
 import cute.settings.ListSelection;
 import cute.settings.SubSetting;
+import cute.settings.enums.ListType;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 
@@ -40,6 +42,8 @@ public class Button extends Component
 		int opY  = offset + this.height;
 		int opY2 = offset + this.height;
 		
+		Setting hasList = null;
+		
 		Component last = null;
 		
 		for(Setting s : mod.getSettings())
@@ -50,9 +54,10 @@ public class Button extends Component
 					last = null;
 					continue;
 				case LIST:
-					last = new DropDownButton((ListSelection)s, this, opY);
+					last =  new DropDownButton((ListSelection)s, this, opY);;
 					this.subcomponents.add(last);
 					opY += this.height;
+					hasList = s; 
 					break;
 				case CHECKBOX:
 					last = new CheckboxButton((Checkbox)s, this, opY);
@@ -80,6 +85,11 @@ public class Button extends Component
 				last.subcomponents.add(new ColorPickerButton((ColorPicker)ss, this, opY2));	
 				opY2 += this.height;
 			}
+		}
+		
+		if(hasList != null)
+		{
+			this.subcomponents.add(new SearchButton(this, opY, (ListSelection)hasList));
 		}
 		
 		this.subcomponents.add(new KeybindButton(this, opY));
