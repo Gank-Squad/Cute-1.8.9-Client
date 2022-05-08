@@ -7,6 +7,7 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 
 import cute.eventapi.EventManager;
+import cute.managers.ConfigManager;
 import cute.managers.ModuleManager;
 import cute.modules.render.Fullbright;
 import cute.util.Cache;
@@ -41,6 +42,17 @@ public class Client
 	public void init()
 	{
 		EventManager.register(ModuleManager.INSTANCE);		
+		
+		ConfigManager.loadConfig();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+			    ConfigManager.saveConfig();
+			}
+		}));
 	}
 	
 	public void shutdown()

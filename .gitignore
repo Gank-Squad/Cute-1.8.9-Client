@@ -1,4 +1,6 @@
+jars/cute
 *.dat
+jars/usercache.json
 jars/crash-reports
 jars/saves
 jars/logs

@@ -87,7 +87,6 @@ public class Cache
 		Stream<VirtualBlock> s = BLOCKS.stream().
 				filter(x -> x.displayName.toLowerCase().contains(lookup));
 		
-		
 		return s.toArray();
 		
 	}

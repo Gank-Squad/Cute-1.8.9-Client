@@ -2,7 +2,11 @@ package cute.util.types;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.stream.Stream;
 
+import cute.util.Cache;
+import cute.settings.ListSelection;
+import cute.modules.render.ESPBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -50,87 +54,7 @@ public class VirtualBlock extends BlockInfo
 		this.z1 = z1;
 		this.z2 = z2;
 	}
-//	
-//	public VirtualBlock(ResourceLocation location)
-//	{
-//		super(location);
-//		
-//		this.meta = -1;
-//		this.enabled = false;
-//		this.r = 0;
-//		this.g = 0;
-//		this.b = 0;
-//		this.a = (byte)255;
-//	}
-//	
-//	public VirtualBlock(ResourceLocation loc, boolean enabled, Color c, int meta)
-//	{
-//		super(loc);
-//
-//		this.r = (byte)c.getRed();
-//		this.g = (byte)c.getGreen();
-//		this.b = (byte)c.getBlue();
-//		this.a = (byte)c.getAlpha();
-//		
-//		this.meta = meta;
-//		this.enabled = enabled;
-//	}
-//	
-//	public VirtualBlock(ResourceLocation loc, boolean enabled, byte r, byte g, byte b, byte a, byte meta) 
-//	{
-//		super(loc);
-//		
-//		this.r = r;
-//		this.g = g;
-//		this.b = b;
-//		this.a = a;
-//		
-//		this.meta = meta;
-//		this.enabled = enabled;
-//	}
-//	
-//	public static VirtualBlock fromRegistryName(String name)
-//	{
-//		ResourceLocation rl = new ResourceLocation(name);
-//		
-//		if (!Block.blockRegistry.containsKey(rl)) 
-//			return null;
-//		
-//		return new VirtualBlock(rl);
-//	}
-//
-//	public static VirtualBlock fromRegistryName(String name, boolean enabled, byte r, byte g, byte b, byte a, byte meta)
-//	{
-//		ResourceLocation rl = new ResourceLocation(name);
-//		
-//		if (!Block.blockRegistry.containsKey(rl)) 
-//			return null;
-//		
-//		VirtualBlock vb = new VirtualBlock(rl);
-//		
-//		vb.enabled = enabled;
-//		vb.r = r;
-//		vb.g = g;
-//		vb.b = b;
-//		vb.meta = meta;
-//		
-//		return vb;
-//	}
-	
-	public static void setStandardList() 
-	{
-//		vBlocks.clear();
-//		
-//		registerBlock(fromRegistryName("minecraft:lapis_ore", true, 0, 0, 128, 200, -1));
-//		registerBlock(fromRegistryName("minecraft:gold_ore", true, 0, 0, 128, 200, -1));
-//		registerBlock(fromRegistryName("minecraft:emerald_ore", true, 0, 0, 128, 200, -1));
-//		registerBlock(fromRegistryName("minecraft:diamond_ore", true, 0, 0, 128, 200, -1));
-//		registerBlock(fromRegistryName("minecraft:coal_ore", true, 0, 0, 128, 200, -1));
-//		registerBlock(fromRegistryName("minecraft:iron_ore", true, 0, 0, 128, 200, -1));
-//		
-//		removeInvalidBlocks();
-	}
-	
+
 
 	private static void insertBlock(VirtualBlock vb) 
 	{
@@ -146,58 +70,40 @@ public class VirtualBlock extends BlockInfo
 		VirtualBlock.vBlocks.add(vb);
 	}
 	
-	public static boolean registerBlock(VirtualBlock vb) 
+	// updates the cache colors / enable and adds the block to the xray list
+	public static void updateCacheFromString(String str) 
 	{
-		if (Block.blockRegistry.containsKey(vb.location)) 
-		{
-			insertBlock(vb);
-			return true;
-		}
+		String[] info = str.split(" ");
 		
-		return false;
-	}
-	
-	
-	public static void removeInvalidBlocks() 
-	{
-		for(VirtualBlock b : vBlocks)
+		if(info.length != 8)
+			return;
+		
+		try
 		{
-			if(b.block == Blocks.air)
-				vBlocks.remove(b);
+			int blockId = Integer.parseInt(info[5]); 
+			
+			Stream<VirtualBlock> s = Cache.BLOCKS.stream().filter(x -> x.blockID == blockId);
+			
+			s.forEach(x -> 
+			{
+				try 
+				{
+					x.r =  (byte) Integer.parseInt(info[0]);
+					x.g =  (byte) Integer.parseInt(info[1]);
+					x.b =  (byte) Integer.parseInt(info[2]);
+					x.a =  (byte) Integer.parseInt(info[3]);
+					x.meta    =   Integer.parseInt(info[4]);
+					x.displayName = info[6];
+					x.enabled = Boolean.parseBoolean(info[7]);
+					ESPBlocks.blocks.enableItem(x);
+				}
+				catch(NumberFormatException e) {}
+			});
 		}
+		catch(NumberFormatException e){}
 	}
 	
-//	public static VirtualBlock FromString(String str) 
-//	{
-//		String[] info = str.split(" ");
-//		
-//		if(info.length != 7)
-//			return null;
-//		
-//		VirtualBlock result = VirtualBlock.fromRegistryName(info[5]);
-//		
-//		if(result == null)
-//			return null;
-//		
-//		try
-//		{
-//			result.r = (byte) Integer.parseInt(info[0]);
-//			result.g = (byte) Integer.parseInt(info[1]);
-//			result.b = (byte) Integer.parseInt(info[2]);
-//			result.a = (byte) Integer.parseInt(info[3]);
-//			
-//			result.meta = Integer.parseInt(info[4]);
-//			
-//			result.enabled = Boolean.parseBoolean(info[6]);
-//			
-//			return result;
-//		}
-//		catch(NumberFormatException e){}
-//		
-//		return null;
-//	}
-//	
-//	
+	
 	public String toString() 
 	{
 		return this.r + " " + 
@@ -205,7 +111,8 @@ public class VirtualBlock extends BlockInfo
 			   this.b + " " + 
 			   this.a + " " + 
 			   this.meta + " " + 
-			   this.registryName + " " + 
+			   this.blockID + " " + 
+			   this.displayName + " " + 
 			   this.enabled;
 	}
 }
