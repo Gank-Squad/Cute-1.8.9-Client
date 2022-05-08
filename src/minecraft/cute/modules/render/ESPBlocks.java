@@ -20,10 +20,16 @@ import cute.ui.components.sub.SearchButton;
 import cute.util.RenderUtil;
 import cute.util.types.VirtualBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
 public class ESPBlocks extends Module 
@@ -135,7 +141,10 @@ public class ESPBlocks extends Module
         GL11.glPushMatrix();
         GL11.glTranslated(-doubleX, -doubleY, -doubleZ);
         GL11.glCallList(DisplayListId);
+        
         GL11.glPopMatrix();
+        
+        
         
         // prevents hotbar / hand from being messed up by color changes 
         RenderUtil.resetColor();
@@ -153,20 +162,21 @@ public class ESPBlocks extends Module
 
         EntityPlayerSP player = this.mc.thePlayer;
     
-		// i have no idea what this is but i changed all the numbers to make more sense at least
-		// https://javadoc.lwjgl.org/constant-values.html#org.lwjgl.opengl.GL11.GL_2_BYTES
-		
 		GL11.glNewList(DisplayListId, GL11.GL_COMPILE);
-		
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glDepthMask(false);
-		
-        GL11.glBegin(GL11.GL_ONE);
-        
 
+        GL11.glDisable( GL11.GL_TEXTURE_2D );
+		GL11.glDisable( GL11.GL_DEPTH_TEST );
+		GL11.glDisable( GL11.GL_CULL_FACE );
+		GL11.glEnable( GL11.GL_BLEND );
+		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
+		GL11.glDepthMask(false);
+		
+		// uncomment this and the stuff in the for loop below for solid blocks
+//      Tessellator ts = Tessellator.getInstance();
+//      WorldRenderer wr = ts.getWorldRenderer();
+		
+		// will need to remove this and it's end if you want solid blocks
+		GL11.glBegin(GL11.GL_LINES);
         
         int x = (int)player.posX;
         int z = (int)player.posZ;
@@ -202,22 +212,68 @@ public class ESPBlocks extends Module
                         if (!vb.enabled || vb.block != bId)
                         	continue;
                         
-                        if((vb.meta == -1) || (vb.meta == bId.getMetaFromState(blockState))) 
+                        int meta = bId.getMetaFromState(blockState);
+                        
+                        if((vb.meta == -1) || (vb.meta == meta)) 
                         {	
-                        	RenderUtil.renderBlock(i, k, j, vb);
+                        	// if you want solid blocks uncomment the Tessellator and world renderer above, and the begin/end functions here
+//                        	GL11.glBegin(GL11.GL_LINES);
+
+
+                        	GL11.glColor4ub(vb.r, vb.g, vb.b, vb.a);
+                	
+                        	switch(vb.blockID)
+                        	{
+                        		default:
+
+                        			RenderUtil.renderBlock(
+                        					i + vb.x1, k + vb.y1, j + vb.z1, 
+                        					i + vb.x2, k + vb.y2, j + vb.z2);
+                        		break;
+                        		
+                        		
+                        		case 44:  // basically all stone slabs 
+                        		case 182: // the rest of the stone slabs
+                        		case 126: // wooden slabs 
+                        			
+                        			if(blockState.getValue(BlockSlab.HALF) == BlockSlab.EnumBlockHalf.TOP)
+                        			{
+                        				RenderUtil.renderBlock(
+                            					i        , k + vb.y2, j, 
+                            					i + vb.x2, k + 1.0f , j + vb.z2);
+                        			}
+                        			else {
+                        				RenderUtil.renderBlock(
+                            					i        , k        , j, 
+                            					i + vb.x2, k + vb.y2, j + vb.z2);
+                        			}
+//                        			
+                        			
+                        			break;
+                        	}
+                        	
+//                        	
+//                        	wr.begin(7, DefaultVertexFormats.POSITION_TEX);
+//                        	
+//                        	RenderUtil.setColor(new Color(0,255,255,255));
+//                        	RenderUtil.drawBoundingBox(wr, i, k, j, i+1, k+1, j+1);
+//                        	
+//                        	ts.draw();
+                        	
+                        	
                             break;
                         }
                     }
                 }
             }
         }
-
-        GL11.glEnd();
         
+        GL11.glEnd();
         GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_BLEND);
+		GL11.glDisable( GL11.GL_BLEND );
+		GL11.glEnable( GL11.GL_TEXTURE_2D );
+		GL11.glEnable( GL11.GL_DEPTH_TEST );
+		GL11.glEnable( GL11.GL_CULL_FACE );
 
         GL11.glEndList();
 	}

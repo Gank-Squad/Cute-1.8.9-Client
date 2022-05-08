@@ -20,6 +20,7 @@ import cute.util.RenderUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 
 
 public class ESPEntity extends Module
@@ -115,7 +116,7 @@ public class ESPEntity extends Module
         	{
         		if(items.getValue()) 
         		{
-        			RenderUtil.setColor(itemsPicker.getColor());
+        			RenderUtil.setColor(itemsPicker.getColor());	
         			RenderUtil.renderEntityHitbox(entity);
         		}
         		continue;

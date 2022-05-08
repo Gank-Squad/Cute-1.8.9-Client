@@ -1,5 +1,6 @@
 package cute.util;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
@@ -221,9 +222,6 @@ public class RenderUtil
 	    
 	    public static void renderBlock(int x, int y, int z, Color color) 
 	    {
-	    	if(color.getAlpha() <= 0)
-	    		return;
-	    	
 	    	GL11.glColor4ub(
 	    			(byte) color.getRed(), 
 	    			(byte) color.getGreen(), 
@@ -265,6 +263,117 @@ public class RenderUtil
 	
 	        GL11.glVertex3f(x + 1, y, z + 1);
 	        GL11.glVertex3f(x + 1, y + 1, z + 1);
+	    }
+	    
+	    
+	    public static void renderBlock(float x1, float y1, float z1, float x2, float y2, float z2) 
+	    {
+	        GL11.glVertex3f(x1, y1, z1);
+	        GL11.glVertex3f(x2, y1, z1);
+	
+	        GL11.glVertex3f(x2, y1, z1);
+	        GL11.glVertex3f(x2, y1, z2);
+	
+	        GL11.glVertex3f(x1, y1, z1);
+	        GL11.glVertex3f(x1, y1, z2);
+	
+	        GL11.glVertex3f(x1, y1, z2);
+	        GL11.glVertex3f(x2, y1, z2);
+	
+	        GL11.glVertex3f(x1, y2, z1);
+	        GL11.glVertex3f(x2, y2, z1);
+	
+	        GL11.glVertex3f(x2, y2, z1);
+	        GL11.glVertex3f(x2, y2, z2);
+	
+	        GL11.glVertex3f(x1, y2, z1);
+	        GL11.glVertex3f(x1, y2, z2);
+	
+	        GL11.glVertex3f(x1, y2, z2);
+	        GL11.glVertex3f(x2, y2, z2);
+	
+	        GL11.glVertex3f(x1, y1, z1);
+	        GL11.glVertex3f(x1, y2, z1);
+	
+	        GL11.glVertex3f(x1, y1, z2);
+	        GL11.glVertex3f(x1, y2, z2);
+	
+	        GL11.glVertex3f(x2, y1, z1);
+	        GL11.glVertex3f(x2, y2, z1);
+	
+	        GL11.glVertex3f(x2, y1, z2);
+	        GL11.glVertex3f(x2, y2, z2);
+	    }
+	    
+	    public static void drawBoundingBox(WorldRenderer vb, float x1, float y1, float z1, float x2, float y2, float z2)
+	    {
+	    	drawBoundingBox(vb, new AxisAlignedBB(x1, y1, z1, x2, y2, z2));
+	    }
+	    
+	    public static void drawBoundingBox(WorldRenderer vb, AxisAlignedBB axisalignedbb) 
+	    {
+//	        Tessellator ts = Tessellator.getInstance();
+//	        WorldRenderer vb = ts.getWorldRenderer();
+//	        vb.begin(7, DefaultVertexFormats.POSITION_TEX);// Starts X.
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+//	        ts.draw();
+//	        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+//	        ts.draw();// Ends X.
+//	        vb.begin(7, DefaultVertexFormats.POSITION_TEX);// Starts Y.
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+//	        ts.draw();
+//	        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+//	        ts.draw();// Ends Y.
+//	        vb.begin(7, DefaultVertexFormats.POSITION_TEX);// Starts Z.
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+//	        ts.draw();
+//	        vb.begin(7, DefaultVertexFormats.POSITION_TEX);
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.minZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ).endVertex();
+	        vb.pos(axisalignedbb.maxX, axisalignedbb.minY, axisalignedbb.maxZ).endVertex();
+//	        ts.draw();// Ends Z.
 	    }
 	    
 	    public static void renderTracerFromPlayer(Entity entity, double hDistanceMax, double vDistanceMax, Color c) 

@@ -43,6 +43,8 @@ public class ListSelection<T> extends Setting
 	
 	public void enableItem(T item)
 	{
+		if(this.enabledItems.contains(item))
+			return;
 		this.enabledItems.add(item);
 	}
 	

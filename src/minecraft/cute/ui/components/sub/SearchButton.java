@@ -166,7 +166,7 @@ public class SearchButton extends Component
 	
 	public int getListHoverIndex(int x, int y)
 	{
-		return (int)((y - this.y) / this.height);
+		return this.scrollIndex + (int)((y - this.y) / this.height);
 	}
 
 	@Override
@@ -192,6 +192,9 @@ public class SearchButton extends Component
 				return;
 			}
 			
+			if(!this.binding)
+				return;
+			
 			if(this.isMouseOnList(mouseX, mouseY))
 			{
 				int index = this.getListHoverIndex(mouseX, mouseY);
@@ -199,9 +202,7 @@ public class SearchButton extends Component
 				if(index >= 0 && index < this.foundSearchTerms.length)
 				{
 					this.setBinding(false);
-					VirtualBlock vb = new VirtualBlock(((BlockInfo)this.foundSearchTerms[index]).location);
-					vb.enabled = true;
-					this.setting.enableItem(vb);
+					this.setting.enableItem((VirtualBlock)this.foundSearchTerms[index]);
 				}
 				return;
 			}

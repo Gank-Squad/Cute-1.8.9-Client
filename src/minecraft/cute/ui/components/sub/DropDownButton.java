@@ -139,7 +139,7 @@ public class DropDownButton extends Component
 			if(this.type == ListType.BLOCK)
 			{
 				VirtualBlock vb = ((VirtualBlock)this.setting.getItem(i)); 
-				display = vb.block.getLocalizedName();
+				display = vb.displayName;
 				
 				if(!vb.enabled)
 					textColor = this.textColorIntDisabled;
@@ -178,11 +178,23 @@ public class DropDownButton extends Component
 		
 		if(button == 1)
 		{
-			if(!isMouseOnButton(mouseX, mouseY))
+			if(isMouseOnButton(mouseX, mouseY))
+			{
+				this.open = !this.open;
 				return;
+			}
+				
+			if(this.isMouseOnList(mouseX, mouseY))
+			{
+				int index = this.getListHoverIndex(mouseX, mouseY);
+				
+				if(index >= 0 && index < this.setting.getSize())
+				{
+					this.setting.disableItem(index);
+				}
+				
+			}
 			
-			this.open = !this.open;
-			return;
 		}
 		
 		if(button == 0)
@@ -230,7 +242,7 @@ public class DropDownButton extends Component
 	
 	public int getListHoverIndex(int x, int y)
 	{
-		return (int)((y - this.y) / this.height);
+		return this.scrollIndex + (int)((y - this.y) / this.height);
 	}
 	
 	public boolean isMouseOnScrollUp(int x, int y)
