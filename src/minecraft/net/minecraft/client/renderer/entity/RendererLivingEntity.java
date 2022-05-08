@@ -1,6 +1,10 @@
 package net.minecraft.client.renderer.entity;
 
 import com.google.common.collect.Lists;
+
+import cute.eventapi.EventManager;
+import cute.events.RenderLivingEvent;
+
 import java.nio.FloatBuffer;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -16,6 +20,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
@@ -30,6 +35,7 @@ import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
@@ -103,6 +109,11 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     {
     }
 
+    public void renderModelAccessor(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor)
+    {
+    	this.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
+    }
+    
     /**
      * Renders the desired {@code T} type Entity.
      */
@@ -210,50 +221,57 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 }
                 else
                 {
-                    boolean flag = this.setDoRenderBrightness(entity, partialTicks);
-
-                    if (EmissiveTextures.isActive())
-                    {
-                        EmissiveTextures.beginRender();
-                    }
-
-                    if (this.renderModelPushMatrix)
-                    {
-                        GlStateManager.pushMatrix();
-                    }
+                 
+                    RenderLivingEvent EVENT_ = new RenderLivingEvent<T>(this, entity, f6, f5, f8, f2, f7, 0.0625F);
+                    EventManager.call(EVENT_);
                     
-                    this.renderModel(entity, f6, f5, f8, f2, f7, 0.0625F);
-                    
-                    if (this.renderModelPushMatrix)
+                    if(!EVENT_.isCancelled())
                     {
-                        GlStateManager.popMatrix();
-                    }
+                    	 boolean flag = this.setDoRenderBrightness(entity, partialTicks);
 
-                    if (EmissiveTextures.isActive())
-                    {
-                        if (EmissiveTextures.hasEmissive())
-                        {
-                            this.renderModelPushMatrix = true;
-                            EmissiveTextures.beginRenderEmissive();
-                            GlStateManager.pushMatrix();
-                            this.renderModel(entity, f6, f5, f8, f2, f7, f4);
-                            GlStateManager.popMatrix();
-                            EmissiveTextures.endRenderEmissive();
-                        }
+                         if (EmissiveTextures.isActive())
+                         {
+                             EmissiveTextures.beginRender();
+                         }
 
-                        EmissiveTextures.endRender();
-                    }
+                         if (this.renderModelPushMatrix)
+                         {
+                             GlStateManager.pushMatrix();
+                         }
 
-                    if (flag)
-                    {
-                        this.unsetBrightness();
-                    }
+                         this.renderModel(entity, f6, f5, f8, f2, f7, 0.0625F);
+                         
+                         if (this.renderModelPushMatrix)
+                         {
+                             GlStateManager.popMatrix();
+                         }
 
-                    GlStateManager.depthMask(true);
+                         if (EmissiveTextures.isActive())
+                         {
+                             if (EmissiveTextures.hasEmissive())
+                             {
+                                 this.renderModelPushMatrix = true;
+                                 EmissiveTextures.beginRenderEmissive();
+                                 GlStateManager.pushMatrix();
+                                 this.renderModel(entity, f6, f5, f8, f2, f7, f4);
+                                 GlStateManager.popMatrix();
+                                 EmissiveTextures.endRenderEmissive();
+                             }
 
-                    if (!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).isSpectator())
-                    {
-                        this.renderLayers(entity, f6, f5, partialTicks, f8, f2, f7, 0.0625F);
+                             EmissiveTextures.endRender();
+                         }
+
+                         if (flag)
+                         {
+                             this.unsetBrightness();
+                         }
+
+                         GlStateManager.depthMask(true);
+
+                         if (!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).isSpectator())
+                         {
+                             this.renderLayers(entity, f6, f5, partialTicks, f8, f2, f7, 0.0625F);
+                         }
                     }
                 }
 
@@ -351,13 +369,14 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.depthMask(false);
                 GlStateManager.enableBlend();
                 GlStateManager.blendFunc(770, 771);
-                GlStateManager.alphaFunc(516, 0.003921569F);
+                GlStateManager.alphaFunc(516, 0.003921569F);    
             }
             
             this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
             
             if (flag1)
             {
+            	
                 GlStateManager.disableBlend();
                 GlStateManager.alphaFunc(516, 0.1F);
                 GlStateManager.popMatrix();

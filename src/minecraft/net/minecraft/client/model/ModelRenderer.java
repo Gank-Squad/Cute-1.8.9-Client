@@ -255,7 +255,7 @@ public class ModelRenderer
                 {
                     GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
                 }
-
+                
                 GlStateManager.callList(this.displayList);
 
                 if (this.childModels != null)

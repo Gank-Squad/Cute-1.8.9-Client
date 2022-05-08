@@ -2,6 +2,9 @@ package net.minecraft.block;
 
 import java.util.List;
 import java.util.Random;
+
+import cute.modules.render.ESPBlocks;
+import cute.util.types.VirtualBlock;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;

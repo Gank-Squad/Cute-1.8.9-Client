@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL32;
 import cute.modules.enums.Category;
 import cute.Client;
 import cute.eventapi.EventTarget;
+import cute.events.RenderLivingEvent;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
 import cute.settings.Checkbox;
@@ -30,7 +31,7 @@ public class ESPEntity extends Module
 		super("Entity ESP", Category.RENDER, "Highlights entities");
 	}
 	
-	public static Mode mode = new Mode("Mode", "Outline", "Glow", "2D", "CS:GO", "Wireframe");
+	public static Mode mode = new Mode("Mode", "Hitbox", "Wireframe");
 
     public static Checkbox players = new Checkbox("Players", true);
     public static ColorPicker playerPicker = new ColorPicker(players, "Player Picker", new Color(215, 46, 46));
@@ -74,11 +75,86 @@ public class ESPEntity extends Module
 			   mc.getRenderManager().options == null;
     }
     
+    @EventTarget
+    public void onEntityRender(RenderLivingEvent event)
+    {
+    	if(mode.getValue() != 1)
+    		return;
+    	
+    	Entity entity = event.entity;
+    	
+    	if(entity instanceof EntityPlayer) 
+    	{
+    		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
+    			return;
+    	}
+    	else
+    	if(EntityUtil.isHostileMob(entity))
+    	{
+    		if(!mobs.getValue()) 
+    			return;
+    	}
+    	else
+    	if(EntityUtil.isPassive(entity)) 
+    	{
+    		if(!animals.getValue()) 
+    			return;
+    	}
+    	else
+    	if(EntityUtil.isNeutralMob(entity)) 
+    	{
+    		if(neutral.getValue()) 
+    			return;
+    	}        	  	
+    	
+    	event.setCancelled(true);
+    	
+    	GL11.glLineWidth((float)lineWidth.getValue());
+        
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        
+//        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
+//        GL11.glEnable(GL11.GL_STENCIL_TEST);
+//        GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
+        
+//        GL11.glClear(GL11.GL_FRONT_LEFT);
+//        GL11.glClearStencil(15);
+
+//        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        
+        event.livingBase.renderModelAccessor(event.entity, event.f6, event.f5, event.f8, event.f2, event.f7, 0.0625F);
+
+        GL11.glPopAttrib();
+        GL11.glHint(GL11.GL_LINE_SMOOTH_HINT,  GL11.GL_NICEST);
+        
+//        
+//        GL11.glDisable(GL11.GL_POLYGON_OFFSET_LINE);
+//        GL11.glDisable(GL11.GL_STENCIL_TEST);
+        GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+        GL11.glDisable(GL11.GL_LINE_SMOOTH);
+//        GL11.glDisable(GL11.GL_BLEND);
+        
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        
+    }
 
     @EventTarget
 	public void onRenderWorld(RenderWorldLastEvent event) 
 	{
 		if(nullCheck())
+			return;
+		
+		if(this.mode.getValue() != 0)
 			return;
 		
 		GL11.glPushMatrix();
