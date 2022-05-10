@@ -1,13 +1,4 @@
-jars/cute
 *.dat
-jars/usercache.json
-jars/crash-reports
-jars/saves
-jars/logs
-jars/saves
-jars/resourcepacks
-jars/shaderpacks
-jars/assets
 
 logs/
 temp/
@@ -41,11 +32,6 @@ hs_err_pid*
 
 # eclipse
 bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
 
 # idea
 out
@@ -59,7 +45,6 @@ build
 .gradle
 
 # other
-eclipse
 run
 
 # Files from Forge MDK
