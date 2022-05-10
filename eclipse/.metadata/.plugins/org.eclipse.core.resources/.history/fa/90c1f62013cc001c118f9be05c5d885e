@@ -1,6 +1,0 @@
-package cute.events;
-
-public class WorldRenderLastEvent extends Event 
-{
-
-}

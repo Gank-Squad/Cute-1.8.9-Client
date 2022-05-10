@@ -1,8 +1,0 @@
-package cute.events;
-
-import cute.eventapi.events.Event;
-
-public class WorldRenderLastEvent implements Event 
-{
-
-}

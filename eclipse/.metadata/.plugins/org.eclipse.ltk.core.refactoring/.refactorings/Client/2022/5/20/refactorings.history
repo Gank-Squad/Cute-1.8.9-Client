@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename method &apos;cute.util.types.VirtualBlock.FromString(...)&apos; to &apos;updateCacheFromString&apos;&#x0D;&#x0A;- Original project: &apos;Client&apos;&#x0D;&#x0A;- Original element: &apos;cute.util.types.VirtualBlock.FromString(...)&apos;&#x0D;&#x0A;- Renamed element: &apos;cute.util.types.VirtualBlock.updateCacheFromString(...)&apos;&#x0D;&#x0A;- Update references to refactored element" delegate="false" deprecate="false" description="Rename method &apos;FromString&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.method" input="/src&lt;cute.util.types{VirtualBlock.java[VirtualBlock~FromString~QString;" name="updateCacheFromString" references="true" stamp="1651979906405" version="1.0"/>
-</session>

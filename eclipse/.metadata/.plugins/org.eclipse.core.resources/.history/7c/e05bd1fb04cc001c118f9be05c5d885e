@@ -1,5 +1,0 @@
-package cute.events;
-
-public class KeyDownEvent {
-
-}
