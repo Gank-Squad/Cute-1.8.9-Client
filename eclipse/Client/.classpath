@@ -6,7 +6,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Programming/java/Minecraft/Client-Cute/jars/versions/1.8.9/1.8.9.jar">
+	<classpathentry kind="lib" path="D:/Programming/CLONES/Cute-1.8.9-Client/jars/versions/1.8.9/1.8.9.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Client/jars/versions/1.8.9/1.8.9-natives"/>
 		</attributes>

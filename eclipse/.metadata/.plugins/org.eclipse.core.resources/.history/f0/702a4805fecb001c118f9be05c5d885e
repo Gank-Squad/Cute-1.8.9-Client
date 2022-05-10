@@ -1,0 +1,5 @@
+package cute.events;
+
+public class ClientRenderEvent {
+
+}

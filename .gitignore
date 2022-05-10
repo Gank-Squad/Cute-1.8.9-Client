@@ -1,7 +1,13 @@
-*.dat
-
-logs/
-temp/
+jars/assets
+jars/crash-reports
+jars/cute
+jars/logs
+jars/resourcepacks
+jars/saves
+jars/shaderpacks
+jars/options.txt
+jars/optionsof.txt
+jars/usercache.json
 
 *.bat
 *.sh
@@ -19,7 +25,6 @@ temp/
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -29,10 +34,6 @@ temp/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-
-# eclipse
-eclipse/.metadata
-eclipse/bin
 
 # idea
 out
@@ -50,6 +51,3 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
-
-logs
-jars/saves/MCP Development World/data/villages.dat

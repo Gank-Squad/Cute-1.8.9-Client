@@ -1,0 +1,24 @@
+package cute.events;
+
+import cute.eventapi.events.Cancellable;
+import cute.eventapi.events.Event;
+
+public class RenderLivingEvent implements Cancellable, Event
+{
+    private boolean canceled;
+
+    public RenderLivingEvent()
+    {
+        this.canceled = false;
+    }
+    
+    public boolean isCancelled()
+    {
+    	return this.canceled;
+    }
+
+    public void setCancelled(boolean state)
+    {
+    	this.canceled = state;
+    }
+}
