@@ -1,0 +1,5 @@
+package cute.util.types;
+
+public class BlockInfo {
+
+}

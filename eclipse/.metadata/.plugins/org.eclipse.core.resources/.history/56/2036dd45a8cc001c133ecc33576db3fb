@@ -1,0 +1,21 @@
+package cute.util.types;
+
+import net.minecraft.block.Block;
+import net.minecraft.util.ResourceLocation;
+
+public class BlockInfo 
+{
+	public final String displayName;
+	public final String registryName;
+	
+	public final Block block;
+	
+	public BlockInfo(ResourceLocation loc)
+	{
+		this.registryName = loc.toString();
+		
+		this.block = Block.blockRegistry.getObject(loc);
+		
+		this.displayName = this.block.getLocalizedName();
+	}
+}

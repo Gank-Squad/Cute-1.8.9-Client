@@ -31,7 +31,8 @@ temp/
 hs_err_pid*
 
 # eclipse
-bin
+/bin
+eclipse/bin
 
 # idea
 out

@@ -1,0 +1,10 @@
+package cute.events;
+
+public class KeyDownEvent extends KeyboardEvent 
+{
+	public KeyDownEvent(int keyCode) 
+	{
+		super(keyCode);
+	}
+
+}

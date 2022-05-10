@@ -1,0 +1,21 @@
+package cute.events;
+
+import cute.eventapi.events.Cancellable;
+import cute.eventapi.events.Event;
+
+public class EntityViewRenderEvent implements Event 
+{
+
+	
+    public static class FogDensity extends EntityViewRenderEvent implements Cancellable
+    {
+        public float density;
+
+        public FogDensity(EntityRenderer renderer, Entity entity, Block block, double renderPartialTicks, float density)
+        {
+            super(renderer, entity, block, renderPartialTicks);
+            this.density = density;
+        }
+    }
+	
+}
