@@ -31,7 +31,7 @@ temp/
 hs_err_pid*
 
 # eclipse
-/bin
+eclipse/.metadata
 eclipse/bin
 
 # idea
