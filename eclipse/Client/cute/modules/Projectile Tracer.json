@@ -1,0 +1,18 @@
+{
+  "Name": "Projectile Tracer",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "Highlight Block": true,
+    "Line Width": 2.5,
+    "SubSettings": {
+      "Tracer Color": {
+        "Red": 255,
+        "Green": 255,
+        "Blue": 255,
+        "Alpha": 255
+      }
+    }
+  }
+}

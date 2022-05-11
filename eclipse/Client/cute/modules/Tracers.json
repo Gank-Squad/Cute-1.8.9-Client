@@ -1,0 +1,56 @@
+{
+  "Name": "Tracers",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "Players": true,
+    "Animals": true,
+    "Mobs": true,
+    "Neutral Creatures": true,
+    "Vehicles": true,
+    "Items": true,
+    "Line Width": 2.5,
+    "X Radius": 100.0,
+    "Y Radius": 50.0,
+    "Render From Y": 99.0,
+    "SubSettings": {
+      "Player Picker": {
+        "Red": 215,
+        "Green": 46,
+        "Blue": 46,
+        "Alpha": 255
+      },
+      "Animal Picker": {
+        "Red": 0,
+        "Green": 200,
+        "Blue": 0,
+        "Alpha": 255
+      },
+      "Mob Picker": {
+        "Red": 131,
+        "Green": 19,
+        "Blue": 199,
+        "Alpha": 255
+      },
+      "Neutral Picker": {
+        "Red": 255,
+        "Green": 255,
+        "Blue": 255,
+        "Alpha": 255
+      },
+      "Vehicle Picker": {
+        "Red": 0,
+        "Green": 255,
+        "Blue": 255,
+        "Alpha": 255
+      },
+      "Item Picker": {
+        "Red": 199,
+        "Green": 196,
+        "Blue": 19,
+        "Alpha": 255
+      }
+    }
+  }
+}

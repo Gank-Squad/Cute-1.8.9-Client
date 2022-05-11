@@ -1,0 +1,14 @@
+{
+  "Name": "Block ESP",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "Auto Refresh": false,
+    "Refresh": 30.0,
+    "X Radius": 45.0,
+    "Y Radius": 45.0,
+    "Line Width": 2.5,
+    "SubSettings": {}
+  }
+}

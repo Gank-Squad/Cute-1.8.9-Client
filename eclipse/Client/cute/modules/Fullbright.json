@@ -1,0 +1,10 @@
+{
+  "Name": "Fullbright",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "Mode": 0,
+    "SubSettings": {}
+  }
+}

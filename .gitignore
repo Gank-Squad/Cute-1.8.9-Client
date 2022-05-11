@@ -1,4 +1,3 @@
-jars/assets
 jars/crash-reports
 jars/cute
 jars/logs
@@ -33,6 +32,7 @@ eclipse/.metadata
 *.zip
 *.tar.gz
 *.rar
+*.log.gz
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*

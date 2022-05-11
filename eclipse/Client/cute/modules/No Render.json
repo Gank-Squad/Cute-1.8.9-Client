@@ -1,0 +1,13 @@
+{
+  "Name": "No Render",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "All Fog": true,
+    "Blindness Fog": true,
+    "Water": true,
+    "Blocks": true,
+    "SubSettings": {}
+  }
+}
