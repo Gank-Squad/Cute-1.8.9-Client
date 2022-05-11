@@ -83,8 +83,7 @@ public class ESPEntity extends Module
     	
     	Entity entity = event.entity;
     	
-    	// pretty sure this is spectators? ?
-    	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase ))
+    	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
     		return;
 
     	if(entity instanceof EntityPlayer) 
@@ -186,8 +185,7 @@ public class ESPEntity extends Module
         
         for(Entity entity : this.mc.theWorld.loadedEntityList) 
 		{
-        	// pretty sure this is spectators? ?
-        	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase ))
+        	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
         		continue;
  
         	if(entity instanceof EntityPlayer) 
