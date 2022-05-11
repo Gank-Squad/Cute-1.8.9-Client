@@ -1,9 +1,0 @@
-package cute.events;
-
-public class KeyUpEvent extends KeyboardEvent
-{
-	public KeyUpEvent(int keyCode) 
-	{
-		super(keyCode);
-	}
-}

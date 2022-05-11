@@ -1,8 +1,0 @@
-package cute.modules.render;
-
-import cute.modules.Module;
-
-public class ProjectileTracer extends Module 
-{
-
-}

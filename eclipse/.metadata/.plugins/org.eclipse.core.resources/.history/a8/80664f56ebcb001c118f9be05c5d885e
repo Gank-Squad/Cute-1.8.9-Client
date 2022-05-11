@@ -1,8 +1,0 @@
-package cute.modules.test;
-
-import cute.modules.Module;
-
-public class TestModule extends Module 
-{
-
-}
