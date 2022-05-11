@@ -9,6 +9,8 @@ jars/options.txt
 jars/optionsof.txt
 jars/usercache.json
 
+eclipse/.metadata
+
 *.bat
 *.sh
 
