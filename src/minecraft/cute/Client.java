@@ -1,21 +1,10 @@
 package cute;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
 
 import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.ModuleManager;
-import cute.modules.render.Fullbright;
-import cute.util.Cache;
-import cute.util.types.BlockInfo;
-import cute.util.types.VirtualBlock;
-import net.minecraft.block.Block;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ResourceLocation;
 
 public class Client 
 {
@@ -36,7 +25,6 @@ public class Client
 	
 	public void preinit()
 	{
-		Cache.loadCache();
 	}
 	
 	public void init()

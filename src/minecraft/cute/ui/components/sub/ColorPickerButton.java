@@ -104,8 +104,8 @@ public class ColorPickerButton extends Component
 		
 		FontUtil.drawStringWithShadow(
 				displaValue + " ", 
-				(this.x                ) * this.tScale + 4, 
-				(this.y + previewOffset) * this.tScale + 3, 
+				(this.x                ) * Component.tScale + 4, 
+				(this.y + previewOffset) * Component.tScale + 3, 
 				this.textColorInt);
 		
 		// green value
@@ -113,8 +113,8 @@ public class ColorPickerButton extends Component
 		
 		FontUtil.drawStringWithShadow(
 				displaValue + " ", 
-				(this.x                              ) * this.tScale + 4, 
-				(this.y + previewOffset + this.height) * this.tScale + 3, 
+				(this.x                              ) * Component.tScale + 4, 
+				(this.y + previewOffset + this.height) * Component.tScale + 3, 
 				this.textColorInt);
 		
 		// blue value 
@@ -122,8 +122,8 @@ public class ColorPickerButton extends Component
 		
 		FontUtil.drawStringWithShadow(
 				displaValue + " ", 
-				(this.x                                  ) * this.tScale + 4, 
-				(this.y + previewOffset + this.height * 2) * this.tScale + 3, 
+				(this.x                                  ) * Component.tScale + 4, 
+				(this.y + previewOffset + this.height * 2) * Component.tScale + 3, 
 				this.textColorInt);
 		
 		GL11.glPopMatrix();

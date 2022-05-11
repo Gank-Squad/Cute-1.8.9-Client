@@ -3,6 +3,14 @@ package cute.ui.components;
 
 import java.util.ArrayList;
 
+import cute.modules.Module;
+import cute.settings.Checkbox;
+import cute.settings.ColorPicker;
+import cute.settings.ListSelection;
+import cute.settings.Mode;
+import cute.settings.Setting;
+import cute.settings.Slider;
+import cute.settings.SubSetting;
 import cute.ui.ClickUI;
 import cute.ui.components.sub.CheckboxButton;
 import cute.ui.components.sub.ColorPickerButton;
@@ -11,15 +19,6 @@ import cute.ui.components.sub.KeybindButton;
 import cute.ui.components.sub.ModeButton;
 import cute.ui.components.sub.SearchButton;
 import cute.ui.components.sub.SliderButton;
-import cute.modules.Module;
-import cute.settings.Checkbox;
-import cute.settings.ColorPicker;
-import cute.settings.Mode;
-import cute.settings.Setting;
-import cute.settings.Slider;
-import cute.settings.ListSelection;
-import cute.settings.SubSetting;
-import cute.settings.enums.ListType;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 

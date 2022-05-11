@@ -62,8 +62,8 @@ public class CheckboxButton extends Component
 		// render the text
 		FontUtil.drawStringWithShadow(
 				this.setting.getName(), 
-				(x + 3) * this.tScale + 4, 
-				(y + 2) * this.tScale + 2,
+				(x + 3) * Component.tScale + 4, 
+				(y + 2) * Component.tScale + 2,
 				this.textColorInt);
 		
 		GL11.glPopMatrix();

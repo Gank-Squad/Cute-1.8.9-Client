@@ -66,8 +66,8 @@ public class KeybindButton extends Component
 		
 		FontUtil.drawStringWithShadow(
 				bindingText, 
-				(this.x + 3) * this.tScale + 4, 
-				(this.y + 2) * this.tScale + 2, 
+				(this.x + 3) * Component.tScale + 4, 
+				(this.y + 2) * Component.tScale + 2, 
 				this.textColorInt);
 		
 		// render the right side of the text 
@@ -75,8 +75,8 @@ public class KeybindButton extends Component
 		
 		FontUtil.drawStringWithShadow(
 				bindingText, 
-				(this.x + width) * this.tScale - FontUtil.getStringWidth(bindingText), 
-				(this.y + 2)     * this.tScale + 2,
+				(this.x + width) * Component.tScale - FontUtil.getStringWidth(bindingText), 
+				(this.y + 2)     * Component.tScale + 2,
 				this.textColorInt);
 		
 

@@ -68,8 +68,8 @@ public class ModeButton extends Component {
 
 		FontUtil.drawStringWithShadow(
 				modeText, 
-				(this.x + 3) * this.tScale + 4, 
-				(this.y + 2) * this.tScale + 2,
+				(this.x + 3) * Component.tScale + 4, 
+				(this.y + 2) * Component.tScale + 2,
 				this.textColorInt);
 		
 		// render the setting value
@@ -77,8 +77,8 @@ public class ModeButton extends Component {
 		
 		FontUtil.drawStringWithShadow(
 				modeText, 
-				(this.x + this.width) * this.tScale - FontUtil.getStringWidth(modeText), 
-				(this.y + 2         ) * this.tScale + 2,
+				(this.x + this.width) * Component.tScale - FontUtil.getStringWidth(modeText), 
+				(this.y + 2         ) * Component.tScale + 2,
 				this.textColorInt);
 		
 		

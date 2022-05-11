@@ -1,18 +1,14 @@
 package cute.ui.components.sub;
 
-import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
-import cute.ui.components.Button;
-import cute.ui.components.Component;
-import cute.settings.Checkbox;
 import cute.settings.ListSelection;
 import cute.settings.enums.ListType;
+import cute.ui.components.Button;
+import cute.ui.components.Component;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 import cute.util.types.VirtualBlock;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
 
 public class DropDownButton extends Component
@@ -91,8 +87,8 @@ public class DropDownButton extends Component
 
 		FontUtil.drawStringWithShadow(
 				this.setting.getName(), 
-				(this.x + 3) * this.tScale + 4, 
-				(this.y + 2) * this.tScale + 2,
+				(this.x + 3) * Component.tScale + 4, 
+				(this.y + 2) * Component.tScale + 2,
 				this.textColorInt);
 		
 		GL11.glPopMatrix();
@@ -116,14 +112,14 @@ public class DropDownButton extends Component
 		// render up and down arrows for the scroll buttons 
 		FontUtil.drawStringWithShadow(
 				"/\\     " + String.valueOf(scrollIndex) + "-" + String.valueOf(range) + "/" + String.valueOf(this.setting.getSize()), 
-				lx * this.tScale + 4, 
-				ly * this.tScale + 4, 
+				lx * Component.tScale + 4, 
+				ly * Component.tScale + 4, 
 				this.textColorInt);
 		
 		FontUtil.drawStringWithShadow(
 				"\\/", 
-				lx * this.tScale + 4, 
-				(ly + this.getListHeight() - this.scrollButtonSize) * this.tScale + 2, 
+				lx * Component.tScale + 4, 
+				(ly + this.getListHeight() - this.scrollButtonSize) * Component.tScale + 2, 
 				this.textColorInt);
 		
 		
@@ -151,8 +147,8 @@ public class DropDownButton extends Component
 			
 			FontUtil.drawStringWithShadow(
 					display + " ", 
-					lx * this.tScale + 4, 
-					ly * this.tScale + 4, 
+					lx * Component.tScale + 4, 
+					ly * Component.tScale + 4, 
 					textColor);
 
 			ly += this.height;

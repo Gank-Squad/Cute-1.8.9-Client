@@ -1,14 +1,10 @@
 package cute.util.types;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
-import cute.util.Cache;
-import cute.settings.ListSelection;
 import cute.modules.render.ESPBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
+import cute.util.Cache;
 import net.minecraft.util.ResourceLocation;
 
 public class VirtualBlock extends BlockInfo
