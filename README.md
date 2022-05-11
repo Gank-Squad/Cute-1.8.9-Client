@@ -13,4 +13,5 @@
 
 - Try running using the green arrow at the top, I think everything should work
 
-- If the step above doesn't run the game, click the little dropdown arrow next to that green button, double click **Java Application**, then set project to **Client**, and main class to 'Start', then under the arguments tab put '-Xmx1024M -Xms1024M' under 'VM arguments' 
+- If the step above doesn't run the game, click the little dropdown arrow next to that green button, double click **Java Application**, then set project to **Client**, and main class to 'Start', then under the arguments tab put '-Xmx1024M -Xms1024M' under 'VM arguments'. You should then set working directory to 'other' and paste '${workspace_loc:Client/jars}'. You're then good to hit save and run.
+
