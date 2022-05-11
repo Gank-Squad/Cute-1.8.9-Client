@@ -3,14 +3,12 @@ package cute.modules;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.input.Keyboard;
 
 import cute.Client;
 import cute.eventapi.EventManager;
 import cute.modules.enums.Category;
 import cute.settings.Setting;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 
@@ -30,7 +28,7 @@ public class Module
 	protected boolean _isBinding;
 	protected float   _remainingAnimation = 0.0f;
 
-	protected List<Setting> _settingsList = new ArrayList();
+	protected List<Setting> _settingsList = new ArrayList<Setting>();
 
 	public Module(String name, Category category, String description) 
 	{

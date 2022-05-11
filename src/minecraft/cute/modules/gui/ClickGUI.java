@@ -1,8 +1,8 @@
 package cute.modules.gui;
 
-import cute.ui.ClickUI;
-import cute.modules.enums.Category;
 import cute.modules.Module;
+import cute.modules.enums.Category;
+import cute.ui.ClickUI;
 
 public class ClickGUI extends Module
 {

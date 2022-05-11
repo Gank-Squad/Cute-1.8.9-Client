@@ -6,11 +6,10 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
 
-import cute.modules.enums.Category;
-import cute.Client;
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
+import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
 import cute.settings.Slider;

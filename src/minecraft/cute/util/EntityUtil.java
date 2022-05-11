@@ -5,8 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.boss.EntityWither;
@@ -34,7 +36,9 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
+import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class EntityUtil
 {
@@ -99,4 +103,38 @@ public class EntityUtil
     {
         return entity instanceof EntityLivingBase;
     }
+//    
+//       public boolean isValidType(Entity entity) 
+//       { 
+//    	   if (entity instanceof EntityPlayerSP ) 
+//    		   return false;  
+//    	   
+//    	   if (entity instanceof EntityPlayer) 
+//    		   return ((Boolean)this.player.getValue()).booleanValue();  
+//    	   
+//    	   if (entity instanceof EntityAmbientCreature || 
+//    		   entity instanceof EntityAgeable         || 
+//    		   entity instanceof EntityWaterMob) 
+//    		   return ((Boolean)this.animals.getValue()).booleanValue();  
+//    	   
+//    	   if (entity instanceof EntityLiving && 
+//			 !(entity instanceof net.minecraft.entity.item.EntityArmorStand)) 
+//    		   return ((Boolean)this.mobs.getValue()).booleanValue();  
+//    	   
+//    	   if (entity instanceof EntityItem) 
+//    		   return ((Boolean)this.items.getValue()).booleanValue();  
+//    	   
+//    	   if (entity instanceof EntityFallingBlock) 
+//    		   return true;  
+//    	   
+//    	   return ((Boolean)this.other.getValue()).booleanValue(); 
+//	   } 
 }
+
+
+
+
+
+
+
+

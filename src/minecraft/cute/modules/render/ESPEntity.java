@@ -5,23 +5,22 @@ import java.awt.Color;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL32;
 
-import cute.modules.enums.Category;
-import cute.Client;
 import cute.eventapi.EventTarget;
 import cute.events.RenderLivingEvent;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
+import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
 import cute.settings.Mode;
 import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
-
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
 
 
 public class ESPEntity extends Module
@@ -75,7 +74,8 @@ public class ESPEntity extends Module
 			   mc.getRenderManager().options == null;
     }
     
-    @EventTarget
+    
+	@EventTarget
     public void onEntityRender(RenderLivingEvent event)
     {
     	if(mode.getValue() != 1)
@@ -83,32 +83,41 @@ public class ESPEntity extends Module
     	
     	Entity entity = event.entity;
     	
+    	// pretty sure this is spectators? ?
+    	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase ))
+    		return;
+
     	if(entity instanceof EntityPlayer) 
     	{
     		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
     			return;
+    		RenderUtil.setColor(playerPicker.getColor());
     	}
     	else
     	if(EntityUtil.isHostileMob(entity))
     	{
     		if(!mobs.getValue()) 
     			return;
+    		RenderUtil.setColor(mobsPicker.getColor());
     	}
     	else
     	if(EntityUtil.isPassive(entity)) 
     	{
     		if(!animals.getValue()) 
     			return;
+    		RenderUtil.setColor(animalPicker.getColor());
     	}
     	else
     	if(EntityUtil.isNeutralMob(entity)) 
     	{
     		if(neutral.getValue()) 
     			return;
+    		RenderUtil.setColor(neutralPicker.getColor());
     	}        	  	
     	
     	event.setCancelled(true);
     	
+    	GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
     	GL11.glLineWidth((float)lineWidth.getValue());
         
         GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -116,36 +125,39 @@ public class ESPEntity extends Module
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_LIGHTING);
         
-//        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
-//        GL11.glEnable(GL11.GL_STENCIL_TEST);
-//        GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
+        GL11.glEnable(GL11.GL_STENCIL_TEST);
+        GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
         
-//        GL11.glClear(GL11.GL_FRONT_LEFT);
-//        GL11.glClearStencil(15);
+        GL11.glClear(GL11.GL_FRONT_LEFT);
+        GL11.glClearStencil(15);
 
-//        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-        
-        event.livingBase.renderModelAccessor(event.entity, event.f6, event.f5, event.f8, event.f2, event.f7, 0.0625F);
-
-        GL11.glPopAttrib();
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glHint(GL11.GL_LINE_SMOOTH_HINT,  GL11.GL_NICEST);
         
-//        
-//        GL11.glDisable(GL11.GL_POLYGON_OFFSET_LINE);
-//        GL11.glDisable(GL11.GL_STENCIL_TEST);
+        // render solid color of entity 
+        // event.livingBase.renderModelAccessor(event.entity, event.f6, event.f5, event.f8, event.f2, event.f7, 0.0625F);
+        
+        // render wire outline of entity in white 
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+        RenderUtil.resetColor();
+        event.livingBase.renderModelAccessor(event.entity, event.f6, event.f5, event.f8, event.f2, event.f7, 0.0625F);
+
+          
+        GL11.glDisable(GL11.GL_POLYGON_OFFSET_LINE);
+        GL11.glDisable(GL11.GL_STENCIL_TEST);
         GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
-//        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_BLEND);
         
         GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
-        
+        GL11.glPopAttrib();
+        RenderUtil.resetColor();
     }
 
     @EventTarget
@@ -154,7 +166,7 @@ public class ESPEntity extends Module
 		if(nullCheck())
 			return;
 		
-		if(this.mode.getValue() != 0)
+		if(ESPEntity.mode.getValue() != 0)
 			return;
 		
 		GL11.glPushMatrix();
@@ -174,9 +186,9 @@ public class ESPEntity extends Module
         
         for(Entity entity : this.mc.theWorld.loadedEntityList) 
 		{
-        	// to add 
-        	// support for slimes / ender dragon 
-        	// check other mobs which might not get a hitbox shown
+        	// pretty sure this is spectators? ?
+        	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase ))
+        		continue;
  
         	if(entity instanceof EntityPlayer) 
         	{

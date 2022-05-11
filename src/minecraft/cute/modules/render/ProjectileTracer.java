@@ -9,15 +9,14 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Cylinder;
 
-import cute.modules.enums.Category;
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
+import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
 import cute.settings.Slider;
 import cute.util.RenderUtil;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;

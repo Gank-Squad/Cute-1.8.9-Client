@@ -1,9 +1,9 @@
 package cute.modules.render;
 
-import cute.modules.enums.Category;
 import cute.eventapi.EventTarget;
 import cute.events.EntityViewRenderEvent;
 import cute.modules.Module;
+import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.src.Config;

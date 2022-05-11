@@ -1,14 +1,10 @@
 package cute.modules.render;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import cute.Client;
-import cute.eventapi.EventManager;
 import cute.eventapi.EventTarget;
-import cute.events.ClientTickEvent;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
@@ -16,7 +12,6 @@ import cute.settings.Checkbox;
 import cute.settings.ListSelection;
 import cute.settings.Slider;
 import cute.settings.enums.ListType;
-import cute.ui.components.sub.SearchButton;
 import cute.util.RenderUtil;
 import cute.util.types.VirtualBlock;
 import net.minecraft.block.Block;
@@ -24,12 +19,7 @@ import net.minecraft.block.BlockSlab;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.init.Blocks;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
 public class ESPBlocks extends Module 
@@ -80,9 +70,9 @@ public class ESPBlocks extends Module
 	{
 		super.onEnable();
 		
-		this.DisplayListId = GL11.glGenLists(GL11.GL_TRIANGLE_STRIP) + 3;
+		ESPBlocks.DisplayListId = GL11.glGenLists(GL11.GL_TRIANGLE_STRIP) + 3;
 		
-		this._cooldownTicks = 0;
+		ESPBlocks._cooldownTicks = 0;
 		
 		this.compileDL();
 	}
@@ -100,18 +90,18 @@ public class ESPBlocks extends Module
 	@Override
 	public void onUpdate() 
 	{
-		if(this._cooldownTicks < 1) 
+		if(ESPBlocks._cooldownTicks < 1) 
 		{
 			this.compileDL();
-			this._cooldownTicks = (int)this.RefreshInterval.getValue();
+			ESPBlocks._cooldownTicks = (int)ESPBlocks.RefreshInterval.getValue();
 		}
 		
-		if(!this.IntervalRefresh.getValue()) 
+		if(!ESPBlocks.IntervalRefresh.getValue()) 
 		{
 			return;
 		}
 		
-		this._cooldownTicks--;
+		ESPBlocks._cooldownTicks--;
 	}
 	
 	
@@ -137,7 +127,7 @@ public class ESPBlocks extends Module
                 + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
                 * evt.partialTicks;
 
-        GL11.glLineWidth((float)this.lineWidth.getValue());
+        GL11.glLineWidth((float)ESPBlocks.lineWidth.getValue());
         GL11.glPushMatrix();
         GL11.glTranslated(-doubleX, -doubleY, -doubleZ);
         GL11.glCallList(DisplayListId);
@@ -155,7 +145,7 @@ public class ESPBlocks extends Module
 		if(nullCheck())
 			return;
 		
-		if(this.blocks.getSize() == 0)
+		if(ESPBlocks.blocks.getSize() == 0)
 			return;
 		
 		WorldClient world = this.mc.theWorld;
@@ -182,8 +172,8 @@ public class ESPBlocks extends Module
         int z = (int)player.posZ;
         int y = (int)player.posY;
         
-        int radiusX = (int)this.SearchRadiusX.getValue();
-        int radiusY = (int)this.SearchRadiusY.getValue();
+        int radiusX = (int)ESPBlocks.SearchRadiusX.getValue();
+        int radiusY = (int)ESPBlocks.SearchRadiusY.getValue();
         
         Block bId;
         VirtualBlock vb;
@@ -204,8 +194,8 @@ public class ESPBlocks extends Module
                     if (bId == Blocks.air)
                         continue;
 
-//                    for (VirtualBlock block : VirtualBlock.vBlocks)
-                	for (Object _block : this.blocks.getEnabledItems())
+
+                	for (Object _block : ESPBlocks.blocks.getEnabledItems())
                     {
                 		vb = (VirtualBlock)_block;
                 		
@@ -242,13 +232,13 @@ public class ESPBlocks extends Module
                             					i        , k + vb.y2, j, 
                             					i + vb.x2, k + 1.0f , j + vb.z2);
                         			}
-                        			else {
+                        			else 
+                        			{
                         				RenderUtil.renderBlock(
                             					i        , k        , j, 
                             					i + vb.x2, k + vb.y2, j + vb.z2);
                         			}
-//                        			
-                        			
+
                         			break;
                         	}
                         	

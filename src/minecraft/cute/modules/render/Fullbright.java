@@ -26,13 +26,13 @@ public class Fullbright extends Module
 	@Override
 	public void setup() 
 	{
-		this.addSetting(this.Mode);
+		this.addSetting(Fullbright.Mode);
 	}
 	
 	@Override
 	public void onEnable() 
 	{
-		enable(this.Mode.getValue());
+		enable(Fullbright.Mode.getValue());
 	}
 
 	@Override
