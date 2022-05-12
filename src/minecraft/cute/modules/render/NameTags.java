@@ -9,6 +9,7 @@ import cute.events.RenderNameTagEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
+import cute.util.RenderUtil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -78,9 +79,9 @@ public class NameTags extends Module
         fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, -1);
         
         
-        if(event.entity instanceof EntityPlayer)
-    	{
-    		EntityPlayer player = (EntityPlayer)event.entity;
+//        if(event.entity instanceof EntityPlayer)
+//    	{
+    		EntityPlayer player = mc.thePlayer;//(EntityPlayer)event.entity;
     		
     		int x = -fontrenderer.getStringWidth(str)/2;
     		
@@ -91,16 +92,24 @@ public class NameTags extends Module
                 if (stack == null) 
                 	continue;
                 
-                GlStateManager.disableDepth();
+                GlStateManager.disableDepth();        
                 renderitem.renderitemForNameTag(stack, x, -20, 0);
-                renderitem.renderItemOverlays(fontrenderer, stack, x, -20);
+                renderitem.renderItemOverlayIntoGUIForNameTags(fontrenderer, stack, x, -20, null);
                 GlStateManager.enableDepth();
-                GlStateManager.depthMask(true);
+
                 renderitem.renderitemForNameTag(stack, x, -20, 0);
-                renderitem.renderItemOverlays(fontrenderer, stack, x, -20);
+                GlStateManager.disableDepth();
+                renderitem.renderItemOverlayIntoGUIForNameTags(fontrenderer, stack, x, -20, null);
+                GlStateManager.enableDepth();
                 x += 14;
             }	
-    	}
+    		
+    		GlStateManager.enableDepth();
+    		
+    		// if you see enchantment glints on stuff when names are rendered, alpha is 
+    		// probably turned off somewhere above, so make sure to enable it 
+//    		GlStateManager.enableAlpha();
+//    	}
     }
     
     

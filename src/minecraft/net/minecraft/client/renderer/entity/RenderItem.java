@@ -2,6 +2,9 @@ package net.minecraft.client.renderer.entity;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockDoublePlant;
@@ -483,7 +486,7 @@ public class RenderItem implements IResourceManagerReloadListener
          this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
          this.textureManager.getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);
          GlStateManager.enableRescaleNormal();
-         GlStateManager.enableAlpha();
+         
          GlStateManager.alphaFunc(516, 0.1F);
          GlStateManager.enableBlend();
          GlStateManager.blendFunc(770, 771);
@@ -492,28 +495,29 @@ public class RenderItem implements IResourceManagerReloadListener
          /////////////////////////////////////// was setup function
          GlStateManager.translate(x, y, z);
          GlStateManager.translate(8.0F, 8.0F, 0.0F);
-         
-         GlStateManager.scale(1.0F, 1.0F, -1.0F);
-         GlStateManager.scale(0.5F, 0.5F, 0.5F);
-         
+
          if (ibakedmodel.isGui3d())
          {
-        	 GlStateManager.scale(40.0F, 40.0F, 40.0F);
-        	 GlStateManager.rotate(-240.0F, 0F, 1.0F, 0F);
+        	 GlStateManager.scale(24.0F, 24.0F, 24.0F);
+
+        	 // slow rotation
+        	 float f = (float)((Minecraft.getSystemTime() / 16) % 360) ;
+        	 GlStateManager.rotate(f, 0.0F, 1.0F, 0.0F);
+//        	 GlStateManager.rotate(-240.0F, 0F, 1.0F, 0F);
         	 GlStateManager.rotate(-180.0F, 0F, 0.0F, 1.0F);
              GlStateManager.enableLighting();
          }
          else
          {
-             GlStateManager.scale(48, 48, 48);
+             GlStateManager.scale(32, 32, 32);
              GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+             
              GlStateManager.disableLighting();
          }
          //////////////////////////////////////
-     
-
+         
          this.renderItem(stack, ibakedmodel);
-         GlStateManager.disableAlpha();
+
          GlStateManager.disableRescaleNormal();
          GlStateManager.disableLighting();
          GlStateManager.popMatrix();
@@ -705,6 +709,73 @@ public class RenderItem implements IResourceManagerReloadListener
         }
     }
 
+    public void renderItemOverlayIntoGUIForNameTags(FontRenderer fr, ItemStack stack, int xPosition, int yPosition, String text)
+    {
+        if (stack == null)
+        	return;
+        
+        if (stack.stackSize != 1 || text != null)
+        {
+            String s = text == null ? String.valueOf(stack.stackSize) : text;
+
+            if (text == null && stack.stackSize < 1)
+            {
+                s = EnumChatFormatting.RED + String.valueOf(stack.stackSize);
+            }
+            
+            // basically removed depth from here and below, cause we're doing it where we want it
+            GlStateManager.disableLighting();
+            GlStateManager.disableBlend();
+            fr.drawStringWithShadow(s, (float)(xPosition + 19 - 2 - fr.getStringWidth(s)), (float)(yPosition + 6 + 3), 16777215);
+            GlStateManager.enableLighting();
+            GlStateManager.enableBlend();
+        }
+
+        if (ReflectorForge.isItemDamaged(stack))
+        {
+            int j1 = (int)Math.round(13.0D - (double)stack.getItemDamage() * 13.0D / (double)stack.getMaxDamage());
+            int i = (int)Math.round(255.0D - (double)stack.getItemDamage() * 255.0D / (double)stack.getMaxDamage());
+
+            if (Reflector.ForgeItem_getDurabilityForDisplay.exists())
+            {
+                double d0 = Reflector.callDouble(stack.getItem(), Reflector.ForgeItem_getDurabilityForDisplay, new Object[] {stack});
+                j1 = (int)Math.round(13.0D - d0 * 13.0D);
+                i = (int)Math.round(255.0D - d0 * 255.0D);
+            }
+
+            GlStateManager.disableLighting();
+            GlStateManager.disableTexture2D();
+            GlStateManager.disableAlpha();
+            GlStateManager.disableBlend();
+            Tessellator tessellator = Tessellator.getInstance();
+            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+            this.draw(worldrenderer, xPosition + 2, yPosition + 13, 13, 2, 0, 0, 0, 255);
+            this.draw(worldrenderer, xPosition + 2, yPosition + 13, 12, 1, (255 - i) / 4, 64, 0, 255);
+            int j = 255 - i;
+            int k = i;
+            int l = 0;
+
+            if (Config.isCustomColors())
+            {
+                int i1 = CustomColors.getDurabilityColor(i);
+
+                if (i1 >= 0)
+                {
+                    j = i1 >> 16 & 255;
+                    k = i1 >> 8 & 255;
+                    l = i1 >> 0 & 255;
+                }
+            }
+
+            this.draw(worldrenderer, xPosition + 2, yPosition + 13, j1, 1, j, k, l, 255);
+            GlStateManager.enableBlend();
+            GlStateManager.enableAlpha();
+            GlStateManager.enableTexture2D();
+            GlStateManager.enableLighting();
+        }
+    }
+    
+    
     /**
      * Draw with the WorldRenderer
      *  
