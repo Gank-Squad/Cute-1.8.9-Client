@@ -475,6 +475,54 @@ public class RenderItem implements IResourceManagerReloadListener
         return itemTranformVec.scale.x < 0.0F ^ itemTranformVec.scale.y < 0.0F ^ itemTranformVec.scale.z < 0.0F;
     }
 
+    public void renderitemForNameTag(ItemStack stack, int x, int y, int z)
+    {
+    	 this.renderItemGui = true;
+         IBakedModel ibakedmodel = this.itemModelMesher.getItemModel(stack);
+         GlStateManager.pushMatrix();
+         this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
+         this.textureManager.getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);
+         GlStateManager.enableRescaleNormal();
+         GlStateManager.enableAlpha();
+         GlStateManager.alphaFunc(516, 0.1F);
+         GlStateManager.enableBlend();
+         GlStateManager.blendFunc(770, 771);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+         /////////////////////////////////////// was setup function
+         GlStateManager.translate(x, y, z);
+         GlStateManager.translate(8.0F, 8.0F, 0.0F);
+         
+         GlStateManager.scale(1.0F, 1.0F, -1.0F);
+         GlStateManager.scale(0.5F, 0.5F, 0.5F);
+         
+         if (ibakedmodel.isGui3d())
+         {
+        	 GlStateManager.scale(40.0F, 40.0F, 40.0F);
+        	 GlStateManager.rotate(-240.0F, 0F, 1.0F, 0F);
+        	 GlStateManager.rotate(-180.0F, 0F, 0.0F, 1.0F);
+             GlStateManager.enableLighting();
+         }
+         else
+         {
+             GlStateManager.scale(48, 48, 48);
+             GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+             GlStateManager.disableLighting();
+         }
+         //////////////////////////////////////
+     
+
+         this.renderItem(stack, ibakedmodel);
+         GlStateManager.disableAlpha();
+         GlStateManager.disableRescaleNormal();
+         GlStateManager.disableLighting();
+         GlStateManager.popMatrix();
+         this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
+         this.textureManager.getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
+         this.renderItemGui = false;
+    }
+    
+    
     public void renderItemIntoGUI(ItemStack stack, int x, int y)
     {
         this.renderItemGui = true;

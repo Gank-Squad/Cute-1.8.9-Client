@@ -4,25 +4,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
+import cute.eventapi.EventTarget;
+import cute.events.ClientTickEvent;
+import cute.events.KeyDownEvent;
+import cute.events.KeyUpEvent;
+import cute.modules.Module;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
 import cute.modules.render.Fullbright;
+import cute.modules.render.NameTags;
 import cute.modules.render.NoRender;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
-import cute.modules.test.TestModule;
 import net.minecraft.client.gui.GuiScreen;
-import cute.eventapi.EventManager;
-import cute.eventapi.EventTarget;
-import cute.events.ClientTickEvent;
-import cute.events.KeyDownEvent;
-import cute.events.KeyUpEvent;
-import cute.events.KeyboardEvent;
-import cute.modules.Module;
 
 public class ModuleManager extends BaseManager
 {
@@ -42,6 +38,7 @@ public class ModuleManager extends BaseManager
 					new Fullbright(),
 					new Tracers(),
 					new ProjectileTracer(),
+					new NameTags(),
 					new NoRender()
 //					
 //					new AntiPotion()

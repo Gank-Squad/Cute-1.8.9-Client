@@ -25,6 +25,9 @@ import net.optifine.entity.model.IEntityRenderer;
 import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
 
+import cute.eventapi.EventManager;
+import cute.events.RenderNameTagEvent;
+
 public abstract class Render<T extends Entity> implements IEntityRenderer
 {
     private static final ResourceLocation shadowTextures = new ResourceLocation("textures/misc/shadow.png");
@@ -381,26 +384,34 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             Tessellator tessellator = Tessellator.getInstance();
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-            int i = 0;
 
-            if (str.equals("deadmau5"))
-            {
-                i = -10;
+            RenderNameTagEvent EVENT_ = new RenderNameTagEvent<T>(tessellator, worldrenderer, fontrenderer, entityIn, str, x, y, z);
+            EventManager.call(EVENT_);
+            
+            if(!EVENT_.isCancelled())
+            {            
+	            int i = 0;
+	            
+	            if (str.equals("deadmau5"))
+	            {
+	                i = -10;
+	            }
+	
+	            int j = fontrenderer.getStringWidth(str) / 2;
+	            GlStateManager.disableTexture2D();
+	            worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+	            worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+	            worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+	            worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+	            worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+	            tessellator.draw();
+	            GlStateManager.enableTexture2D();
+	            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
+	            GlStateManager.enableDepth();
+	            GlStateManager.depthMask(true);
+	            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, -1);
             }
-
-            int j = fontrenderer.getStringWidth(str) / 2;
-            GlStateManager.disableTexture2D();
-            worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            tessellator.draw();
-            GlStateManager.enableTexture2D();
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
-            GlStateManager.enableDepth();
-            GlStateManager.depthMask(true);
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, -1);
+            
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

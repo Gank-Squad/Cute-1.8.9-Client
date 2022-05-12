@@ -1,6 +1,7 @@
 package cute.ui.components;
 
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 import cute.modules.Module;
@@ -146,6 +147,7 @@ public class Button extends Component
 		
 		if(this.mod.isEnabled())
 		{
+			RenderUtil.setColor(new Color(0, 200, 0));
 			RenderUtil.renderRect(x, y, x2, y2);
 		}
 
