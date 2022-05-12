@@ -498,7 +498,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
          if (ibakedmodel.isGui3d())
          {
-        	 GlStateManager.scale(24.0F, 24.0F, 24.0F);
+        	 GlStateManager.scale(22.0F, 22.0F, 22.0F);
 
         	 // slow rotation
         	 float f = (float)((Minecraft.getSystemTime() / 16) % 360) ;

@@ -18,6 +18,7 @@ import cute.modules.render.NameTags;
 import cute.modules.render.NoRender;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
+import cute.modules.test.FakePlayer;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ModuleManager extends BaseManager
@@ -30,7 +31,8 @@ public class ModuleManager extends BaseManager
 	
 	public static List<Module> modules = Arrays.asList
 				(
-//					new TestModule(),
+					new FakePlayer(),
+					
 					new ClickGUI(),
 //					
 					new ESPBlocks(),

@@ -185,7 +185,7 @@ public class ESPEntity extends Module
         
         for(Entity entity : this.mc.theWorld.loadedEntityList) 
 		{
-        	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
+        	if(entity instanceof EntityPlayerSP )//|| !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
         		continue;
  
         	if(entity instanceof EntityPlayer) 
