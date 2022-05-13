@@ -9,8 +9,10 @@ import cute.events.ClientTickEvent;
 import cute.events.KeyDownEvent;
 import cute.events.KeyUpEvent;
 import cute.modules.Module;
+import cute.modules.bot.FakePlayer;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
+import cute.modules.render.DataViewer;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
 import cute.modules.render.Fullbright;
@@ -18,7 +20,6 @@ import cute.modules.render.NameTags;
 import cute.modules.render.NoRender;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
-import cute.modules.test.FakePlayer;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ModuleManager extends BaseManager
@@ -37,6 +38,7 @@ public class ModuleManager extends BaseManager
 //					
 					new ESPBlocks(),
 					new ESPEntity(),
+					new DataViewer(),
 					new Fullbright(),
 					new Tracers(),
 					new ProjectileTracer(),

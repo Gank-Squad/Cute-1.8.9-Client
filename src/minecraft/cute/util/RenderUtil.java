@@ -356,7 +356,7 @@ public class RenderUtil
 //	        ts.draw();// Ends Z.
 	    }
 	    
-	    public static void renderTracerFromPlayer(Entity entity, double hDistanceMax, double vDistanceMax, Color c) 
+	    public static void renderTracerFromPlayer(Entity entity, double radius, double alphaSensitivity, Color c) 
 	    {
 	    	Vec3 vec = mc.thePlayer.getPositionVector();
 	
@@ -374,38 +374,32 @@ public class RenderUtil
 				my += Math.cos(pitch) * drawBeforeCameraDist;
 			}
 			
-			renderTracer(mx, my, mz, entity, hDistanceMax, vDistanceMax, c);
+			renderTracer(mx, my, mz, entity, radius, alphaSensitivity, c);
 	    }
 	    
-	    public static void renderTracer(double fx, double fy, double fz, Entity entity, double hDistanceMax, double vDistanceMax, Color c)
+	    public static void renderTracer(double fx, double fy, double fz, Entity entity, double radius, double alphaSensitivity, Color c)
 	    {
-			double distance = entity.getDistanceToEntity(mc.thePlayer);
-			
-			if (distance > hDistanceMax) 
+	    	double distance = entity.getDistanceToEntity(mc.thePlayer);
+	    	
+	    	if(distance > radius)
+	    		return;
+
+	    	alphaSensitivity = alphaSensitivity == 0 ? -1 : alphaSensitivity;
+	    	
+			double alpha = (1d - (distance / radius * alphaSensitivity)) * 255d;
+
+			if (alpha < 26d) 
 			{
-				return;
+				alpha = 26d; // 26 seems to be the lowest visible alpha 
 			}
-	
-			if (Math.abs((mc.thePlayer.posY - entity.posY)) > vDistanceMax) 
+			else if (alpha > 255d) 
 			{
-				return;
+				alpha = 255d;
 			}
-	
-			// calculate alpha based on distance - the further the more transparent
-			float alpha = 1 - (float)(distance / (hDistanceMax / 2D));
-			
-			if (alpha < 0.01F) 
-			{
-				alpha = 0.01F;
-			}
-			else if (alpha > 1F) 
-			{
-				alpha = 1F;
-			}
-			
+
 			float f2 = (entity.height / 2f)  + (entity.isSneaking() ? 0.25F : 0.0F);
 			
-			setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), (int)(alpha * 255)));
+			GL11.glColor4d(c.getRed()/255d, c.getGreen()/255d, c.getBlue()/255d, alpha/255);
 			GL11.glVertex3d(fx, fy, fz);
 			GL11.glVertex3d(entity.lastTickPosX, entity.posY + f2, entity.lastTickPosZ);
 	    }

@@ -113,7 +113,7 @@ public class NameTags extends Module
 	
 	        GlStateManager.enableTexture2D();
 	
-	        // this is here so that it goes through walls good
+	        // this is here so that it goes through walls
 	        fontrenderer.drawString(str, -j, i, -1);
 	        
 	        GlStateManager.enableDepth();
@@ -138,39 +138,41 @@ public class NameTags extends Module
             if (stack == null) 
             	continue;
             
-            // render item name and picture through walls 
+            // render item and overlay above entities behind it
+            GlStateManager.depthMask(true);
+            renderitem.renderitemForNameTag(stack, x, -20, 0);
+            renderitem.renderItemOverlayIntoGUIForNameTags(fontrenderer, stack, x, -20, null);
+            
+            // render item and overlay through walls  
             GlStateManager.disableDepth();        
             renderitem.renderitemForNameTag(stack, x, -20, 0);
             renderitem.renderItemOverlayIntoGUIForNameTags(fontrenderer, stack, x, -20, null);
             GlStateManager.enableDepth();
 
-            // render picture on top of entities behind it 
-            renderitem.renderitemForNameTag(stack, x, -20, 0);
-            
-            // render name on top of entities behind it ??
-            GlStateManager.disableDepth();
-            renderitem.renderItemOverlayIntoGUIForNameTags(fontrenderer, stack, x, -20, null);
-            
             int y = 0;
             for(String enchant : getEnchantList(stack))
-            {
-            	GlStateManager.pushMatrix();
-            	GlStateManager.translate(8.0F, 8.0F, 0.0F);
-                GlStateManager.depthMask(true);
-                GlStateManager.disableLighting();
-                
-            	float _x = x  - fontrenderer.getStringWidth(enchant) + 6f;
-            	float _y = -38f + y;
+            {                
+                // note - when I removed the push matrix and translate I added +8 to _x and _y
+                // this is becase renderitemForNameTag translates by +8 in x and y,
+            	float _x = x  - fontrenderer.getStringWidth(enchant) + 14f;
+            	float _y = -30f + y;
             	
-            	RenderUtil.resetColor();
+            	GlStateManager.disableLighting();
+            	GlStateManager.depthMask(true);
             	
+            	// render enchant above entities behind it
             	fontrenderer.drawStringWithShadow(enchant, _x, _y, -1);
+            	
+            	// render enchant through walls 
+            	GlStateManager.disableDepth();
+            	fontrenderer.drawStringWithShadow(enchant, _x, _y, -1);
+            	
+            	GlStateManager.enableDepth();
             	GlStateManager.enableLighting();
-            	GlStateManager.popMatrix();
+
             	y -= 10;
             }
-            GlStateManager.enableDepth();
-            
+
             x += 16;
         }	
 		

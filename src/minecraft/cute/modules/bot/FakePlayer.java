@@ -1,4 +1,4 @@
-package cute.modules.test;
+package cute.modules.bot;
 
 import java.util.UUID;
 

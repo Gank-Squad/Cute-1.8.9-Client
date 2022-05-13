@@ -47,9 +47,9 @@ public class Tracers extends Module
     public static ColorPicker itemsPicker = new ColorPicker(items, "Item Picker", new Color(199, 196, 19));
 
     public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
-    public static Slider horizontalRadius = new Slider("X Radius", 1, 100, 300D, 1);
-    public static Slider verticalRadius = new Slider("Y Radius", 1, 50, 300D, 1);
-    public static Slider firstPersonRenderPoint = new Slider("Render From Y", 0, 99, 100, 1);
+    public static Slider radius = new Slider("Radius", 1, 100, 300D, 1);
+    public static Slider alphaSensitivity = new Slider("Alpha Sensitivity", 0, 1, 2, 1);
+    public static Slider firstPersonRenderPoint = new Slider("Y Render Point", 0, 99, 100, 1);
     
     @Override
     public void setup() 
@@ -61,8 +61,8 @@ public class Tracers extends Module
         addSetting(vehicles);
         addSetting(items);
         addSetting(lineWidth);
-        addSetting(horizontalRadius);
-        addSetting(verticalRadius);
+        addSetting(radius);
+        addSetting(alphaSensitivity);
         addSetting(firstPersonRenderPoint);
     }
     
@@ -124,7 +124,7 @@ public class Tracers extends Module
         	{
         		if(players.getValue() && entity.getName() != this.mc.thePlayer.getName()) 
         		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, horizontalRadius.getValue(), verticalRadius.getValue(), playerPicker.getColor());
+        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), playerPicker.getColor());
         		}
         		continue;
         	}
@@ -133,7 +133,7 @@ public class Tracers extends Module
         	{
         		if(items.getValue()) 
         		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, horizontalRadius.getValue(), verticalRadius.getValue(), itemsPicker.getColor());
+        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), itemsPicker.getColor());
         		}
         		continue;
         	}
@@ -142,7 +142,7 @@ public class Tracers extends Module
         	{
         		if(mobs.getValue()) 
         		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, horizontalRadius.getValue(), verticalRadius.getValue(), mobsPicker.getColor());
+        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), mobsPicker.getColor());
         		}
         		continue;
         	}
@@ -151,7 +151,7 @@ public class Tracers extends Module
         	{
         		if(animals.getValue()) 
         		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, horizontalRadius.getValue(), verticalRadius.getValue(), animalPicker.getColor());
+        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), animalPicker.getColor());
         		}
         		continue;
         	}
@@ -160,7 +160,7 @@ public class Tracers extends Module
         	{
         		if(neutral.getValue()) 
         		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, horizontalRadius.getValue(), verticalRadius.getValue(), neutralPicker.getColor());
+        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), neutralPicker.getColor());
         		}
         		continue;
         	}        	
@@ -169,7 +169,7 @@ public class Tracers extends Module
         	{
         		if(vehicles.getValue()) 
         		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, horizontalRadius.getValue(), verticalRadius.getValue(), vehiclesPicker.getColor());
+        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), vehiclesPicker.getColor());
         		}
         	}			
 		}

@@ -515,7 +515,7 @@ public class RenderItem implements IResourceManagerReloadListener
              GlStateManager.disableLighting();
          }
          //////////////////////////////////////
-         
+         GlStateManager.enableAlpha();
          this.renderItem(stack, ibakedmodel);
 
          GlStateManager.disableRescaleNormal();
@@ -725,10 +725,10 @@ public class RenderItem implements IResourceManagerReloadListener
             
             // basically removed depth from here and below, cause we're doing it where we want it
             GlStateManager.disableLighting();
-            GlStateManager.disableBlend();
+//            GlStateManager.disableBlend();
             fr.drawStringWithShadow(s, (float)(xPosition + 19 - 2 - fr.getStringWidth(s)), (float)(yPosition + 6 + 3), 16777215);
             GlStateManager.enableLighting();
-            GlStateManager.enableBlend();
+//            GlStateManager.enableBlend();
         }
 
         if (ReflectorForge.isItemDamaged(stack))

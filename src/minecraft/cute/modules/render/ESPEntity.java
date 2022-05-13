@@ -109,7 +109,7 @@ public class ESPEntity extends Module
     	else
     	if(EntityUtil.isNeutralMob(entity)) 
     	{
-    		if(neutral.getValue()) 
+    		if(!neutral.getValue()) 
     			return;
     		RenderUtil.setColor(neutralPicker.getColor());
     	}        	  	
@@ -141,7 +141,6 @@ public class ESPEntity extends Module
         
         // render wire outline of entity in white 
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-        RenderUtil.resetColor();
         event.livingBase.renderModelAccessor(event.entity, event.f6, event.f5, event.f8, event.f2, event.f7, 0.0625F);
 
           
@@ -187,7 +186,7 @@ public class ESPEntity extends Module
 		{
         	if(entity instanceof EntityPlayerSP )//|| !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
         		continue;
- 
+        	
         	if(entity instanceof EntityPlayer) 
         	{
         		if(players.getValue() && entity.getName() != this.mc.thePlayer.getName()) 
