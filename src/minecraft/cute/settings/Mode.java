@@ -30,7 +30,11 @@ public class Mode extends Setting
 	
 	public void setMode(int mode) 
 	{
+		if(this._mode == mode)
+			return;
+		
 		this._mode = mode;
+		super.update();
 	}
 	
 	public int getValue() 
@@ -46,5 +50,6 @@ public class Mode extends Setting
 	public void nextMode()
 	{
 		this._mode = this.getNextMode();
+		super.update();
 	}
 }

@@ -1,9 +1,10 @@
 package cute.modules.render;
 
+import cute.eventapi.EventTarget;
+import cute.events.SettingChangedEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
 import cute.settings.Mode;
-
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
@@ -32,12 +33,15 @@ public class Fullbright extends Module
 	@Override
 	public void onEnable() 
 	{
+		super.onEnable();
 		enable(Fullbright.Mode.getValue());
 	}
 
 	@Override
 	public void onDisable() 
 	{
+		super.onDisable();
+	
 		if(nullCheck())
 			return;
 	
@@ -51,7 +55,12 @@ public class Fullbright extends Module
 		this._oldBrightness = -1;
 	}
 	
-	
+	@EventTarget
+	public void modeChangedEvent(SettingChangedEvent e)
+	{
+		enable(Fullbright.Mode.getValue());
+	}
+
 	public void enable(int mode) 
 	{		
 		switch(mode)
@@ -81,7 +90,7 @@ public class Fullbright extends Module
 				if(nullCheck())
 					return;
 				
-				mc.thePlayer.addPotionEffect(new PotionEffect(Potion.nightVision.id, 80950, 1, false, false));
+				mc.thePlayer.addPotionEffect(new PotionEffect(Potion.nightVision.id, Integer.MAX_VALUE, 1, false, false));
 				
 				this.hadNV = true;
 				return;

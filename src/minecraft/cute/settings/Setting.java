@@ -3,6 +3,8 @@ package cute.settings;
 import java.util.ArrayList;
 import java.util.List;
 
+import cute.eventapi.EventManager;
+import cute.events.SettingChangedEvent;
 import cute.settings.enums.SettingType;
 
 public class Setting 
@@ -13,6 +15,10 @@ public class Setting
 	
 	protected List<SubSetting> _subs = new ArrayList();
 	
+	public void update()
+	{
+		EventManager.call(new SettingChangedEvent());
+	}
 
 	public SettingType getSettingType()
 	{
