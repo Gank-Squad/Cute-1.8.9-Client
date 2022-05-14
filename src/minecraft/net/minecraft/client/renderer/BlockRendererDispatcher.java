@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer;
 
+import cute.eventapi.EventManager;
+import cute.events.BlockRenderEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -60,23 +62,29 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener
             {
                 return false;
             }
-            else
+            
+            BlockRenderEvent EVENT = new BlockRenderEvent(state.getBlock());
+            EventManager.call(EVENT);
+            
+            if(EVENT.isCancelled())
             {
-                switch (i)
-                {
-                    case 1:
-                        return this.fluidRenderer.renderFluid(blockAccess, state, pos, worldRendererIn);
+            	return false;
+            }
+            
+            switch (i)
+            {
+                case 1:
+                    return this.fluidRenderer.renderFluid(blockAccess, state, pos, worldRendererIn);
 
-                    case 2:
-                        return false;
+                case 2:
+                    return false;
 
-                    case 3:
-                        IBakedModel ibakedmodel = this.getModelFromBlockState(state, blockAccess, pos);
-                        return this.blockModelRenderer.renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn);
+                case 3:
+                    IBakedModel ibakedmodel = this.getModelFromBlockState(state, blockAccess, pos);
+                    return this.blockModelRenderer.renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn);
 
-                    default:
-                        return false;
-                }
+                default:
+                    return false;
             }
         }
         catch (Throwable throwable)

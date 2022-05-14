@@ -20,6 +20,7 @@ import cute.modules.render.NameTags;
 import cute.modules.render.NoRender;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
+import cute.modules.render.XRay;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ModuleManager extends BaseManager
@@ -43,8 +44,8 @@ public class ModuleManager extends BaseManager
 					new Tracers(),
 					new ProjectileTracer(),
 					new NameTags(),
-					new NoRender()
-//					
+					new NoRender(),
+					new XRay()
 //					new AntiPotion()
 				);
 	

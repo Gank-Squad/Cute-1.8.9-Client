@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer;
 
+import java.awt.Color;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -14,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.google.common.primitives.Floats;
 
+import cute.modules.render.XRay;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -460,6 +462,9 @@ public class WorldRenderer
             }
         }
 
+        if (XRay.isOn()) 
+        	j = -1; //new Color(255,255,255,255).getRGB();
+        
         this.rawIntBuffer.put(i, j);
     }
 

@@ -2,6 +2,8 @@ package net.minecraft.client.renderer;
 
 import java.util.BitSet;
 import java.util.List;
+
+import cute.modules.render.XRay;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -46,7 +48,8 @@ public class BlockModelRenderer
     {
         Block block = blockStateIn.getBlock();
         block.setBlockBoundsBasedOnState(blockAccessIn, blockPosIn);
-        return this.renderModel(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, true);
+        return this.renderModel(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, XRay.checkSides.getValue() || !XRay.isOn());
+       // return this.renderModel(blockAccessIn, modelIn, blockStateIn, blockPosIn, worldRendererIn, true);
     }
 
     public boolean renderModel(IBlockAccess blockAccessIn, IBakedModel modelIn, IBlockState blockStateIn, BlockPos blockPosIn, WorldRenderer worldRendererIn, boolean checkSides)

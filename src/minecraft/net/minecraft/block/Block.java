@@ -82,7 +82,8 @@ public class Block
         }
         public String getPlaceSound()
         {
-            return "random.anvil_land";
+        	return "step.stone";
+            // return "random.anvil_land";
         }
     };
     public static final Block.SoundType SLIME_SOUND = new Block.SoundType("slime", 1.0F, 1.0F)
@@ -470,7 +471,13 @@ public class Block
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        return side == EnumFacing.DOWN && this.minY > 0.0D ? true : (side == EnumFacing.UP && this.maxY < 1.0D ? true : (side == EnumFacing.NORTH && this.minZ > 0.0D ? true : (side == EnumFacing.SOUTH && this.maxZ < 1.0D ? true : (side == EnumFacing.WEST && this.minX > 0.0D ? true : (side == EnumFacing.EAST && this.maxX < 1.0D ? true : !worldIn.getBlockState(pos).getBlock().isOpaqueCube())))));
+        return side == EnumFacing.DOWN  && this.minY > 0.0D ? true : (
+        	   side == EnumFacing.UP    && this.maxY < 1.0D ? true : (
+        	   side == EnumFacing.NORTH && this.minZ > 0.0D ? true : (
+        	   side == EnumFacing.SOUTH && this.maxZ < 1.0D ? true : (
+               side == EnumFacing.WEST  && this.minX > 0.0D ? true : (
+        	   side == EnumFacing.EAST  && this.maxX < 1.0D ? true : 
+        		   !worldIn.getBlockState(pos).getBlock().isOpaqueCube())))));
     }
 
     /**

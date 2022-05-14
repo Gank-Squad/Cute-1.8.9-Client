@@ -1,6 +1,9 @@
 package net.minecraft.client.renderer.chunk;
 
 import com.google.common.collect.Sets;
+
+import cute.modules.render.XRay;
+
 import java.nio.FloatBuffer;
 import java.util.BitSet;
 import java.util.EnumMap;
@@ -235,6 +238,11 @@ public class RenderChunk
                 {
                     aenumworldblocklayer = this.blockLayersSingle;
                     aenumworldblocklayer[0] = block.getBlockLayer();
+                    
+                    if(XRay.isOn())
+                    {
+                    	aenumworldblocklayer[0] = EnumWorldBlockLayer.TRANSLUCENT;
+                    }
                 }
 
                 for (int j = 0; j < aenumworldblocklayer.length; ++j)

@@ -16,27 +16,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.gson.JsonSyntaxException;
-import net.optifine.CustomColors;
-import net.optifine.CustomSky;
-import net.optifine.DynamicLights;
-import net.optifine.Lagometer;
-import net.optifine.RandomEntities;
-import net.optifine.SmartAnimations;
-import net.optifine.model.BlockModelUtils;
-import net.optifine.reflect.Reflector;
-import net.optifine.render.ChunkVisibility;
-import net.optifine.render.CloudRenderer;
-import net.optifine.render.RenderEnv;
-import net.optifine.shaders.Shaders;
-import net.optifine.shaders.ShadersRender;
-import net.optifine.shaders.ShadowUtils;
-import net.optifine.shaders.gui.GuiShaderOptions;
-import net.optifine.util.ChunkUtils;
-import net.optifine.util.RenderChunkUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -44,6 +23,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import com.google.gson.JsonSyntaxException;
+
+import cute.modules.render.XRay;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockEnderChest;
@@ -117,6 +102,23 @@ import net.minecraft.world.WorldProvider;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.optifine.CustomColors;
+import net.optifine.CustomSky;
+import net.optifine.DynamicLights;
+import net.optifine.Lagometer;
+import net.optifine.RandomEntities;
+import net.optifine.SmartAnimations;
+import net.optifine.model.BlockModelUtils;
+import net.optifine.reflect.Reflector;
+import net.optifine.render.ChunkVisibility;
+import net.optifine.render.CloudRenderer;
+import net.optifine.render.RenderEnv;
+import net.optifine.shaders.Shaders;
+import net.optifine.shaders.ShadersRender;
+import net.optifine.shaders.ShadowUtils;
+import net.optifine.shaders.gui.GuiShaderOptions;
+import net.optifine.util.ChunkUtils;
+import net.optifine.util.RenderChunkUtils;
 
 public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListener
 {
@@ -1249,7 +1251,9 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
                 for (EnumFacing enumfacing : flag1 ? ChunkVisibility.getFacingsNotOpposite(renderglobal$containerlocalrenderinformation5.setFacing) : EnumFacing.VALUES)
                 {
-                    if (!flag1 || enumfacing1 == null || compiledchunk.isVisible(enumfacing1.getOpposite(), enumfacing))
+                	
+                	if (XRay.isOn() || !flag1 || enumfacing1 == null || compiledchunk.isVisible(enumfacing1.getOpposite(), enumfacing))
+                	//if (!flag1 || enumfacing1 == null || compiledchunk.isVisible(enumfacing1.getOpposite(), enumfacing))
                     {
                         RenderChunk renderchunk4 = this.getRenderChunkOffset(blockpos, renderchunk6, enumfacing, flag3, j);
 
