@@ -12,7 +12,6 @@ import cute.modules.Module;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.Slider;
-import cute.util.RenderUtil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -38,7 +37,6 @@ public class NameTags extends Module
     public static Slider scaleDistance = new Slider("Scale Distance", 1d, 20d, 100d, 1);
     public static Slider scale         = new Slider("Size Scale", 0.01d, 0.25d, 1d, 1);
 
-    
     @Override
     public void setup()
     {
@@ -79,6 +77,13 @@ public class NameTags extends Module
     @EventTarget
     public void onRenderWorld(RenderNameTagEvent event) 
     {
+    	// untested but i think when in pvp on hypixel the anti ka bots copy the player gear
+    	// so it renders twice the armor above their head, this is supposed to avoid bots now idk if it works
+    	if(!(event.entity instanceof EntityPlayer) || 
+    	     event.entity.isDead || 
+    	    !event.entity.isEntityAlive())
+    		return;
+    	
     	event.setCancelled(true);
     	
     	FontRenderer fontrenderer = event.fontRenderer;
@@ -123,8 +128,12 @@ public class NameTags extends Module
     	}
         
         
-        if(!NameTags.armor.getValue() || !(event.entity instanceof EntityPlayer))
-        	return;
+        if(!NameTags.armor.getValue() || !(event.entity instanceof EntityPlayer)) 
+        {
+        	GlStateManager.enableDepth();
+        	return;	
+        }
+        
         
         
     	EntityPlayer player = (EntityPlayer)event.entity;
@@ -161,7 +170,7 @@ public class NameTags extends Module
             	GlStateManager.depthMask(true);
             	
             	// render enchant above entities behind it
-            	fontrenderer.drawStringWithShadow(enchant, _x, _y, -1);
+            	 fontrenderer.drawStringWithShadow(enchant, _x, _y, -1);
             	
             	// render enchant through walls 
             	GlStateManager.disableDepth();
