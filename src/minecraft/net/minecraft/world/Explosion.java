@@ -3,6 +3,9 @@ package net.minecraft.world;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+
+import cute.modules.audio.Sounds;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -173,7 +176,7 @@ public class Explosion
      */
     public void doExplosionB(boolean spawnParticles)
     {
-        this.worldObj.playSoundEffect(this.explosionX, this.explosionY, this.explosionZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+        this.worldObj.playSoundEffect(this.explosionX, this.explosionY, this.explosionZ, "random.explode", Sounds.isOn() ? (float)Sounds.explosions.getValue() : 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 
         if (this.explosionSize >= 2.0F && this.isSmoking)
         {

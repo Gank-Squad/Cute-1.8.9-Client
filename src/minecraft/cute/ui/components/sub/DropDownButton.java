@@ -132,17 +132,28 @@ public class DropDownButton extends Component
 			int textColor = this.textColorInt;
 					
 			// this control is also supposed to work for pots, so need the proper toString
-			if(this.type == ListType.BLOCK)
+			
+			switch(this.type)
 			{
-				VirtualBlock vb = ((VirtualBlock)this.setting.getItem(i)); 
-				display = vb.displayName;
-				
-				if(!vb.enabled && this.setting.canToggleItems)
-					textColor = this.textColorIntDisabled;
-			}
-			else
-			{
-				display = ((Potion)this.setting.getItem(i)).getName();
+				default:
+					display = "NULL";
+					break;
+					
+				case BLOCK:
+					VirtualBlock vb = ((VirtualBlock)this.setting.getItem(i)); 
+					display = vb.displayName;
+					
+					if(!vb.enabled && this.setting.canToggleItems)
+						textColor = this.textColorIntDisabled;
+					break;
+					
+				case PLAYERNAME:
+					display = (String)this.setting.getItem(i);
+					break;
+					
+				case POTION:
+					display = ((Potion)this.setting.getItem(i)).getName();
+					break;
 			}
 			
 			FontUtil.drawStringWithShadow(
@@ -188,27 +199,46 @@ public class DropDownButton extends Component
 				{
 					this.setting.disableItem(index);
 				}
-				
+				return;
 			}
 			
+			this.open = false;
 		}
 		
 		if(button == 0)
 		{
+			if(isMouseOnButton(mouseX, mouseY))
+			{
+				this.open = true;
+				return;
+			}
+			
+			if(!this.open)
+				return;
+			
 			if(this.isMouseOnList(mouseX, mouseY))
 			{
 				int index = this.getListHoverIndex(mouseX, mouseY);
 				
 				if(index >= 0 && index < this.setting.getSize())
 				{
-					if(this.type == ListType.BLOCK)
+					
+					switch(this.type)
 					{
-						if(this.setting.canToggleItems)
-						{
-							VirtualBlock vb = ((VirtualBlock)this.setting.getItem(index)); 
+						case BLOCK:
+							if(this.setting.canToggleItems)
+							{
+								VirtualBlock vb = ((VirtualBlock)this.setting.getItem(index)); 
 
-							vb.enabled = !vb.enabled;	
-						}
+								vb.enabled = !vb.enabled;	
+							}
+							break;
+							
+						case POTION:
+							break;
+							
+						case PLAYERNAME:
+							break;
 					}
 				}
 				return;
@@ -229,6 +259,7 @@ public class DropDownButton extends Component
 				return;
 			}
 			
+			this.open = false;
 		}		
 	}	
 	

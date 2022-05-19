@@ -9,6 +9,7 @@ import cute.eventapi.EventTarget;
 import cute.events.RenderLivingEvent;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
+import cute.modules.client.Players;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
@@ -187,9 +188,10 @@ public class ESPEntity extends Module
         	if(entity instanceof EntityPlayerSP )//|| !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
         		continue;
         	
+        
         	if(entity instanceof EntityPlayer) 
         	{
-        		if(players.getValue() && entity.getName() != this.mc.thePlayer.getName()) 
+        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName())) 
         		{
         			RenderUtil.setColor(playerPicker.getColor());
         			RenderUtil.renderEntityHitbox(entity);

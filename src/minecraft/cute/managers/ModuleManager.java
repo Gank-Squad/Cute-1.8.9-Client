@@ -9,8 +9,9 @@ import cute.events.ClientTickEvent;
 import cute.events.KeyDownEvent;
 import cute.events.KeyUpEvent;
 import cute.modules.Module;
+import cute.modules.audio.Sounds;
 import cute.modules.bot.FakePlayer;
-import cute.modules.client.Friends;
+import cute.modules.client.Players;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
 import cute.modules.gui.Hud;
@@ -39,7 +40,7 @@ public class ModuleManager extends BaseManager
 					
 					new ClickGUI(),
 					new Hud(),
-					new Friends(),
+					new Players(),
 					
 					new ESPBlocks(),
 					new ESPEntity(),
@@ -49,7 +50,9 @@ public class ModuleManager extends BaseManager
 					new ProjectileTracer(),
 					new NameTags(),
 					new NoRender(),
-					new XRay()
+					new XRay(),
+					
+					new Sounds()
 				);
 	
 	

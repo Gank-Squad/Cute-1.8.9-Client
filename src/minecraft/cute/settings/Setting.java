@@ -15,9 +15,9 @@ public class Setting
 	
 	protected List<SubSetting> _subs = new ArrayList();
 	
-	public void update()
+	public void update(boolean added, Object... args)
 	{
-		EventManager.call(new SettingChangedEvent());
+		EventManager.call(new SettingChangedEvent(_name, _settingType, added, args));
 	}
 
 	public SettingType getSettingType()

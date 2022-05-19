@@ -12,6 +12,7 @@ import cute.modules.Module;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.Slider;
+import cute.util.types.VirtualBlock;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -32,11 +33,21 @@ public class NameTags extends Module
 	public static final Logger Logger = LogManager.getLogger();
 	public static Checkbox names = new Checkbox("Names", true);
 
-    public static Checkbox armor = new Checkbox("Items", true);
+    public static Checkbox armor = new Checkbox("Armor/Hand", true);
+    
+    public static Checkbox everything = new Checkbox("Everything", false);
     
     public static Slider scaleDistance = new Slider("Scale Distance", 1d, 20d, 100d, 1);
     public static Slider scale         = new Slider("Size Scale", 0.01d, 0.25d, 1d, 1);
 
+    public static boolean globalEnabled = false;
+    
+    // this is used so the minecraft files mentioned at the top can check if XRay is on 
+ 	public static boolean isOn()
+ 	{
+ 		return NameTags.globalEnabled;
+ 	}
+    
     @Override
     public void setup()
     {
@@ -45,6 +56,22 @@ public class NameTags extends Module
     	this.addSetting(NameTags.scaleDistance);
     	this.addSetting(NameTags.scale);
     }
+    
+	@Override
+	public void onEnable()
+	{
+		super.onEnable();
+		
+		NameTags.globalEnabled = true;
+	}
+	
+	@Override 
+	public void onDisable()
+	{
+		super.onDisable();
+		
+		NameTags.globalEnabled = false;
+	}
     
     public static List<String> getEnchantList(ItemStack stack) 
     {

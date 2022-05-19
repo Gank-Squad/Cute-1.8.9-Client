@@ -33,20 +33,26 @@ public class ListSelection<T> extends Setting
 		if(index < 0 || index >= this.enabledItems.size())
 			return;
 		
-		this.enabledItems.remove(index);
+		T item = this.enabledItems.remove(index);
+		
+		if (item != null)
+			this.update(false, item);
 	}
 	
 	
 	public void disableItem(T item)
 	{
-		this.enabledItems.remove(item);
+		if(this.enabledItems.remove(item))
+			this.update(false, item);
 	}
 	
 	public void enableItem(T item)
 	{
 		if(this.enabledItems.contains(item))
 			return;
+		
 		this.enabledItems.add(item);
+		this.update(true, item);
 	}
 	
 	public Iterator<T> getIterator()

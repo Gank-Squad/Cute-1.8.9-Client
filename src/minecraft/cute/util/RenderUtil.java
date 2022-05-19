@@ -364,7 +364,7 @@ public class RenderUtil
 			double mz = vec.zCoord;
 			double my = vec.yCoord + mc.thePlayer.getEyeHeight() - 0.35;
 			
-			if (!mc.getRenderManager().options.thirdPersonView) 
+			if (mc.getRenderManager().options.showDebugInfo == 0) 
 			{
 				double drawBeforeCameraDist = 100;
 				double pitch = ((mc.thePlayer.rotationPitch + 90) * Math.PI) / 180;

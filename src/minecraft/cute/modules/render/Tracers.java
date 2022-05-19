@@ -9,12 +9,14 @@ import org.lwjgl.opengl.GL32;
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
+import cute.modules.client.Players;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
 import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -87,7 +89,7 @@ public class Tracers extends Module
 		double mz = vec.zCoord;
 		double my = vec.yCoord + mc.thePlayer.getEyeHeight() - 0.35;
 
-		if (!mc.getRenderManager().options.thirdPersonView) 
+		if (mc.getRenderManager().options.showDebugInfo == 0) 
 		{
 			double drawBeforeCameraDist = firstPersonRenderPoint.getValue();
 			double pitch = ((mc.thePlayer.rotationPitch + 90) * Math.PI) / 180;
@@ -120,9 +122,12 @@ public class Tracers extends Module
 		// main draw loop
 		for (Entity entity : mc.theWorld.loadedEntityList) 
 		{
+			if(entity instanceof EntityPlayerSP)
+				continue;
+			
 			if(entity instanceof EntityPlayer) 
         	{
-        		if(players.getValue() && entity.getName() != this.mc.thePlayer.getName()) 
+        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName())) 
         		{
         			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), playerPicker.getColor());
         		}

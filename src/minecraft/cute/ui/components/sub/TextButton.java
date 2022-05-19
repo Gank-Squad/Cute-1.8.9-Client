@@ -186,7 +186,7 @@ public class TextButton extends Component
 				return;
 				
 			case Keyboard.KEY_RETURN:
-				this.onEnter(this.searchTerm);
+				this.onEnter(this.searchTerm.toLowerCase());
 				return;
 				
 			default:

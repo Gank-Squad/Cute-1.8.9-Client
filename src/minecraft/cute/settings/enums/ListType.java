@@ -4,4 +4,5 @@ public enum ListType
 {
 	BLOCK,
 	POTION,
+	PLAYERNAME,
 }

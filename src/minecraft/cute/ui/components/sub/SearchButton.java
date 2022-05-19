@@ -1,14 +1,16 @@
 package cute.ui.components.sub;
 
-import org.lwjgl.input.Keyboard;
+import java.util.List;
+import java.util.stream.Stream;
+
 import org.lwjgl.opengl.GL11;
 
 import cute.settings.ListSelection;
 import cute.settings.enums.ListType;
-import cute.ui.ClickUI;
 import cute.ui.components.Button;
 import cute.ui.components.Component;
 import cute.util.Cache;
+import cute.util.EntityUtil;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 import cute.util.types.BlockInfo;
@@ -24,8 +26,6 @@ public class SearchButton extends TextButton
 	private Object[] foundSearchTerms = new Object[0];
 	
 	private ListType type;
-	
-	private String searchTerm = "";
 	
 	ListSelection setting;
 	
@@ -112,7 +112,20 @@ public class SearchButton extends TextButton
 		{
 			String display;
 			
-			display = ((BlockInfo)this.foundSearchTerms[i]).displayName;
+			switch(this.type)
+			{
+			default:
+				display = "NULL";
+				break;
+			case BLOCK:
+				display = ((BlockInfo)this.foundSearchTerms[i]).displayName;
+				break;
+				
+			case PLAYERNAME:
+				display = (String)this.foundSearchTerms[i];
+				break;
+			}
+			
 			
 			FontUtil.drawStringWithShadow(
 					display + " ", 
@@ -168,7 +181,17 @@ public class SearchButton extends TextButton
 				if(index >= 0 && index < this.foundSearchTerms.length)
 				{
 					this.setBinding(false);
-					this.setting.enableItem((VirtualBlock)this.foundSearchTerms[index]);
+					
+					switch(this.type)
+					{
+						case BLOCK:
+							this.setting.enableItem((VirtualBlock)this.foundSearchTerms[index]);
+							break;
+							
+						case PLAYERNAME:
+							this.setting.enableItem((String)this.foundSearchTerms[index]);
+							break;
+					}
 				}
 				return;
 			}
@@ -202,8 +225,26 @@ public class SearchButton extends TextButton
 	@Override 
 	public void onEnter(String search)
 	{
-		this.scrollIndex = 0;
-		this.foundSearchTerms = Cache.searchForBlock(search.toLowerCase());
+		switch(this.type)
+		{
+		case PLAYERNAME:
+			
+			this.scrollIndex = 0;
+			
+			List<String> names = EntityUtil.getTabMenuPlayerNames();
+			
+			Stream<String> s = names.stream().
+					filter(x -> x.toLowerCase().contains(search));
+
+			this.foundSearchTerms = s.toArray();
+			break;
+			
+		case BLOCK:
+			this.scrollIndex = 0;
+			this.foundSearchTerms = Cache.searchForBlock(search);
+			break;
+		}
+		
 	}	
 
 	public boolean isMouseOnScrollUp(int x, int y)

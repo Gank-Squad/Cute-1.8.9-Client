@@ -11,7 +11,8 @@ public enum Category
 	MISC    ("Miscellaneous", new Color(122, 61, 217), 3),
 	MOVEMENT("Movement"     , new Color(217, 49, 103), 4),
 	RENDER  ("Render"       , new Color(231, 164, 73), 5),
-	BOT     ("Bot"          , new Color(208, 68, 195), 6);
+	BOT     ("Bot"          , new Color(208, 68, 195), 6), 
+	SOUNDS  ("Sounds"       , new Color(208, 68, 195), 7);
 
 	String _name;
 	Color _color;

@@ -1931,6 +1931,10 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         this.mc.mcProfiler.endStartSection("hand");
 
+        RenderHandEvent EVNE_ = new RenderHandEvent(renderglobal, partialTicks, pass); 
+        EventManager.call(EVNE_);
+        
+        if(!EVNE_.isCancelled())
         if (this.renderHand && !Shaders.isShadowPass)
         {
             if (flag)
@@ -1947,6 +1951,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
             else
             {
+            	
                 this.renderHand(partialTicks, pass);
             }
 
@@ -1958,7 +1963,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Shaders.endRender();
         }
         
-        EventManager.call(new RenderHandEvent());
+        
     }
 
     private void renderCloudsCheck(RenderGlobal renderGlobalIn, float partialTicks, int pass)

@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import cute.eventapi.EventManager;
 import cute.events.RenderLivingEvent;
+import cute.modules.render.NameTags;
 
 import java.nio.FloatBuffer;
 import java.util.List;
@@ -740,7 +741,10 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             }
         }
 
-        return Minecraft.isGuiEnabled() && entity != this.renderManager.livingPlayer && !entity.isInvisibleToPlayer(entityplayersp) && entity.riddenByEntity == null;
+        return Minecraft.isGuiEnabled() && 
+        		entity != this.renderManager.livingPlayer && 
+        		entity.riddenByEntity == null && 
+        		(NameTags.isOn() || !entity.isInvisibleToPlayer(entityplayersp));
     }
 
     public void setRenderOutlines(boolean renderOutlinesIn)

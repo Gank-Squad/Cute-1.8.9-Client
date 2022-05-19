@@ -2,6 +2,9 @@ package cute;
 
 import java.awt.Color;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.ModuleManager;
@@ -10,6 +13,8 @@ public class Client
 {
 	public static final String VERSION = "0.2.0";
 	public static final String NAME    = "Cute";
+	
+//	public static final Logger LOGGER = LogManager.getLogger("Cute");
 	
 	private static final Client INSTANCE = new Client();
 	
@@ -32,6 +37,9 @@ public class Client
 		EventManager.register(ModuleManager.INSTANCE);		
 		
 		ConfigManager.loadConfig();
+		
+		// for debug cause eclipse puts it at unlimited for some reason 
+//		Minecraft.getMinecraft().gameSettings.limitFramerate = 60;
 		
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
 		{

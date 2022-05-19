@@ -1,8 +1,5 @@
 package cute.settings;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cute.settings.enums.SettingType;
 
 public class Mode extends Setting
@@ -34,7 +31,7 @@ public class Mode extends Setting
 			return;
 		
 		this._mode = mode;
-		super.update();
+		super.update(true, mode);
 	}
 	
 	public int getValue() 
@@ -50,6 +47,6 @@ public class Mode extends Setting
 	public void nextMode()
 	{
 		this._mode = this.getNextMode();
-		super.update();
+		super.update(true, this._mode);
 	}
 }
