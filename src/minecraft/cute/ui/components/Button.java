@@ -86,12 +86,16 @@ public class Button extends Component
 				last.subcomponents.add(new ColorPickerButton((ColorPicker)ss, this, opY2));	
 				opY2 += this.height;
 			}
+			
+			if(hasList != null)
+			{
+				this.subcomponents.add(new SearchButton(this, opY, (ListSelection)hasList));
+				opY += this.height;
+				
+				hasList = null;
+			}
 		}
 		
-		if(hasList != null)
-		{
-			this.subcomponents.add(new SearchButton(this, opY, (ListSelection)hasList));
-		}
 		
 		this.subcomponents.add(new KeybindButton(this, opY));
 	}
