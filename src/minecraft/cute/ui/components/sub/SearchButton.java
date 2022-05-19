@@ -14,15 +14,9 @@ import cute.util.RenderUtil;
 import cute.util.types.BlockInfo;
 import cute.util.types.VirtualBlock;
 
-public class SearchButton extends Component  
+public class SearchButton extends TextButton  
 {
 	private final Button parent;
-	
-	private boolean binding;
-	
-	private int offset;
-	private int x;
-	private int y;
 	
 	private int scrollButtonSize = this.height - 3;
 	private int scrollIndex = 0;
@@ -39,6 +33,8 @@ public class SearchButton extends Component
 	
 	public SearchButton(Button button, int offset, ListSelection setting)
 	{
+		super(button, offset);
+		
 		this.parent = button;
 		this.x = button.parent.getX() + button.parent.getWidth();
 		this.y = button.parent.getY() + button.offset;
@@ -78,28 +74,7 @@ public class SearchButton extends Component
 	@Override
 	public void renderComponent() 
 	{
-		RenderUtil.beginRenderRect();
-		
-//		background 
-		RenderUtil.setColor(this.backColor);
-		RenderUtil.renderRect(x + 2, y, x + width, y + this.getHeight());
-		RenderUtil.renderRect(x    , y, x + 2    , y + this.getHeight());
-		RenderUtil.endRenderRect();
-		
-		// draw the text for the setting 
-		GL11.glPushMatrix();
-		GL11.glScalef(0.75f,0.75f, 0.75f);
-		
-		String text = this.binding ? this.searchTerm : "Search";
-		
-		FontUtil.drawStringWithShadow(
-				text, 
-				(this.x + 3) * Component.tScale + 4, 
-				(this.y + 2) * Component.tScale + 2,
-				this.textColorInt);
-		
-		GL11.glPopMatrix();
-		
+		super.renderComponent();
 		
 		// if the block list isn't open we're done here
 		if(!this.binding)
@@ -151,12 +126,12 @@ public class SearchButton extends Component
 		GL11.glPopMatrix();
 	}
 	
-	@Override
-	public void updateComponent(int mouseX, int mouseY) 
-	{
-		this.y = parent.parent.getY() + offset;
-		this.x = parent.parent.getX();
-	}
+//	@Override
+//	public void updateComponent(int mouseX, int mouseY) 
+//	{
+//		this.y = parent.parent.getY() + offset;
+//		this.x = parent.parent.getX();
+//	}
 	
 	public int getListHoverIndex(int x, int y)
 	{
@@ -171,16 +146,13 @@ public class SearchButton extends Component
 		
 		if(button == 1)
 		{
-			if(!isMouseOnButton(mouseX, mouseY))
-				return;
-			
-			this.setBinding(false);
+			super.setBinding(false);
 			return;
 		}
-		
+
 		if(button == 0)
 		{
-			if(this.isMouseOnButton(mouseX, mouseY))
+			if(this.isMouseOnSearch(mouseX, mouseY))
 			{
 				this.setBinding(true);
 				return;
@@ -200,7 +172,7 @@ public class SearchButton extends Component
 				}
 				return;
 			}
-			
+
 			if(this.isMouseOnScrollUp(mouseX, mouseY))
 			{
 				this.scrollIndex = Math.max(0, this.scrollIndex - 1);
@@ -216,56 +188,23 @@ public class SearchButton extends Component
 				return;
 			}
 			
+			this.setBinding(false);
 		}		
 	}	
 	
-	public void setBinding(boolean state)
-	{
-		this.binding = state;
-		ClickUI.keyboardInUses = state;
-	}
-	
+
 	@Override
 	public boolean isOpen()
 	{
 		return this.foundSearchTerms.length != 0;
 	}
 	
-	@Override
-	public void keyTyped(char typedChar, int key) 
+	@Override 
+	public void onEnter(String search)
 	{
-		if(!this.binding) 
-			return;
-		
-		
-		switch(key)
-		{
-			case Keyboard.KEY_ESCAPE:
-				this.setBinding(false);
-				return;
-				
-			case Keyboard.KEY_BACK:
-				if(this.searchTerm.length() == 0)
-					return;
-				this.searchTerm = this.searchTerm.substring(0, this.searchTerm.length() - 1);
-				return;
-				
-			case Keyboard.KEY_RETURN:
-				this.scrollIndex = 0;
-				this.foundSearchTerms = Cache.searchForBlock(this.searchTerm.toLowerCase());
-				return;
-				
-			default:
-				if(typedChar >= 'a' && typedChar <= 'z' ||
-				   typedChar >= 'A' && typedChar <= 'Z' || 
-				   typedChar == ' ')
-				{
-					this.searchTerm += typedChar;
-				}
-				return;
-		}
-	}
-	
+		this.scrollIndex = 0;
+		this.foundSearchTerms = Cache.searchForBlock(search.toLowerCase());
+	}	
 
 	public boolean isMouseOnScrollUp(int x, int y)
 	{

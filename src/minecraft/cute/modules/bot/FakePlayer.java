@@ -27,6 +27,9 @@ public class FakePlayer extends Module
 	{
 		super.onEnable();
 		
+		if(nullCheck())
+			return;
+		
 		EntityPlayer ww = new EntityOtherPlayerMP(mc.theWorld, new GameProfile(
 				UUID.fromString("3f66a67c-db6c-36b7-b762-d7a40c17883b"), generateString()));
 		ww.inventory.copyInventory(mc.thePlayer.inventory);

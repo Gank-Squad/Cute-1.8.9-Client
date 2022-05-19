@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
+import net.minecraft.client.network.NetHandlerPlayClient;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,6 +38,7 @@ import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.scoreboard.ScorePlayerTeam;
 
 public class EntityUtil
 {
@@ -55,6 +59,22 @@ public class EntityUtil
 
         return new ArrayList(Arrays.asList(EntityBoat.class, EntityMinecart.class));
     }
+    
+    public static List<String> getTabMenuPlayerNames()
+	{
+		NetHandlerPlayClient nethandlerplayclient = mc.thePlayer.sendQueue;
+        List<NetworkPlayerInfo> list = GuiPlayerTabOverlay.getOrdering().<NetworkPlayerInfo>sortedCopy(nethandlerplayclient.getPlayerInfoMap());
+
+        ArrayList<String> names = new ArrayList<String>();
+        for (NetworkPlayerInfo ni : list)
+        {
+            String playerName = ni.getDisplayName() != null ? ni.getDisplayName().getFormattedText() : ScorePlayerTeam.formatPlayerName(ni.getPlayerTeam(), ni.getGameProfile().getName());
+
+            names.add(playerName);
+        }
+        
+        return names;
+	}
 
     public static boolean isPassive(Entity entity) 
     {

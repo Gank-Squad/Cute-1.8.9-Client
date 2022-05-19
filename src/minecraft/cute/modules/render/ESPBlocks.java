@@ -46,6 +46,7 @@ public class ESPBlocks extends Module
 	@Override
     public void setup() 
 	{
+		blocks.canToggleItems = true;
 		addSetting(blocks);
         addSetting(IntervalRefresh);
         addSetting(RefreshInterval);

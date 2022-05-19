@@ -10,8 +10,10 @@ import cute.events.KeyDownEvent;
 import cute.events.KeyUpEvent;
 import cute.modules.Module;
 import cute.modules.bot.FakePlayer;
+import cute.modules.client.Friends;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
+import cute.modules.gui.Hud;
 import cute.modules.render.DataViewer;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
@@ -36,7 +38,9 @@ public class ModuleManager extends BaseManager
 					new FakePlayer(),
 					
 					new ClickGUI(),
-//					
+					new Hud(),
+					new Friends(),
+					
 					new ESPBlocks(),
 					new ESPEntity(),
 					new DataViewer(),
@@ -46,7 +50,6 @@ public class ModuleManager extends BaseManager
 					new NameTags(),
 					new NoRender(),
 					new XRay()
-//					new AntiPotion()
 				);
 	
 	

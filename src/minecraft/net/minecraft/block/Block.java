@@ -82,8 +82,11 @@ public class Block
         }
         public String getPlaceSound()
         {
+             return "random.anvil_land";
+        }
+        public String getStepSound()
+        {
         	return "step.stone";
-            // return "random.anvil_land";
         }
     };
     public static final Block.SoundType SLIME_SOUND = new Block.SoundType("slime", 1.0F, 1.0F)

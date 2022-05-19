@@ -3,6 +3,9 @@ package net.minecraft.client.gui;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.mojang.authlib.GameProfile;
+
+import cute.modules.gui.Hud;
+
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -42,6 +45,11 @@ public class GuiPlayerTabOverlay extends Gui
         this.guiIngame = guiIngameIn;
     }
 
+    public static Ordering<NetworkPlayerInfo> getOrdering()
+    {
+    	return GuiPlayerTabOverlay.field_175252_a;
+    }
+    
     /**
      * Returns the name that should be renderd for the player supplied
      */

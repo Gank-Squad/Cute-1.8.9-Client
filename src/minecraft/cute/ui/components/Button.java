@@ -20,6 +20,7 @@ import cute.ui.components.sub.KeybindButton;
 import cute.ui.components.sub.ModeButton;
 import cute.ui.components.sub.SearchButton;
 import cute.ui.components.sub.SliderButton;
+import cute.ui.components.sub.TextButton;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 
@@ -227,7 +228,14 @@ public class Button extends Component
 		}
 	}
 	
-	
+	@Override
+	public void keyUp(char typedChar, int key) 
+	{
+		for(Component comp : this.subcomponents) 
+		{
+			comp.keyUp(typedChar, key);
+		}
+	}
 	@Override
 	public void keyTyped(char typedChar, int key) 
 	{

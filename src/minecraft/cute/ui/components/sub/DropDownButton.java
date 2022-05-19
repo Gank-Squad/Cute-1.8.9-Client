@@ -137,7 +137,7 @@ public class DropDownButton extends Component
 				VirtualBlock vb = ((VirtualBlock)this.setting.getItem(i)); 
 				display = vb.displayName;
 				
-				if(!vb.enabled)
+				if(!vb.enabled && this.setting.canToggleItems)
 					textColor = this.textColorIntDisabled;
 			}
 			else
@@ -203,11 +203,13 @@ public class DropDownButton extends Component
 				{
 					if(this.type == ListType.BLOCK)
 					{
-						VirtualBlock vb = ((VirtualBlock)this.setting.getItem(index)); 
+						if(this.setting.canToggleItems)
+						{
+							VirtualBlock vb = ((VirtualBlock)this.setting.getItem(index)); 
 
-						vb.enabled = !vb.enabled;
+							vb.enabled = !vb.enabled;	
+						}
 					}
-					System.out.println(this.setting.getItem(index));
 				}
 				return;
 			}

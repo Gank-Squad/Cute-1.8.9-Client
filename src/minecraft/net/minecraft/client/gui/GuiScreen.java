@@ -114,6 +114,10 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
         }
     }
 
+    protected void keyUp(char typedChar, int keyCode) throws IOException
+    {  	
+    }
+    
     /**
      * Returns a string stored in the system clipboard.
      */
@@ -637,6 +641,10 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
         if (Keyboard.getEventKeyState())
         {
             this.keyTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
+        }
+        else 
+        {
+        	this.keyUp(Keyboard.getEventCharacter(), Keyboard.getEventKey());
         }
 
         this.mc.dispatchKeypresses();

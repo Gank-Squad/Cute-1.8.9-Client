@@ -72,6 +72,11 @@ public class Component
 	{
 		
 	}
+
+	public void keyUp(char typedChar, int key) 
+	{
+		
+	}
 	
 	public void setOff(int newOff) 
 	{

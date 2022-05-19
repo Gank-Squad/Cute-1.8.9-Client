@@ -9,7 +9,8 @@ import cute.settings.enums.SettingType;
 public class ListSelection<T> extends Setting 
 {
 	private ListType _type;
-	private ArrayList<T> enabledItems   ;
+	private ArrayList<T> enabledItems;
+	public boolean canToggleItems = false;
 	
 	public ListSelection(String name, ArrayList<T> enabled, ListType type) 
 	{

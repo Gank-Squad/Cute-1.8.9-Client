@@ -98,11 +98,6 @@ public class ClickUI extends GuiScreen
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) 
 	{
-		boolean dontCloseUI = false;
-		
-		if(keyCode == Keyboard.KEY_ESCAPE && this.keyboardInUses)
-			dontCloseUI = true;
-			
 		for(Frame frame : frames) 
 		{
 			if(!frame.isOpen())
@@ -117,16 +112,34 @@ public class ClickUI extends GuiScreen
 			}
 		}
 		
-		if(this.keyboardInUses || dontCloseUI)
+		if(ClickUI.keyboardInUses)
 			return;
 
-		if (keyCode == 1 || keyCode == this.closeOnKey) 
+		if (keyCode == Keyboard.KEY_ESCAPE || keyCode == this.closeOnKey) 
 		{
 			ClickUI.keyboardInUses = false;
             this.mc.displayGuiScreen(null);
         }
 	}
 
+	@Override
+	protected void keyUp(char typedChar, int keyCode)
+	{
+		for(Frame frame : frames) 
+		{
+			if(!frame.isOpen())
+				continue;
+			
+			if(frame.getComponents().isEmpty())
+				continue;
+			
+			for(Component component : frame.getComponents()) 
+			{
+				component.keyUp(typedChar, keyCode);
+			}
+		}
+	}
+	
 //	@Override
 //	public void onGuiClosed() 
 //	{
