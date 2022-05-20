@@ -1,4 +1,4 @@
-package cute.modules.gui;
+package cute.modules.gui.hud;
 
 import java.awt.Color;
 
@@ -9,8 +9,9 @@ import cute.events.RenderHandEvent;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
-import cute.settings.Checkbox;
+//import cute.settings.Checkbox;
 import cute.util.RenderUtil;
+//import net.minecraft.client.Minecraft;
 
 public class Hud extends Module
 {
@@ -32,17 +33,18 @@ public class Hud extends Module
 	{
 //		RenderUtil.setColor(new Color(255,255,255));
 //		RenderUtil.renderRectSingle(0, 0, 100, 100);
+		
 	}
 	
 	@EventTarget
 	public void onRenderHand(RenderHandEvent e)
 	{
 		
-		RenderUtil.setColor(new Color(255,255,255));
-		GL11.glPushMatrix();
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		RenderUtil.renderBlock((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ, new Color(255,255,255));
-		GL11.glPopMatrix();
-		RenderUtil.renderRectSingle(0, 0, 100, 100);
+//		RenderUtil.setColor(new Color(255,255,255));
+//		GL11.glPushMatrix();
+//		GL11.glDisable(GL11.GL_DEPTH_TEST);
+//		RenderUtil.renderBlock((int)mc.thePlayer.posX, (int)mc.thePlayer.posY, (int)mc.thePlayer.posZ, new Color(255,255,255));
+//		GL11.glPopMatrix();
+//		RenderUtil.renderRectSingle(0, 0, 100, 100);
 	}
 }

@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.ModuleManager;
+import cute.modules.gui.hud.HudManager;
+import cute.modules.gui.hud.display.instances;
 
 public class Client 
 {
@@ -30,6 +32,13 @@ public class Client
 	
 	public void preinit()
 	{
+	}
+	
+	private HudManager hudManager;
+	public void start()
+	{
+		hudManager = HudManager.getInstance();
+		instances.register(hudManager);
 	}
 	
 	public void init()

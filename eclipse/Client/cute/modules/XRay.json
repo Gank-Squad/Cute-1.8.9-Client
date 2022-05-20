@@ -1,9 +1,10 @@
 {
-  "Name": "Click GUI",
+  "Name": "XRay",
   "Enabled": false,
   "Drawn": true,
-  "Bind": 54,
+  "Bind": 0,
   "Settings": {
+    "Check Sides": true,
     "SubSettings": {}
   }
 }

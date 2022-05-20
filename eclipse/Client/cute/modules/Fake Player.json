@@ -1,8 +1,8 @@
 {
-  "Name": "Click GUI",
+  "Name": "Fake Player",
   "Enabled": false,
   "Drawn": true,
-  "Bind": 54,
+  "Bind": 0,
   "Settings": {
     "SubSettings": {}
   }
