@@ -23,6 +23,8 @@ public class HudManager
 	
 	private static HudManager instance = null;
 	
+//	private static HudConfigScreen nyah;
+	
 	public static HudManager getInstance()
 	{
 		if (instance != null)
@@ -62,6 +64,8 @@ public class HudManager
 	
 	public void openConfigScreen()
 	{
+//		this.nyah = new HudConfigScreen(this);
+//		Minecraft.getMinecraft().displayGuiScreen(nyah);
 		Minecraft.getMinecraft().displayGuiScreen(new HudConfigScreen(this));
 	}
 	

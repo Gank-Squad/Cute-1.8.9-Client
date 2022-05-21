@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.Minecraft;
 //import net.java.games.input.Keyboard;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -24,6 +25,8 @@ public class HudConfigScreen extends GuiScreen
 	
 	public HudConfigScreen(HudManager api)
 	{
+		
+//		System.out.println("test2");
 		Collection<IRender> registeredRenderers = api.getRegisteredRenderers();
 		
 		for (IRender render : registeredRenderers)
@@ -45,14 +48,13 @@ public class HudConfigScreen extends GuiScreen
 		}
 	}
 	
-	
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
-	{
-		
-		
-		super.drawDefaultBackground();
-		
+	{	
+//		super.drawDefaultBackground();
+	    drawRect(0, 0, this.width, this.height, 0x66101010);
+//	    System.out.println("test");
 		final float zBackup = this.zLevel;
 		
 		// put infront of everything
@@ -60,10 +62,16 @@ public class HudConfigScreen extends GuiScreen
 		
 		this.drawHollowRect(0, 0, this.width - 1, this.height - 1, 0xFFFFFFFF);
 		
+//		renderers.forEach((renderer, position) -> renderer.renderDummy(position));
+		
 		for (IRender renderer : renderers.keySet())
 		{
 			ScreenPosition pos = renderers.get(renderer);
+			
+			renderer.renderDummy(pos);
+			
 			this.drawHollowRect(pos.getAbsoluteX(), pos.getAbsoluteY(), renderer.getWidth(), renderer.getHeight(), 0xFFFFFFFF);
+			
 		}
 		
 		this.zLevel = zBackup;
@@ -72,12 +80,12 @@ public class HudConfigScreen extends GuiScreen
 	
 	private void drawHollowRect(int x, int y, int w, int h, int c)
 	{
-		this.drawHorizontalLine(x, x + w, y + h, c);
-		this.drawHorizontalLine(x, x + w, y, c);
-		
-		this.drawVerticalLine(x, y+h, y, c);
-		this.drawVerticalLine(x+w, y+h, y, c);
-		
+//		this.drawHorizontalLine(x, x + w, y + h, c);
+//		this.drawHorizontalLine(x, x + w, y, c);
+//		
+//		this.drawVerticalLine(x, y+h, y, c);
+//		this.drawVerticalLine(x+w, y+h, y, c);
+//		System.out.println("abc");
 	}
 	
 	
@@ -90,7 +98,7 @@ public class HudConfigScreen extends GuiScreen
 			{
 				entry.getKey().save(entry.getValue());
 			});
-			this.mc.displayGuiScreen(null);
+			Minecraft.getMinecraft().displayGuiScreen(null);
 		}
 	}
 	
@@ -107,17 +115,35 @@ public class HudConfigScreen extends GuiScreen
 		this.prevY = y;
 	}
 
-
-	private void moveSelectedRenderBy(int x, int y) {
+	@Override
+	protected void mouseClicked (int x, int y, int btn) // throws IOException
+	{
 		IRender renderer = selectedRenderer.get();
 		ScreenPosition pos = renderers.get(renderer);
 		
+		System.out.println(pos.getAbsoluteX());
 		
-		pos.setAbsolute(pos.getAbsoluteX() + x, pos.getAbsoluteY() + y);
+		this.prevX = x;
+		this.prevY = y;
+		
+		loadMouseOver(x, y);
+		
+	}
+
+	private void moveSelectedRenderBy(int offsetX, int offsetY) {
+		IRender renderer = selectedRenderer.get();
+		ScreenPosition pos = renderers.get(renderer);
+		
+		pos.setAbsolute(
+					pos.getAbsoluteX() + offsetX,
+					pos.getAbsoluteY() + offsetY
+				);
 		
 		adjustBounds(renderer, pos);
 		
 	}
+	
+	
 	
 	@Override
 	public void onGuiClosed()
@@ -131,46 +157,43 @@ public class HudConfigScreen extends GuiScreen
 	@Override
 	public boolean doesGuiPauseGame()
 	{
-		return true;
+		return false;
 	}
 	
 	private void adjustBounds(IRender renderer, ScreenPosition pos)
 	{
-		ScaledResolution res = new ScaledResolution(mc);
+		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
 		int sw = res.getScaledWidth();
 		int sh = res.getScaledHeight();
 		
-		int ax = Math.max(0,  Math.min(pos.getAbsoluteX(), Math.max(sw-renderer.getWidth(), 0)));
-		int ay = Math.max(0,  Math.min(pos.getAbsoluteY(), Math.max(sh-renderer.getHeight(), 0)));
+		int ax = Math.max(0, Math.min(
+					pos.getAbsoluteX(),
+					Math.max(sw - renderer.getWidth(), 0)
+				));
+		int ay = Math.max(0, Math.min(pos.getAbsoluteY(), Math.max(sh - renderer.getHeight(), 0)));
 		
 		pos.setAbsolute(ax,ay);
-	}
-	
-	
-	@Override
-	protected void mouseClicked (int x, int y, int btn) throws IOException
-	{
-		this.prevX = x;
-		this.prevY = y;
-		
-		loadMouseOver(x, y);
 	}
 
 
 	private void loadMouseOver(int x, int y) {
-		this.selectedRenderer = renderers.keySet().stream().filter(new MouseOverFinder(x,y)).findFirst();
+		this.selectedRenderer = renderers.keySet().stream()
+				.filter(new MouseOverFinder(x,y))
+				.findFirst();
 	}
+	
+	
 	private class MouseOverFinder implements Predicate<IRender>
 	{
 		
-		private int x;
-		private int y;
+		private int mouseX;
+		private int mouseY;
 		
 		public MouseOverFinder(int x, int y)
 		{
-			this.x = x;
-			this.y = y;
+			this.mouseX = x;
+			this.mouseY = y;
 		}
 		
 		@Override
@@ -181,9 +204,9 @@ public class HudConfigScreen extends GuiScreen
 			int absoluteX = pos.getAbsoluteX();
 			int absoluteY = pos.getAbsoluteY();
 			
-			if (x >= absoluteX && x >= absoluteX + renderer.getWidth())
+			if (mouseX >= absoluteX && mouseX <= absoluteX + renderer.getWidth())
 			{
-				if (y >= absoluteY && y <= absoluteY + renderer.getHeight())
+				if (mouseY >= absoluteY && mouseY <= absoluteY + renderer.getHeight())
 				{
 					return true;
 				}

@@ -7,25 +7,54 @@ import org.lwjgl.opengl.GL11;
 import cute.eventapi.EventTarget;
 import cute.events.RenderHandEvent;
 import cute.events.RenderWorldLastEvent;
+import cute.events.SettingChangedEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
+import cute.modules.render.Fullbright;
+import cute.settings.Checkbox;
 //import cute.settings.Checkbox;
 import cute.util.RenderUtil;
 //import net.minecraft.client.Minecraft;
 
 public class Hud extends Module
 {
+	public static Checkbox draggable = new Checkbox("Draggable", false);
+	private static HudManager hudManager;
+	@EventTarget
+	public void modeChangedEvent(SettingChangedEvent e)
+	{
+//		System.out.println("ny");
+		if(e.settingName != draggable.getName())
+			return;
+		
+		if (e.args.length == 0)
+		{
+			return;
+		}
+		
+		if (!(boolean)e.args[0])
+		{
+			return;
+		}
+		
+//		System.out.println("nyah:3");
+		hudManager = HudManager.getInstance();
+		mc.displayGuiScreen(null);
+		hudManager.openConfigScreen();
+//		enable(Fullbright.Mode.getValue());
+	}
 	
 	public Hud() 
 	{
 		super("Hud", Category.CLIENT, "a in game hud");
+		
 	}
 
 	
 	@Override
     public void setup() 
 	{
-	
+		this.addSetting(draggable);
     }
 
 	@EventTarget
