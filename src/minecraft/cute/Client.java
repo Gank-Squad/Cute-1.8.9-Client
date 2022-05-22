@@ -2,9 +2,6 @@ package cute;
 
 import java.awt.Color;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.ModuleManager;
