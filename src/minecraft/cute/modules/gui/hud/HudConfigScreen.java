@@ -110,21 +110,18 @@ public class HudConfigScreen extends GuiScreen
 	@Override
 	protected void mouseClicked (int x, int y, int btn)
 	{
-		if(btn == 0) 
-		{
-			this.loadMouseOver(x, y); // set the selected renderer 
-		}	
+		if(btn != 0)
+			return;
 		
-		this.prevX = x;
-		this.prevY = y;
-		
+		this.loadMouseOver(x, y); // set the selected renderer 
+			
 		// if the renderer was selected, adjust the prevXY so it's not 0
 		if (selectedRenderer.isPresent()) 
 		{
 			ScreenPosition pos = renderers.get(selectedRenderer.get());
 			
-			this.prevX -= pos.getRelativeX();
-			this.prevY -= pos.getRelativeY();
+			this.prevX = (int)(x - pos.getRelativeX());
+			this.prevY = (int)(y - pos.getRelativeY());
 		}
 	}
 
@@ -172,8 +169,6 @@ public class HudConfigScreen extends GuiScreen
 			double absoluteX = pos.getRelativeX();
 			double absoluteY = pos.getRelativeY();
 		
-			System.out.println("finding renderer");
-			
 			return mouseX >= absoluteX && mouseX <= absoluteX + renderer.getWidth() &&
 				   mouseY >= absoluteY && mouseY <= absoluteY + renderer.getHeight();
 		}
