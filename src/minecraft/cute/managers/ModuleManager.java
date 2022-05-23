@@ -30,10 +30,6 @@ public class ModuleManager extends BaseManager
 {
 	public static final ModuleManager INSTANCE = new ModuleManager();
 	
-	private ModuleManager() 
-	{
-	}
-	
 	public static List<Module> modules = Arrays.asList
 				(
 					new FakePlayer(),

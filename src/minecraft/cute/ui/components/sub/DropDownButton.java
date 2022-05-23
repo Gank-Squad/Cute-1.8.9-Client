@@ -2,6 +2,7 @@ package cute.ui.components.sub;
 
 import org.lwjgl.opengl.GL11;
 
+import cute.Client;
 import cute.settings.ListSelection;
 import cute.settings.enums.ListType;
 import cute.ui.components.Button;
@@ -76,7 +77,7 @@ public class DropDownButton extends Component
 		RenderUtil.beginRenderRect();
 		
 //		background 
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(x + 2, y, x + width, y + this.getHeight());
 		RenderUtil.renderRect(x    , y, x + 2    , y + this.getHeight());
 		RenderUtil.endRenderRect();
@@ -89,7 +90,7 @@ public class DropDownButton extends Component
 				this.setting.getName(), 
 				(this.x + 3) * Component.tScale + 4, 
 				(this.y + 2) * Component.tScale + 2,
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		GL11.glPopMatrix();
 		
@@ -103,7 +104,7 @@ public class DropDownButton extends Component
 		int range = Math.min(this.setting.getSize(), scrollIndex + this.listCap);
 		
 		// render background for the list of blocks 
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRectSingle(lx + 2, ly, lx + width, ly + this.getListHeight());
 		
 		GL11.glPushMatrix();
@@ -114,13 +115,13 @@ public class DropDownButton extends Component
 				"/\\     " + String.valueOf(scrollIndex) + "-" + String.valueOf(range) + "/" + String.valueOf(this.setting.getSize()), 
 				lx * Component.tScale + 4, 
 				ly * Component.tScale + 4, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		FontUtil.drawStringWithShadow(
 				"\\/", 
 				lx * Component.tScale + 4, 
 				(ly + this.getListHeight() - this.scrollButtonSize) * Component.tScale + 2, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		
 		// render all the blocks 
@@ -129,7 +130,7 @@ public class DropDownButton extends Component
 		for(int i = scrollIndex; i < Math.min(this.setting.getSize(), scrollIndex + this.listCap); i++)
 		{
 			String display;
-			int textColor = this.textColorInt;
+			int textColor = Client.GlobalColors.textColorInt;
 					
 			// this control is also supposed to work for pots, so need the proper toString
 			
@@ -144,7 +145,7 @@ public class DropDownButton extends Component
 					display = vb.displayName;
 					
 					if(!vb.enabled && this.setting.canToggleItems)
-						textColor = this.textColorIntDisabled;
+						textColor = Client.GlobalColors.textColorIntDisabled;
 					break;
 					
 				case PLAYERNAME:

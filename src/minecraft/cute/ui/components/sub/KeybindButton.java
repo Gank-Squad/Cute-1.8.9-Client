@@ -5,6 +5,7 @@ package cute.ui.components.sub;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import cute.Client;
 import cute.ui.components.Button;
 import cute.ui.components.Component;
 import cute.util.FontUtil;
@@ -52,7 +53,7 @@ public class KeybindButton extends Component
 	{
 		// render the background 
 		RenderUtil.beginRenderRect();
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(this.x + 2, this.y, this.x + this.width, this.y + this.height);
 		RenderUtil.renderRect(this.x    , this.y, this.x + 2         , this.y + this.height);
 		RenderUtil.endRenderRect();
@@ -68,7 +69,7 @@ public class KeybindButton extends Component
 				bindingText, 
 				(this.x + 3) * Component.tScale + 4, 
 				(this.y + 2) * Component.tScale + 2, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		// render the right side of the text 
 		bindingText = binding ? "" : Keyboard.getKeyName(this.parent.mod.getKeybind().getKeyCode());
@@ -77,7 +78,7 @@ public class KeybindButton extends Component
 				bindingText, 
 				(this.x + width) * Component.tScale - FontUtil.getStringWidth(bindingText), 
 				(this.y + 2)     * Component.tScale + 2,
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 
 		GL11.glPopMatrix();

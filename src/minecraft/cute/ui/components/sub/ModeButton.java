@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 
 import cute.ui.components.Button;
 import cute.ui.components.Component;
+import cute.Client;
 import cute.settings.Mode;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
@@ -53,7 +54,7 @@ public class ModeButton extends Component {
 	{
 		// render the background 
 		RenderUtil.beginRenderRect();
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(x, y, x + width, y + this.height);
 		RenderUtil.renderRect(x, y, x + 2    , y + 12         );
 		RenderUtil.endRenderRect();
@@ -70,7 +71,7 @@ public class ModeButton extends Component {
 				modeText, 
 				(this.x + 3) * Component.tScale + 4, 
 				(this.y + 2) * Component.tScale + 2,
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		// render the setting value
 		modeText = this.setting.getMode();
@@ -79,7 +80,7 @@ public class ModeButton extends Component {
 				modeText, 
 				(this.x + this.width) * Component.tScale - FontUtil.getStringWidth(modeText), 
 				(this.y + 2         ) * Component.tScale + 2,
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		
 		GL11.glPopMatrix();

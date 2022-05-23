@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import cute.ui.components.Button;
 import cute.ui.components.Component;
+import cute.Client;
 import cute.settings.Checkbox;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
@@ -15,8 +16,6 @@ public class CheckboxButton extends Component
 {
 	private final Checkbox setting;
 	private final Button parent;
-	
-	private boolean hovered;
 	
 	private int offset;
 	private int x;
@@ -37,18 +36,18 @@ public class CheckboxButton extends Component
 	{		
 		// background 
 		RenderUtil.beginRenderRect();
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(x + 2, y, x + width, y + this.getHeight());
 		RenderUtil.renderRect(x    , y, x + 2    , y + this.getHeight());
 
 		// background of the checkbox 
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(x + width - 8, y + 3, x + width - 2, y + 9);
 		
 		// the check of the checkbox 
 		if(this.setting.getValue()) 
 		{
-			RenderUtil.setColor(this.textColor);
+			RenderUtil.setColor(Client.GlobalColors.textColor);
 			RenderUtil.renderRect(x + width - 7, y + 4, x + width - 3, y + 8);
 		}
 		
@@ -64,7 +63,7 @@ public class CheckboxButton extends Component
 				this.setting.getName(), 
 				(x + 3) * Component.tScale + 4, 
 				(y + 2) * Component.tScale + 2,
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		GL11.glPopMatrix();
 		

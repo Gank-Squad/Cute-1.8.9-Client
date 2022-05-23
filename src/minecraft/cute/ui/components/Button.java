@@ -4,6 +4,7 @@ package cute.ui.components;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import cute.Client;
 import cute.modules.Module;
 import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
@@ -140,9 +141,9 @@ public class Button extends Component
 		int y2 = y + this.height;
 		
 		RenderUtil.beginRenderRect();
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(x, y, x2, y2);
-		RenderUtil.setColor(this.sliderColor);
+		RenderUtil.setColor(Client.GlobalColors.sliderColor);
 		RenderUtil.renderRect(x, y, x2, y2);
 		
 		if(this.hovered)
@@ -162,7 +163,7 @@ public class Button extends Component
 				this.mod.getName(), 
 				x + this.parent.getWidth() / 2, 
 				y + (int)(this.height / 2) + 1, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 
 		
 		if(!this.open)

@@ -1,17 +1,19 @@
 package cute.modules.gui.hud;
 
-public interface IRender extends IRenderConfig
+public interface IRender
 {
 	int getWidth();
+	
 	int getHeight();
 	
-	void render(ScreenPosition pos);
+	ScreenPosition getPos();
+	
+	void setPos(ScreenPosition pos);
+	
+	void render();
 	
 	void renderDummy(ScreenPosition pos);
-//	{
-//		render(pos);
-//	}
-	
+
 	public default boolean isEnabled()
 	{
 		return true;

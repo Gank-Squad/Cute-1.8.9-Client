@@ -8,10 +8,9 @@ import java.util.function.Predicate;
 
 import org.lwjgl.input.Keyboard;
 
+import cute.managers.HudManager;
 import net.minecraft.client.Minecraft;
-//import net.java.games.input.Keyboard;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
 
 public class HudConfigScreen extends GuiScreen 
 {
@@ -25,8 +24,6 @@ public class HudConfigScreen extends GuiScreen
 	
 	public HudConfigScreen(HudManager api)
 	{
-		
-//		System.out.println("test2");
 		Collection<IRender> registeredRenderers = api.getRegisteredRenderers();
 		
 		for (IRender render : registeredRenderers)
@@ -35,16 +32,8 @@ public class HudConfigScreen extends GuiScreen
 			{
 				continue;
 			}
-			
-			ScreenPosition pos = render.load();
-			
-			if  (pos == null)
-			{
-				pos = ScreenPosition.fromRelative(0.5,  0.5);
-			}
-			
-			adjustBounds(render, pos);
-			this.renderers.put(render,pos);
+
+			renderers.put(render, render.getPos());
 		}
 	}
 	
@@ -52,105 +41,100 @@ public class HudConfigScreen extends GuiScreen
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{	
-//		super.drawDefaultBackground();
 	    drawRect(0, 0, this.width, this.height, 0x66101010);
-//	    System.out.println("test");
+
 		final float zBackup = this.zLevel;
 		
 		// put infront of everything
 		this.zLevel = 200;
 		
-		this.drawHollowRect(0, 0, this.width - 1, this.height - 1, 0xFFFFFFFF);
-		
-//		renderers.forEach((renderer, position) -> renderer.renderDummy(position));
+		// this updates the position while dragging,
+		// you could put the same code in the mouseDragClick event, 
+		// but the dragging is way smoother when it's here in the render function
+		if (selectedRenderer.isPresent())
+		{
+			renderers.get(selectedRenderer.get()).setRelative(mouseX - this.prevX, mouseY - this.prevY);
+		}
 		
 		for (IRender renderer : renderers.keySet())
 		{
-			ScreenPosition pos = renderers.get(renderer);
+			if(!renderer.isEnabled())
+				continue;
 			
+			ScreenPosition pos = renderers.get(renderer);
+
 			renderer.renderDummy(pos);
 			
-			this.drawHollowRect(pos.getAbsoluteX(), pos.getAbsoluteY(), renderer.getWidth(), renderer.getHeight(), 0xFFFFFFFF);
+			//this.drawHollowRect(pos.getAbsoluteX(), pos.getAbsoluteY(), renderer.getWidth(), renderer.getHeight(), 0xFFFFFFFF);
 			
 		}
 		
 		this.zLevel = zBackup;
 	}
 	
-	
-	private void drawHollowRect(int x, int y, int w, int h, int c)
-	{
-//		this.drawHorizontalLine(x, x + w, y + h, c);
-//		this.drawHorizontalLine(x, x + w, y, c);
-//		
-//		this.drawVerticalLine(x, y+h, y, c);
-//		this.drawVerticalLine(x+w, y+h, y, c);
-//		System.out.println("abc");
-	}
-	
+
 	
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException
 	{
-		if(keyCode == Keyboard.KEY_ESCAPE)
+		if(keyCode != Keyboard.KEY_ESCAPE)
+			return;
+		
+		renderers.entrySet().forEach((entry)-> 
 		{
-			renderers.entrySet().forEach((entry)-> 
-			{
-				entry.getKey().save(entry.getValue());
-			});
-			Minecraft.getMinecraft().displayGuiScreen(null);
-		}
+			entry.getKey().setPos(entry.getValue());
+		});
+		
+		Minecraft.getMinecraft().displayGuiScreen(null);
 	}
 	
+
+	@Override
+	protected void mouseReleased(int x, int y, int btn)
+	{
+		if(selectedRenderer.isPresent())
+		{
+			IRender render = selectedRenderer.get();
+			
+			ScreenPosition pos = renderers.get(render);
+			
+			// save the position 
+			render.setPos(pos);
+		}
+		
+		selectedRenderer = Optional.empty();
+		this.prevX = 0;
+		this.prevY = 0;
+	}
 	
 	@Override
-	protected void mouseClickMove(int x, int y, int btn, long time)
+	protected void mouseClicked (int x, int y, int btn)
 	{
-		if (selectedRenderer.isPresent())
+		if(btn == 0) 
 		{
-			moveSelectedRenderBy(x - prevX, y - prevY);
-		}
+			this.loadMouseOver(x, y); // set the selected renderer 
+		}	
 		
 		this.prevX = x;
 		this.prevY = y;
+		
+		// if the renderer was selected, adjust the prevXY so it's not 0
+		if (selectedRenderer.isPresent()) 
+		{
+			ScreenPosition pos = renderers.get(selectedRenderer.get());
+			
+			this.prevX -= pos.getRelativeX();
+			this.prevY -= pos.getRelativeY();
+		}
 	}
 
-	@Override
-	protected void mouseClicked (int x, int y, int btn) // throws IOException
-	{
-		IRender renderer = selectedRenderer.get();
-		ScreenPosition pos = renderers.get(renderer);
-		
-		System.out.println(pos.getAbsoluteX());
-		
-		this.prevX = x;
-		this.prevY = y;
-		
-		loadMouseOver(x, y);
-		
-	}
-
-	private void moveSelectedRenderBy(int offsetX, int offsetY) {
-		IRender renderer = selectedRenderer.get();
-		ScreenPosition pos = renderers.get(renderer);
-		
-		pos.setAbsolute(
-					pos.getAbsoluteX() + offsetX,
-					pos.getAbsoluteY() + offsetY
-				);
-		
-		adjustBounds(renderer, pos);
-		
-	}
-	
-	
 	
 	@Override
 	public void onGuiClosed()
 	{
 		for (IRender renderer : renderers.keySet())
 		{
-			renderer.save(renderers.get(renderer));
+			renderer.setPos(renderers.get(renderer));
 		}
 	}
 	
@@ -160,22 +144,6 @@ public class HudConfigScreen extends GuiScreen
 		return false;
 	}
 	
-	private void adjustBounds(IRender renderer, ScreenPosition pos)
-	{
-		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		
-		int sw = res.getScaledWidth();
-		int sh = res.getScaledHeight();
-		
-		int ax = Math.max(0, Math.min(
-					pos.getAbsoluteX(),
-					Math.max(sw - renderer.getWidth(), 0)
-				));
-		int ay = Math.max(0, Math.min(pos.getAbsoluteY(), Math.max(sh - renderer.getHeight(), 0)));
-		
-		pos.setAbsolute(ax,ay);
-	}
-
 
 	private void loadMouseOver(int x, int y) {
 		this.selectedRenderer = renderers.keySet().stream()
@@ -201,18 +169,13 @@ public class HudConfigScreen extends GuiScreen
 		{
 			ScreenPosition pos = renderers.get(renderer);
 			
-			int absoluteX = pos.getAbsoluteX();
-			int absoluteY = pos.getAbsoluteY();
+			double absoluteX = pos.getRelativeX();
+			double absoluteY = pos.getRelativeY();
+		
+			System.out.println("finding renderer");
 			
-			if (mouseX >= absoluteX && mouseX <= absoluteX + renderer.getWidth())
-			{
-				if (mouseY >= absoluteY && mouseY <= absoluteY + renderer.getHeight())
-				{
-					return true;
-				}
-			}
-			
-			return false;
+			return mouseX >= absoluteX && mouseX <= absoluteX + renderer.getWidth() &&
+				   mouseY >= absoluteY && mouseY <= absoluteY + renderer.getHeight();
 		}
 	}
 }
