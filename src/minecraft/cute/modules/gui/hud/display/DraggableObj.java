@@ -1,20 +1,19 @@
 package cute.modules.gui.hud.display;
 
+import java.util.ArrayList;
+
 import cute.eventapi.EventManager;
 import cute.modules.gui.hud.IRender;
 import cute.modules.gui.hud.ScreenPosition;
-import net.minecraft.client.Minecraft;
-import cute.modules.gui.hud.display.DraggableComponent;
 import cute.util.RenderUtil;
-import java.awt.Color;
-import java.util.ArrayList;
+import net.minecraft.client.Minecraft;
 
 public class DraggableObj implements IRender
 {
 
 	private boolean isEnabled = true;
 	
-	protected final Minecraft mc;
+	protected final Minecraft mc = Minecraft.getMinecraft();
 	
 	private ScreenPosition pos = ScreenPosition.fromRelative(0.5, 0.5);
 	
@@ -30,23 +29,22 @@ public class DraggableObj implements IRender
 	{
 		this.pos.setRelative(50, 50);
 		
-		this.mc = Minecraft.getMinecraft();
 		setEnabled(isEnabled);
-		DraggableComponent c = new DraggableComponent(
-					0, 0, 40, 40,
-					(int)pos.getRelativeX(),
-					(int)pos.getRelativeY(),
-					0x00000080
-				);
-		addComponent(c);
-		DraggableComponent d = new DraggableComponent(
-				0, 10,
-				(int)pos.getRelativeX(),
-				(int)pos.getRelativeY(),
-				"nyah owo",
-				0xFF00FFFF
-			);
-		addComponent(d);
+//		DraggableComponent c = new DraggableComponent(
+//					0, 0, 40, 40,
+//					(int)pos.getRelativeX(),
+//					(int)pos.getRelativeY(),
+//					0x00000080
+//				);
+//		addComponent(c);
+//		DraggableComponent d = new DraggableComponent(
+//				0, 10,
+//				(int)pos.getRelativeX(),
+//				(int)pos.getRelativeY(),
+//				"nyah owo",
+//				0xFF00FFFF
+//			);
+//		addComponent(d);
 	}
 	
 	public void setEnabled(boolean isEnabled)
@@ -109,26 +107,28 @@ public class DraggableObj implements IRender
 		for (DraggableComponent component : components)
 		{
 			component.checkPos((int)pos.getRelativeX(), (int)pos.getRelativeY());
-			if (component.isString())
-			{
-				this.mc.fontRendererObj.drawStringWithShadow(
-						component.getText(),
-						(int)component.getAbsoluteX(),
-						(int)component.getAbsoluteY(),
-						(int)component.getColor()
-						);
-			}
-			else
-			{
-				RenderUtil.setColor(component.getColor());
-				RenderUtil.renderRectSingle(
-						component.getAbsoluteX(),
-						component.getAbsoluteY(),
-						component.getAbsoluteX() + component.getWidth(),
-						component.getAbsoluteY() + component.getHeight()
-						);
-				RenderUtil.resetColor();
-			}
+			component.render();
+//			
+//			if (component.isString())
+//			{
+//				this.mc.fontRendererObj.drawStringWithShadow(
+//						component.getText(),
+//						(int)component.getAbsoluteX(),
+//						(int)component.getAbsoluteY(),
+//						(int)component.getColor()
+//						);
+//			}
+//			else
+//			{
+//				RenderUtil.setColor(component.getColor());
+//				RenderUtil.renderRectSingle(
+//						component.getAbsoluteX(),
+//						component.getAbsoluteY(),
+//						component.getAbsoluteX() + component.getWidth(),
+//						component.getAbsoluteY() + component.getHeight()
+//						);
+//				RenderUtil.resetColor();
+//			}
 		}
 		
 	}
@@ -140,36 +140,17 @@ public class DraggableObj implements IRender
 		
 		for (DraggableComponent component : components)
 		{
-			if (component.isString())
-			{
-				this.mc.fontRendererObj.drawStringWithShadow(
-						 component.getText(),
-						(int)(pos.getRelativeX() - component.getRelativeX()),
-						(int)(pos.getRelativeY() - component.getRelativeY()),
-						(int)component.getColor()
-						);
-			}
-			else
-			{
-				RenderUtil.setColor((int)component.getColor());
-				RenderUtil.renderRectSingle(
-						pos.getRelativeX() - component.getRelativeX(),
-						pos.getRelativeY() - component.getRelativeX(),
-						pos.getRelativeX() - component.getRelativeX() + component.getWidth(),
-						pos.getRelativeY() - component.getRelativeX() + component.getHeight()
-						);
-				RenderUtil.resetColor();				
-			}
+			component.renderDummy(pos);
 		}
 		
-//		RenderUtil.setColor(0x8d8d8d80);
-//		RenderUtil.renderRectSingle(
-//					(int)pos.getRelativeX(),
-//					(int)pos.getRelativeY(),
-//					(int)pos.getRelativeX() + this.width,
-//					(int)pos.getRelativeY() + this.height
-//				);
-//		RenderUtil.resetColor();
+		RenderUtil.setColor(0x8d8d8d80);
+		RenderUtil.renderRectSingle(
+					(int)pos.getRelativeX(),
+					(int)pos.getRelativeY(),
+					(int)pos.getRelativeX() + this.width,
+					(int)pos.getRelativeY() + this.height
+				);
+		RenderUtil.resetColor();
 	}
 	
 	public ScreenPosition getPos()

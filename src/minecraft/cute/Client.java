@@ -6,6 +6,13 @@ import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.HudManager;
 import cute.managers.ModuleManager;
+import cute.modules.gui.hud.display.DraggableObj;
+import cute.modules.gui.hud.display.component.ItemComponent;
+import cute.modules.gui.hud.display.component.RectComponent;
+import cute.modules.gui.hud.display.component.TextComponent;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemAppleGold;
+import net.minecraft.item.ItemStack;
 
 public class Client 
 {
@@ -60,6 +67,28 @@ public class Client
 		HudManager.INSTANCE.registerDefault();
 		
 		ConfigManager.loadConfig();
+		
+		// this is super ugly but this would be how you'd construct complex components
+		// just string together individual smaller bois 
+		DraggableObj obj =((DraggableObj)HudManager.defaultRenders.get(0)); 
+		RectComponent re = new RectComponent(0,0,10,10,
+				(int)obj.getPos().getRelativeX(),
+				(int)obj.getPos().getRelativeY(), -1);
+		
+		TextComponent rt = new TextComponent(0,0,
+				(int)obj.getPos().getRelativeX(),
+				(int)obj.getPos().getRelativeY(),
+				"uwu", -1);
+		
+		ItemComponent ri = new ItemComponent(25,25, 
+				new ItemStack(Item.itemRegistry.getObjectById(278)),
+				(int)obj.getPos().getRelativeX(),
+				(int)obj.getPos().getRelativeY());
+		
+		
+		obj.addComponent(re);
+		obj.addComponent(rt);
+		obj.addComponent(ri);
 		
 		// for debug cause eclipse puts it at unlimited for some reason 
 //		Minecraft.getMinecraft().gameSettings.limitFramerate = 60;

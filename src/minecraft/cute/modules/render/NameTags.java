@@ -155,7 +155,7 @@ public class NameTags extends Module
     	}
         
         
-        if(!NameTags.armor.getValue() || !(event.entity instanceof EntityPlayer)) 
+        if(!NameTags.armor.getValue()) 
         {
         	GlStateManager.enableDepth();
         	return;	
