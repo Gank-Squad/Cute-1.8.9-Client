@@ -98,7 +98,16 @@ public class RenderUtil
 	    {
 	        glColor4d(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f);
 	    }
-	
+	    public static void setColor(int c)
+	    {
+	    	glColor4d(
+		    			(c >> 24 & 0xFF) / 255f,
+		    			(c >> 16 & 0xFF) / 255f,
+		    			(c >> 8 & 0xFF) / 255f,
+		    			(c & 0xFF) / 255f
+	    			);
+	    }
+	    
 	    public static void resetColor()
 	    {
 	    	glColor4d(1, 1, 1, 1);

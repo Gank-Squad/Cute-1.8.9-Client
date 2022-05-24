@@ -12,6 +12,7 @@ import cute.events.RenderEvent;
 import cute.modules.gui.hud.HudConfigScreen;
 import cute.modules.gui.hud.IRender;
 import cute.modules.gui.hud.display.DraggableText;
+import cute.modules.gui.hud.display.DraggableObj;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
@@ -26,7 +27,8 @@ public class HudManager extends BaseManager
 	
 	public static List<IRender> defaultRenders = Arrays.asList
 			(
-				new DraggableText()
+				//new DraggableText()
+				new DraggableObj()
 			);
 
 	public void registerDefault()

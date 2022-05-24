@@ -5,8 +5,8 @@ import net.minecraft.client.gui.ScaledResolution;
 
 public class ScreenPosition
 {
-	private double x;
-	private double y;
+	protected double x;
+	protected double y;
 	
 	public ScreenPosition(double x, double y)
 	{
