@@ -26,10 +26,10 @@ public class RectComponent extends DraggableComponent
 	{
 		RenderUtil.setColor(this.color);
 		RenderUtil.renderRectSingle(
-				pos.getRelativeX() - this.rx,
-				pos.getRelativeY() - this.ry,
-				pos.getRelativeX() - this.rx + this.width,
-				pos.getRelativeY() - this.ry + this.height);
+				pos.getRelativeX() + this.rx,
+				pos.getRelativeY() + this.ry,
+				pos.getRelativeX() + this.rx + this.width,
+				pos.getRelativeY() + this.ry + this.height);
 		RenderUtil.resetColor();
 	}
 }

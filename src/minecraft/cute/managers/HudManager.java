@@ -28,7 +28,7 @@ public class HudManager extends BaseManager
 	public static List<IRender> defaultRenders = Arrays.asList
 			(
 				//new DraggableText()
-				new DraggableObj()
+				new DraggableObj(0,0)
 			);
 
 	public void registerDefault()

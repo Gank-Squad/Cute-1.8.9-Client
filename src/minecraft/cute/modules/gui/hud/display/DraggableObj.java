@@ -6,7 +6,9 @@ import cute.eventapi.EventManager;
 import cute.modules.gui.hud.IRender;
 import cute.modules.gui.hud.ScreenPosition;
 import cute.util.RenderUtil;
+//import cute.util.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 
 public class DraggableObj implements IRender
 {
@@ -24,27 +26,18 @@ public class DraggableObj implements IRender
 	private int height;
 	private int width;
 	
+	private int t;
+	private int l;
 	
 	public DraggableObj()
 	{
-		this.pos.setRelative(50, 50);
-		
+		this.pos.setRelative(0, 0);
 		setEnabled(isEnabled);
-//		DraggableComponent c = new DraggableComponent(
-//					0, 0, 40, 40,
-//					(int)pos.getRelativeX(),
-//					(int)pos.getRelativeY(),
-//					0x00000080
-//				);
-//		addComponent(c);
-//		DraggableComponent d = new DraggableComponent(
-//				0, 10,
-//				(int)pos.getRelativeX(),
-//				(int)pos.getRelativeY(),
-//				"nyah owo",
-//				0xFF00FFFF
-//			);
-//		addComponent(d);
+	}
+	public DraggableObj(int x, int y)
+	{
+		this.pos.setRelative(x, y);
+		setEnabled(isEnabled);
 	}
 	
 	public void setEnabled(boolean isEnabled)
@@ -63,8 +56,8 @@ public class DraggableObj implements IRender
 	public void calcWidth()
 	{
 		// check every component and keep track of leftmost and rightmost point
-		int left = 9999999;
-		int right = -9999999;
+		int left = Integer.MAX_VALUE;
+		int right = -Integer.MAX_VALUE;
 		
 		for (DraggableComponent c : components)
 		{
@@ -77,13 +70,13 @@ public class DraggableObj implements IRender
 				right = c.getAbsoluteX() + c.getWidth();
 			}
 		}
-		
+
 		this.width = right - left;
 	}
 	public void calcHeight()
 	{
-		int top = 99999;
-		int bot = -99999;
+		int top = Integer.MAX_VALUE;
+		int bot = -Integer.MAX_VALUE;
 		
 		for (DraggableComponent c : components)
 		{
@@ -108,27 +101,6 @@ public class DraggableObj implements IRender
 		{
 			component.checkPos((int)pos.getRelativeX(), (int)pos.getRelativeY());
 			component.render();
-//			
-//			if (component.isString())
-//			{
-//				this.mc.fontRendererObj.drawStringWithShadow(
-//						component.getText(),
-//						(int)component.getAbsoluteX(),
-//						(int)component.getAbsoluteY(),
-//						(int)component.getColor()
-//						);
-//			}
-//			else
-//			{
-//				RenderUtil.setColor(component.getColor());
-//				RenderUtil.renderRectSingle(
-//						component.getAbsoluteX(),
-//						component.getAbsoluteY(),
-//						component.getAbsoluteX() + component.getWidth(),
-//						component.getAbsoluteY() + component.getHeight()
-//						);
-//				RenderUtil.resetColor();
-//			}
 		}
 		
 	}
@@ -145,6 +117,7 @@ public class DraggableObj implements IRender
 		
 		RenderUtil.setColor(0x8d8d8d80);
 		RenderUtil.renderRectSingle(
+//					this.l, this.t,
 					(int)pos.getRelativeX(),
 					(int)pos.getRelativeY(),
 					(int)pos.getRelativeX() + this.width,
@@ -160,6 +133,10 @@ public class DraggableObj implements IRender
 	public void setPos(ScreenPosition pos)
 	{
 		this.pos = pos;
+	}
+	public void setPos(int x, int y)
+	{
+		this.pos.setRelative(x,y);
 	}
 	public int getWidth()
 	{

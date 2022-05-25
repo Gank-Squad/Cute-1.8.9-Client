@@ -50,8 +50,8 @@ public class TextComponent extends DraggableComponent
 	{
 		this.mc.fontRendererObj.drawStringWithShadow(
 				 this.text,
-				(int)(pos.getRelativeX() - this.rx),
-				(int)(pos.getRelativeY() - this.ry),
+				(int)(pos.getRelativeX() + this.rx),
+				(int)(pos.getRelativeY() + this.ry),
 				(int)this.color
 				);
 	}
