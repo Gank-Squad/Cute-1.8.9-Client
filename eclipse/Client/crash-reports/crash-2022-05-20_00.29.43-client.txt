@@ -1,0 +1,64 @@
+---- Minecraft Crash Report ----
+// Uh... Did I do that?
+
+Time: 5/20/22 12:29 AM
+Description: Initializing game
+
+java.lang.Error: Unresolved compilation problem: 
+
+	at cute.managers.ModuleManager.getModules(ModuleManager.java:60)
+	at net.minecraft.client.settings.GameSettings.<init>(GameSettings.java:343)
+	at net.minecraft.client.Minecraft.startGame(Minecraft.java:484)
+	at net.minecraft.client.Minecraft.run(Minecraft.java:415)
+	at net.minecraft.client.main.Main.main(Main.java:113)
+	at Start.main(Start.java:11)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Stacktrace:
+	at cute.managers.ModuleManager.getModules(ModuleManager.java:60)
+	at net.minecraft.client.settings.GameSettings.<init>(GameSettings.java:343)
+	at net.minecraft.client.Minecraft.startGame(Minecraft.java:484)
+
+-- Initialization --
+Details:
+Stacktrace:
+	at net.minecraft.client.Minecraft.run(Minecraft.java:415)
+	at net.minecraft.client.main.Main.main(Main.java:113)
+	at Start.main(Start.java:11)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.8.9
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 1.8.0_332, Temurin
+	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode), Temurin
+	Memory: 893963912 bytes (852 MB) / 1029177344 bytes (981 MB) up to 1029177344 bytes (981 MB)
+	JVM Flags: 2 total; -Xmx1024M -Xms1024M
+	IntCache: cache: 0, tcache: 0, allocated: 0, tallocated: 0
+	Launched Version: mcp
+	LWJGL: 2.9.4
+	OpenGL: ~~ERROR~~ RuntimeException: No OpenGL context found in the current thread.
+	GL Caps: 
+	Using VBOs: ~~ERROR~~ NullPointerException: null
+	Is Modded: Very likely; Jar signature invalidated
+	Type: Client (map_client.txt)
+	Resource Packs: ~~ERROR~~ NullPointerException: null
+	Current Language: ~~ERROR~~ NullPointerException: null
+	Profiler Position: N/A (disabled)
+	CPU: <unknown>
+	OptiFine Version: OptiFine_1.8.9_HD_U_M5
+	OptiFine Build: ~~NULL~~
+	Render Distance Chunks: 8
+	Mipmaps: 4
+	Anisotropic Filtering: 1
+	Antialiasing: 0
+	Multitexture: false
+	Shaders: null
+	OpenGlVersion: null
+	OpenGlRenderer: null
+	OpenGlVendor: null
+	CpuCount: 16

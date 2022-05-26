@@ -172,17 +172,18 @@ public class ESPEntity extends Module
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
 		GL11.glDepthMask(false);
 
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
 		GL11.glEnable(GL32.GL_DEPTH_CLAMP);
-		
+
 		GL11.glLineWidth((float)lineWidth.getValue());
 
-        
         for(Entity entity : this.mc.theWorld.loadedEntityList) 
 		{
         	if(entity instanceof EntityPlayerSP )//|| !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
@@ -252,6 +253,7 @@ public class ESPEntity extends Module
 		GL11.glDisable(GL32.GL_DEPTH_CLAMP);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
 		
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		

@@ -17,6 +17,7 @@ public class Checkbox extends Setting
 	public void toggleValue() 
 	{
 		this._checked = !this._checked;
+		this.update(true, this._checked);
 	}
 	
 	public String getName() 
@@ -32,5 +33,6 @@ public class Checkbox extends Setting
 	public void setChecked(boolean newValue) 
 	{
 		this._checked = newValue;
+		this.update(true, this._checked);
 	}
 }

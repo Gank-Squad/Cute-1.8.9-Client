@@ -1,0 +1,9 @@
+{
+  "Name": "Fake Player",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "SubSettings": {}
+  }
+}

@@ -14,7 +14,7 @@ import cute.modules.bot.FakePlayer;
 import cute.modules.client.Players;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
-import cute.modules.gui.Hud;
+import cute.modules.gui.hud.Hud;
 import cute.modules.render.DataViewer;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
@@ -29,10 +29,6 @@ import net.minecraft.client.gui.GuiScreen;
 public class ModuleManager extends BaseManager
 {
 	public static final ModuleManager INSTANCE = new ModuleManager();
-	
-	private ModuleManager() 
-	{
-	}
 	
 	public static List<Module> modules = Arrays.asList
 				(

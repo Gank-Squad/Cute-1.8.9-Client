@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ChatComponentText;
 
 public class Util
@@ -63,6 +64,12 @@ public class Util
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
+	
+	public static ScaledResolution getScaledRes()
+	{
+		final ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+		return res;
+	}
 	
 }
 

@@ -1,0 +1,9 @@
+{
+  "Name": "Players",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "SubSettings": {}
+  }
+}

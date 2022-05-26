@@ -1,0 +1,10 @@
+{
+  "Name": "Volume",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "Explosion": 0.5909090909090909,
+    "SubSettings": {}
+  }
+}

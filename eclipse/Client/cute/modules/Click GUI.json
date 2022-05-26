@@ -2,7 +2,7 @@
   "Name": "Click GUI",
   "Enabled": false,
   "Drawn": true,
-  "Bind": 0,
+  "Bind": 54,
   "Settings": {
     "SubSettings": {}
   }

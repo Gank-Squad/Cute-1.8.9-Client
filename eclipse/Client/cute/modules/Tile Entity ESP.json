@@ -1,0 +1,18 @@
+{
+  "Name": "Tile Entity ESP",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "Color": true,
+    "Line Width": 2.5,
+    "SubSettings": {
+      "Color": {
+        "Red": 215,
+        "Green": 46,
+        "Blue": 46,
+        "Alpha": 255
+      }
+    }
+  }
+}

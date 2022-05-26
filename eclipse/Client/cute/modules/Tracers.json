@@ -11,9 +11,9 @@
     "Vehicles": true,
     "Items": true,
     "Line Width": 2.5,
-    "X Radius": 100.0,
-    "Y Radius": 50.0,
-    "Render From Y": 99.0,
+    "Radius": 100.0,
+    "Alpha Sensitivity": 1.0,
+    "Y Render Point": 99.0,
     "SubSettings": {
       "Player Picker": {
         "Red": 215,

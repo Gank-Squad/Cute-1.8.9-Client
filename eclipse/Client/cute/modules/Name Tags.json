@@ -1,0 +1,13 @@
+{
+  "Name": "Name Tags",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "Names": true,
+    "Armor/Hand": true,
+    "Scale Distance": 20.0,
+    "Size Scale": 0.25,
+    "SubSettings": {}
+  }
+}

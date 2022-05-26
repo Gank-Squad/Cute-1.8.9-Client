@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import cute.ui.components.Button;
 import cute.ui.components.Component;
+import cute.Client;
 import cute.settings.Slider;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
@@ -63,12 +64,12 @@ public class SliderButton extends Component
 	{		
 		// render the background 
 		RenderUtil.beginRenderRect();
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(x + 2, y, x + width, y + this.height);
 		RenderUtil.renderRect(x, y, x + 2, y + this.height);
 		
 		// render the slider 
-		RenderUtil.setColor(this.sliderColor);
+		RenderUtil.setColor(Client.GlobalColors.sliderColor);
 		RenderUtil.renderRect(x + 2, y, x + (int)this.renderWidth, y + this.height);
 		
 		// render the slider again if hovered (alpha adds up so it's brighter)
@@ -90,7 +91,7 @@ public class SliderButton extends Component
 				displayValue, 
 				(this.x + 3) * Component.tScale + 4, 
 				(this.y + 2) * Component.tScale + 2, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		// render the value
 		displayValue = String.valueOf(Util.roundToPlace(this.setting.getValue(), 2));
@@ -99,7 +100,7 @@ public class SliderButton extends Component
 				displayValue, 
 				(this.x + this.width) * Component.tScale - FontUtil.getStringWidth(displayValue), 
 				(this.y + 2)          * Component.tScale + 2,
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 
 		GL11.glPopMatrix();

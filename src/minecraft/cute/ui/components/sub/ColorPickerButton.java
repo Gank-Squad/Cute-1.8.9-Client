@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 
 import cute.ui.components.Button;
 import cute.ui.components.Component;
+import cute.Client;
 import cute.settings.ColorPicker;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
@@ -74,7 +75,7 @@ public class ColorPickerButton extends Component
 		
 		// background
 		RenderUtil.beginRenderRect();
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(x + 2, y, x + width, y + this.getHeight());
 		
 		// preview color 
@@ -82,15 +83,15 @@ public class ColorPickerButton extends Component
 		RenderUtil.renderRect(x + 2, y, x + this.width, y + this.previewColorHeight);
 		
 		// red slider 
-		RenderUtil.setColor(this.red);
+		RenderUtil.setColor(Client.GlobalColors.red);
 		RenderUtil.renderRect(x + 2, y + previewOffset, x + (int)this.redWidth, y + this.height + this.previewColorHeight );
 		
 		// green slider 
-		RenderUtil.setColor(this.green);
+		RenderUtil.setColor(Client.GlobalColors.green);
 		RenderUtil.renderRect(x + 2, y + previewOffset + this.height, x + (int)this.greenWidth, y + this.height * 2 + this.previewColorHeight);
 		
 		// blue slider 
-		RenderUtil.setColor(this.blue);
+		RenderUtil.setColor(Client.GlobalColors.blue);
 		RenderUtil.renderRect(x + 2, y + previewOffset + this.height * 2, x + (int)this.blueWidth, y + this.height * 3 + this.previewColorHeight);
 		RenderUtil.endRenderRect();
 		
@@ -106,7 +107,7 @@ public class ColorPickerButton extends Component
 				displaValue + " ", 
 				(this.x                ) * Component.tScale + 4, 
 				(this.y + previewOffset) * Component.tScale + 3, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		// green value
 		displaValue =  String.valueOf(this.setting.getGreen());
@@ -115,7 +116,7 @@ public class ColorPickerButton extends Component
 				displaValue + " ", 
 				(this.x                              ) * Component.tScale + 4, 
 				(this.y + previewOffset + this.height) * Component.tScale + 3, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		// blue value 
 		displaValue =  String.valueOf(this.setting.getBlue());
@@ -124,7 +125,7 @@ public class ColorPickerButton extends Component
 				displaValue + " ", 
 				(this.x                                  ) * Component.tScale + 4, 
 				(this.y + previewOffset + this.height * 2) * Component.tScale + 3, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		GL11.glPopMatrix();
 	}

@@ -1,0 +1,10 @@
+{
+  "Name": "XRay",
+  "Enabled": false,
+  "Drawn": true,
+  "Bind": 0,
+  "Settings": {
+    "Check Sides": true,
+    "SubSettings": {}
+  }
+}

@@ -5,6 +5,7 @@ import java.util.stream.Stream;
 
 import org.lwjgl.opengl.GL11;
 
+import cute.Client;
 import cute.settings.ListSelection;
 import cute.settings.enums.ListType;
 import cute.ui.components.Button;
@@ -85,7 +86,7 @@ public class SearchButton extends TextButton
 		int range = Math.min(this.foundSearchTerms.length, scrollIndex + this.listCap);
 		
 		// render background for the list of blocks 
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRectSingle(lx + 2, ly, lx + width, ly + this.getListHeight());
 		
 		GL11.glPushMatrix();
@@ -96,13 +97,13 @@ public class SearchButton extends TextButton
 				"/\\     " + String.valueOf(scrollIndex) + "-" + String.valueOf(range) + "/" + String.valueOf(this.foundSearchTerms.length), 
 				lx * Component.tScale + 4, 
 				ly * Component.tScale + 4, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		FontUtil.drawStringWithShadow(
 				"\\/", 
 				lx * Component.tScale + 4, 
 				(ly + this.getListHeight() - this.scrollButtonSize) * Component.tScale + 2, 
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		
 		// render all the blocks 
@@ -131,7 +132,7 @@ public class SearchButton extends TextButton
 					display + " ", 
 					lx * Component.tScale + 4, 
 					ly * Component.tScale + 4, 
-					this.textColorInt);
+					Client.GlobalColors.textColorInt);
 
 			ly += this.height;
 		}

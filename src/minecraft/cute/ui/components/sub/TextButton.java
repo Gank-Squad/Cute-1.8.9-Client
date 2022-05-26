@@ -3,6 +3,7 @@ package cute.ui.components.sub;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import cute.Client;
 import cute.ui.ClickUI;
 import cute.ui.components.Button;
 import cute.ui.components.Component;
@@ -53,7 +54,7 @@ public class TextButton extends Component
 		RenderUtil.beginRenderRect();
 		
 		// background 
-		RenderUtil.setColor(this.backColor);
+		RenderUtil.setColor(Client.GlobalColors.backColor);
 		RenderUtil.renderRect(x + 2, y, x + width, y + this.getHeight());
 		RenderUtil.renderRect(x    , y, x + 2    , y + this.getHeight());
 		RenderUtil.endRenderRect();
@@ -68,7 +69,7 @@ public class TextButton extends Component
 				text, 
 				(this.x + 3) * Component.tScale + 4, 
 				(this.y + 2) * Component.tScale + 2,
-				this.textColorInt);
+				Client.GlobalColors.textColorInt);
 		
 		GL11.glPopMatrix();
 	}
