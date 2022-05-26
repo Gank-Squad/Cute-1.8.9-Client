@@ -526,6 +526,59 @@ public class RenderItem implements IResourceManagerReloadListener
          this.renderItemGui = false;
     }
     
+    public void renderItemForHUD(ItemStack stack, int x, int y, int z)
+    {
+    	 this.renderItemGui = true;
+         IBakedModel ibakedmodel = this.itemModelMesher.getItemModel(stack);
+         GlStateManager.pushMatrix();
+         this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
+         this.textureManager.getTexture(TextureMap.locationBlocksTexture).setBlurMipmap(false, false);
+         GlStateManager.enableRescaleNormal();
+         
+         GlStateManager.alphaFunc(516, 0.1F);
+         GlStateManager.enableBlend();
+         GlStateManager.blendFunc(770, 771);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+         
+         /////////////////////////////////////// was setup function
+         GlStateManager.translate(x, y, z);
+         GlStateManager.translate(8.0F, 8.0F, 0.0F);
+         GlStateManager.scale(1.0F, 1.0F, -1.0F);
+         GlStateManager.scale(0.5F, 0.5F, 0.5F);
+
+         if (ibakedmodel.isGui3d())
+         {
+        	 GlStateManager.scale(40.0F, 40.0F, 40.0F);
+             GlStateManager.rotate(210.0F, 1.0F, 0.0F, 0.0F);
+             GlStateManager.rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+             GlStateManager.enableLighting();
+         }
+         else
+         {
+        	 GlStateManager.scale(64.0F, 64.0F, 64.0F);
+             GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+             GlStateManager.disableLighting();
+         }
+         //////////////////////////////////////
+         GlStateManager.enableAlpha();
+         
+         if (Reflector.ForgeHooksClient_handleCameraTransforms.exists())
+         {
+             ibakedmodel = (IBakedModel)Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, new Object[] {ibakedmodel, ItemCameraTransforms.TransformType.GUI});
+         }
+         else
+         {
+             ibakedmodel.getItemCameraTransforms().applyTransform(ItemCameraTransforms.TransformType.GUI);
+         }
+
+         this.renderItem(stack, ibakedmodel);
+         GlStateManager.disableRescaleNormal();
+         GlStateManager.disableLighting();
+         GlStateManager.popMatrix();
+         this.textureManager.bindTexture(TextureMap.locationBlocksTexture);
+         this.textureManager.getTexture(TextureMap.locationBlocksTexture).restoreLastBlurMipmap();
+         this.renderItemGui = false;
+    }
     
     public void renderItemIntoGUI(ItemStack stack, int x, int y)
     {

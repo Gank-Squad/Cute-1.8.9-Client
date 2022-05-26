@@ -6,15 +6,6 @@ import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.HudManager;
 import cute.managers.ModuleManager;
-import cute.modules.gui.hud.display.DraggableObj;
-import cute.modules.gui.hud.display.component.ItemComponent;
-import cute.modules.gui.hud.display.component.RectComponent;
-import cute.modules.gui.hud.display.component.TextComponent;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemAppleGold;
-import net.minecraft.item.ItemStack;
-import net.minecraft.client.Minecraft;
 
 public class Client 
 {
@@ -69,42 +60,40 @@ public class Client
 		HudManager.INSTANCE.registerDefault();
 		
 		ConfigManager.loadConfig();
-		
-//		
-//		
-//		this.pos.setRelative(res.getScaledWidth() - 50, res.getScaledHeight() - 50);
-		
+
 		
 		// this is super ugly but this would be how you'd construct complex components
 		// just string together individual smaller bois 
-		DraggableObj obj =((DraggableObj)HudManager.defaultRenders.get(0));
+//		DraggableObj obj =((DraggableObj)HudManager.defaultRenders.get(0));
 		
-		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
+//		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 //		obj.setPos(res.getScaledWidth() - 40, res.getScaledHeight() - 40);
-		obj.setPos(20,20);
+//		obj.setPos(20,20);
 		
 		
 		
-		RectComponent re = new RectComponent(0,0,4,30,
-				(int)obj.getPos().getRelativeX(),
-				(int)obj.getPos().getRelativeY(), -1);
-		RectComponent re2 = new RectComponent(0,0,26,26,
-				(int)obj.getPos().getRelativeX(),
-				(int)obj.getPos().getRelativeY(), 0xFFFF00FF);
+//		RectComponent re = new RectComponent(0,0,4,30,
+//				(int)obj.getPos().getRelativeX(),
+//				(int)obj.getPos().getRelativeY(), -1);
+//		
+//		RectComponent re2 = new RectComponent(0,0,26,26,
+//				(int)obj.getPos().getRelativeX(),
+//				(int)obj.getPos().getRelativeY(), 0xFFFF00FF);
+		
 //		TextComponent rt = new TextComponent(0,0,
 //				(int)obj.getPos().getRelativeX(),
 //				(int)obj.getPos().getRelativeY(),
 //				"uwu", -1);
 		
-		ItemComponent ri = new ItemComponent(0,0, 16, 16,
-				new ItemStack(Item.itemRegistry.getObjectById(2)),
-				(int)obj.getPos().getRelativeX(),
-				(int)obj.getPos().getRelativeY());
+//		ItemComponent ri = new ItemComponent(0,0, 16, 16,
+//				new ItemStack(Item.itemRegistry.getObjectById(2)),
+//				(int)obj.getPos().getRelativeX(),
+//				(int)obj.getPos().getRelativeY());
 		
-		obj.addComponent(re2);
-		obj.addComponent(re);
+//		obj.addComponent(re2);
+//		obj.addComponent(re);
 //		obj.addComponent(rt);
-		obj.addComponent(ri);
+//		obj.addComponent(ri);
 		
 		// for debug cause eclipse puts it at unlimited for some reason 
 //		Minecraft.getMinecraft().gameSettings.limitFramerate = 60;
@@ -121,7 +110,7 @@ public class Client
 	
 	public void shutdown()
 	{
-		System.out.println("Client shutting down...");
+
 	}
 	
 	

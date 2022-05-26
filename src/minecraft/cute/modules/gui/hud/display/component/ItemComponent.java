@@ -4,9 +4,14 @@ import org.lwjgl.opengl.GL11;
 
 import cute.modules.gui.hud.ScreenPosition;
 import cute.modules.gui.hud.display.DraggableComponent;
+import cute.util.RenderUtil;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.src.Config;
+import net.optifine.shaders.Shaders;
 
 public class ItemComponent extends DraggableComponent
 {
@@ -43,40 +48,36 @@ public class ItemComponent extends DraggableComponent
 	@Override
 	public void render()
 	{
-		GL11.glPushMatrix();
-		GlStateManager.disableLighting();
 		RenderItem renderitem = this.mc.getRenderItem();
-		
-		GL11.glScalef((float)getScaleX(this.width), (float)getScaleY(this.height), (float)1);
 
-//        renderitem.renderitemForNameTag(this.item,
-//        		(int)((this.x - 2 * getScaleX(this.width)) / getScaleX(this.width)),
-//        		(int)((this.y - 2 * getScaleY(this.height)) / getScaleY(this.height)), 10);
+		GL11.glPushMatrix();
+		GL11.glScalef((float)getScaleX(this.width), (float)getScaleY(this.height), (float)1);
 		
-		renderitem.renderItemIntoGUI(this.item,
+		// bless GuiContainer.java, this make the lighting work
+		RenderHelper.enableGUIStandardItemLighting();
+
+		renderitem.renderItemForHUD(this.item,
         		(int)((this.x) / getScaleX(this.width)),
-        		(int)((this.y) / getScaleY(this.height)));
-//        renderitem.renderItemOverlayIntoGUIForNameTags(this.mc.fontRendererObj, this.item, this.x, this.y, null);
-        
-		GlStateManager.enableLighting();
+        		(int)((this.y) / getScaleY(this.height)), 10);
+
         GL11.glPopMatrix();
 	}
 	
 	@Override
 	public void renderDummy(ScreenPosition pos)
 	{
-		GL11.glPushMatrix();
-		GlStateManager.disableDepth();
-		
 		RenderItem renderitem = this.mc.getRenderItem();
 		
+		GL11.glPushMatrix();
 		GL11.glScalef((float)getScaleX(this.width), (float)getScaleY(this.height), (float)1);
 		
-		renderitem.renderitemForNameTag(this.item, 
+		// bless GuiContainer.java, this make the lighting work
+		RenderHelper.enableGUIStandardItemLighting();
+		renderitem.renderItemForHUD(this.item, 
         		(int)((pos.getRelativeX() + (this.rx)) / getScaleX(this.width)), 
         		(int)((pos.getRelativeY() + (this.ry)) / getScaleY(this.height)), 10);
         
-		GlStateManager.enableDepth();
+		
         GL11.glPopMatrix();
     }
 
