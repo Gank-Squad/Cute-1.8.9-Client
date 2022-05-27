@@ -14,17 +14,17 @@ public class TextComponent extends DraggableComponent
 	private float scaleX;
 	private float scaleY;
 
-	public TextComponent(int relativeX, int relativeY, String text, int color)
-	{
-		super(relativeX, relativeY, 
-				Minecraft.getMinecraft().fontRendererObj.getStringWidth(text), 
-				Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT, 
-				color);
-		
-//		this.scaleX = 1;
-//		this.scaleY = 1;
-		this.text = text;
-	}
+//	public TextComponent(int relativeX, int relativeY, String text, int color)
+//	{
+//		super(relativeX, relativeY, 
+//				Minecraft.getMinecraft().fontRendererObj.getStringWidth(text), 
+//				Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT, 
+//				color);
+//		
+////		this.scaleX = 1;
+////		this.scaleY = 1;
+//		this.text = text;
+//	}
 	public TextComponent(int relativeX, int relativeY, int width, int height, String text, int color)
 	{
 		super(relativeX, relativeY, width, height, color);
@@ -39,6 +39,8 @@ public class TextComponent extends DraggableComponent
 				(int)(Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT * scaleY),
 				color);
 		this.text = text;
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
 	}
 	
 	public void setScaleX(float width)
@@ -53,8 +55,8 @@ public class TextComponent extends DraggableComponent
 	public void setText(String text)
 	{
 		this.text = text;
-		this.width = this.mc.fontRendererObj.getStringWidth(text);
-		this.height = this.mc.fontRendererObj.FONT_HEIGHT + 3;
+		this.width = (int)(this.mc.fontRendererObj.getStringWidth(text));
+		this.height = (int)((this.mc.fontRendererObj.FONT_HEIGHT + 3) );
 	}
 	
 	public String getText()

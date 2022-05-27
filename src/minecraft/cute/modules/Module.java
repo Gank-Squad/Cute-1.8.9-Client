@@ -48,7 +48,7 @@ public class Module
 		this.setup();	
 	}
 
-//	public Module() { }
+	
 	
 	// i would make this final and put it in the constructor but 
 	// it's annoying to have to init modules in the gameSettings class
@@ -69,6 +69,11 @@ public class Module
 	{
 		return mc.theWorld == null || 
 			   mc.thePlayer == null;
+	}
+	
+	public void delayedSetup()
+	{
+		
 	}
 	
 	public void setup() 

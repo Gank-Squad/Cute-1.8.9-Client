@@ -30,28 +30,49 @@ public class ModuleManager extends BaseManager
 {
 	public static final ModuleManager INSTANCE = new ModuleManager();
 	
-	public static List<Module> modules = Arrays.asList
-				(
-					new FakePlayer(),
-					
-					new ClickGUI(),
-					new Hud(),
-					new Players(),
-					
-					new ESPBlocks(),
-					new ESPEntity(),
-					new DataViewer(),
-					new Fullbright(),
-					new Tracers(),
-					new ProjectileTracer(),
-					new NameTags(),
-					new NoRender(),
-					new XRay(),
-					
-					new Sounds()
-				);
+	public static List<Module> modules = new ArrayList<Module>(); 
+//			Arrays.asList
+//				(
+//					new FakePlayer(),
+//					
+//					new ClickGUI(),
+//					new Hud(),
+//					new Players(),
+//					
+//					new ESPBlocks(),
+//					new ESPEntity(),
+//					new DataViewer(),
+//					new Fullbright(),
+//					new Tracers(),
+//					new ProjectileTracer(),
+//					new NameTags(),
+//					new NoRender(),
+//					new XRay(),
+//					
+//					new Sounds()
+//				);
+//	
 	
-	
+	public static void initModule()
+	{
+		modules.add(new FakePlayer());
+		
+		modules.add(new ClickGUI());
+		modules.add(new Hud());
+		
+		modules.add(new Players());
+		modules.add(new ESPBlocks());
+		modules.add(new ESPEntity());
+		modules.add(new Fullbright());
+		modules.add(new Tracers());
+		modules.add(new ProjectileTracer());
+		modules.add(new DataViewer());
+		modules.add(new NameTags());
+		modules.add(new NoRender());
+		modules.add(new XRay());
+		
+		modules.add(new Sounds());
+	}
 	
 	public static List<Module> getModules()
 	{
@@ -95,6 +116,13 @@ public class ModuleManager extends BaseManager
 //		ModuleManager.onFastUpdate();
 //	}
 
+	public static void callDelaySetup()
+	{
+		for(Module m : modules)
+		{
+			m.delayedSetup();
+		}
+	}
 	
 	public static void onUpdate() 
 	{

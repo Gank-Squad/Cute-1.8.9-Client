@@ -30,11 +30,9 @@ public class DraggableObj implements IRender
 //	
 //	private double rx;
 //	private double ry;
-	private ScaledResolution res;
 	
 	public DraggableObj()
 	{
-		res = new ScaledResolution(Minecraft.getMinecraft());
 		this.pos.setRelative(0, 0);
 		setEnabled(isEnabled);
 		
@@ -43,12 +41,7 @@ public class DraggableObj implements IRender
 	}
 	public DraggableObj(int x, int y)
 	{
-		res = new ScaledResolution(Minecraft.getMinecraft());
-//		rx = x;
-//		ry = y;
-		this.pos.setRelative(
-					x,y
-				);
+		this.pos.setRelative(x, y);
 		setEnabled(isEnabled);
 		this.width = 0;
 		this.height = 0;
@@ -146,8 +139,6 @@ public class DraggableObj implements IRender
 	
 	public void render()
 	{
-		// draw all the components
-		res = new ScaledResolution(Minecraft.getMinecraft());
 		for (DraggableComponent component : components)
 		{
 			component.checkPos((int)pos.getAbsoluteX(), (int)pos.getAbsoluteY());
@@ -156,12 +147,7 @@ public class DraggableObj implements IRender
 		
 	}
 	public void renderDummy(ScreenPosition pos)
-	{
-		// draw all the components with position given in pos 
-		// also draw another rect (this.width, this.height) and make it grey
-		// may do an outline in the future
-		res = new ScaledResolution(Minecraft.getMinecraft());
-		
+	{	
 //		ScreenPosition pos2 = pos;
 //		pos = new ScreenPosition(
 //				(float)absCoordsX(pos.getRelativeX()),

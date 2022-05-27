@@ -337,9 +337,9 @@ public class GameSettings
         this.loadOptions();
         Config.initGameSettings(this);
         
-        
         // very important you do this here, if you don't, goodluck with keybinds
         // otherwise opening the controls menu crashes the game ???
+        ModuleManager.initModule();
         for(Module CUTE_MOD : ModuleManager.getModules())
         {
         	this.registerKeybind(CUTE_MOD.initKeybinding());
@@ -355,6 +355,7 @@ public class GameSettings
         this.forceUnicodeFont = "en_US";
         this.logger = false;
         
+        ModuleManager.initModule();
         for(Module CUTE_MOD : ModuleManager.getModules())
         {
         	this.registerKeybind(CUTE_MOD.initKeybinding());

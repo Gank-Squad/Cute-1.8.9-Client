@@ -7,7 +7,7 @@ public class ScreenPosition
 {
 	protected double x;
 	protected double y;
-	protected double baseScale = 1000;
+	protected double baseScale = 100000;
 	
 	public ScreenPosition(double x, double y)
 	{
