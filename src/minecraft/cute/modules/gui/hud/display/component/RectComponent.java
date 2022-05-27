@@ -7,9 +7,9 @@ import cute.util.RenderUtil;
 public class RectComponent extends DraggableComponent
 {
 
-	public RectComponent(int relativeX, int relativeY, int width, int height, int parentX, int parentY, int color) 
+	public RectComponent(int relativeX, int relativeY, int width, int height, int color) 
 	{
-		super(relativeX, relativeY, width, height, parentX, parentY, color);
+		super(relativeX, relativeY, width, height, color);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -26,10 +26,10 @@ public class RectComponent extends DraggableComponent
 	{
 		RenderUtil.setColor(this.color);
 		RenderUtil.renderRectSingle(
-				pos.getRelativeX() + this.rx,
-				pos.getRelativeY() + this.ry,
-				pos.getRelativeX() + this.rx + this.width,
-				pos.getRelativeY() + this.ry + this.height);
+				pos.getAbsoluteX() + this.rx,
+				pos.getAbsoluteY() + this.ry,
+				pos.getAbsoluteX() + this.rx + this.width,
+				pos.getAbsoluteY() + this.ry + this.height);
 		RenderUtil.resetColor();
 	}
 }

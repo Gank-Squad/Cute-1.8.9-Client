@@ -53,7 +53,7 @@ public class HudConfigScreen extends GuiScreen
 		// but the dragging is way smoother when it's here in the render function
 		if (selectedRenderer.isPresent())
 		{
-			renderers.get(selectedRenderer.get()).setRelative(mouseX - this.prevX, mouseY - this.prevY);
+			renderers.get(selectedRenderer.get()).setAbsolute(mouseX - this.prevX, mouseY - this.prevY);
 		}
 		
 		for (IRender renderer : renderers.keySet())
@@ -112,16 +112,15 @@ public class HudConfigScreen extends GuiScreen
 	{
 		if(btn != 0)
 			return;
-		
 		this.loadMouseOver(x, y); // set the selected renderer 
 			
 		// if the renderer was selected, adjust the prevXY so it's not 0
 		if (selectedRenderer.isPresent()) 
 		{
 			ScreenPosition pos = renderers.get(selectedRenderer.get());
-			
-			this.prevX = (int)(x - pos.getRelativeX());
-			this.prevY = (int)(y - pos.getRelativeY());
+
+			this.prevX = (int)(x - pos.getAbsoluteX());
+			this.prevY = (int)(y - pos.getAbsoluteY());
 		}
 	}
 
@@ -166,8 +165,8 @@ public class HudConfigScreen extends GuiScreen
 		{
 			ScreenPosition pos = renderers.get(renderer);
 			
-			double absoluteX = pos.getRelativeX();
-			double absoluteY = pos.getRelativeY();
+			double absoluteX = pos.getAbsoluteX();
+			double absoluteY = pos.getAbsoluteY();
 		
 			return mouseX >= absoluteX && mouseX <= absoluteX + renderer.getWidth() &&
 				   mouseY >= absoluteY && mouseY <= absoluteY + renderer.getHeight();

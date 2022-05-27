@@ -7,6 +7,7 @@ public class ScreenPosition
 {
 	protected double x;
 	protected double y;
+	protected double baseScale = 1000;
 	
 	public ScreenPosition(double x, double y)
 	{
@@ -32,13 +33,13 @@ public class ScreenPosition
 	public int getAbsoluteX()
 	{
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		return (int)(x * res.getScaledWidth());
+		return (int)(x * res.getScaledWidth() / baseScale);
 	}
 	
 	public int getAbsoluteY()
 	{
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		return (int)(y * res.getScaledHeight());
+		return (int)(y * res.getScaledHeight() / baseScale);
 	}
 	
 	public double getRelativeX()
@@ -56,8 +57,8 @@ public class ScreenPosition
 	{
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 		
-		this.x = (double)(x / res.getScaledWidth());
-		this.y = (double)(y / res.getScaledHeight());
+		this.x = (double)(x / res.getScaledWidth() * baseScale);
+		this.y = (double)(y / res.getScaledHeight() * baseScale);
 	}
 	
 	public void setRelative(double x, double y)

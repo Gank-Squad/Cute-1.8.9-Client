@@ -17,25 +17,25 @@ public class ItemComponent extends DraggableComponent
 {
 	protected ItemStack item;
 	
-	public ItemComponent(int relativeX, int relativeY, ItemStack item, int parentX, int parentY) 
+	public ItemComponent(int relativeX, int relativeY, ItemStack item) 
 	{
-		super(relativeX, relativeY, 13, 13, parentX, parentY, -1);
+		super(relativeX, relativeY, 16, 16, -1);
 		
 		this.item = item;
 	}
-	public ItemComponent(int relativeX, int relativeY, int width, int height,  ItemStack item, int parentX, int parentY) 
+	public ItemComponent(int relativeX, int relativeY, int width, int height,  ItemStack item) 
 	{
-		super(relativeX, relativeY, width, height, parentX, parentY, -1);
+		super(relativeX, relativeY, width, height, -1);
 		System.out.println(width);
 		
 		this.item = item;
 	}
 	
 	
-	public void renderItem(float x, float y)
-	{
-		
-	}
+//	public void renderItem(float x, float y)
+//	{
+//		
+//	}
 	public float getScaleX(int x)
 	{
 		return x / 16;	
@@ -74,8 +74,8 @@ public class ItemComponent extends DraggableComponent
 		// bless GuiContainer.java, this make the lighting work
 		RenderHelper.enableGUIStandardItemLighting();
 		renderitem.renderItemForHUD(this.item, 
-        		(int)((pos.getRelativeX() + (this.rx)) / getScaleX(this.width)), 
-        		(int)((pos.getRelativeY() + (this.ry)) / getScaleY(this.height)), 10);
+        		(int)((pos.getAbsoluteX() + (this.rx)) / getScaleX(this.width)), 
+        		(int)((pos.getAbsoluteY() + (this.ry)) / getScaleY(this.height)), 10);
         
 		
         GL11.glPopMatrix();

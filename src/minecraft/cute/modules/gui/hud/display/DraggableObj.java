@@ -26,15 +26,32 @@ public class DraggableObj implements IRender
 	private int height;
 	private int width;
 	
+//	public final int baseScale = 1000;
+//	
+//	private double rx;
+//	private double ry;
+	private ScaledResolution res;
+	
 	public DraggableObj()
 	{
+		res = new ScaledResolution(Minecraft.getMinecraft());
 		this.pos.setRelative(0, 0);
 		setEnabled(isEnabled);
+		
+		this.width = 0;
+		this.height = 0;
 	}
 	public DraggableObj(int x, int y)
 	{
-		this.pos.setRelative(x, y);
+		res = new ScaledResolution(Minecraft.getMinecraft());
+//		rx = x;
+//		ry = y;
+		this.pos.setRelative(
+					x,y
+				);
 		setEnabled(isEnabled);
+		this.width = 0;
+		this.height = 0;
 	}
 	
 	public void setEnabled(boolean isEnabled)
@@ -49,7 +66,28 @@ public class DraggableObj implements IRender
 		EventManager.unregister(this);
 	}
 	
+//	public int absCoordsX(double relativePosX)
+//	{
+//		double mod = relativePosX / baseScale;
+//		return (int)(res.getScaledWidth() * mod);
+//	}
+//	public int absCoordsY(double relativePosY)
+//	{
+//		double mod = relativePosY / baseScale;
+//		return (int)(res.getScaledHeight() * mod);
+//	}
+//	public double relCoordsX(int absolutePosX)
+//	{
+//		double mod = absolutePosX / res.getScaledWidth();
+//		return baseScale * mod;
+//	}
+//	public double relCoordsY(int absolutePosY)
+//	{
+//		double mod = absolutePosY / res.getScaledWidth();
+//		return baseScale * mod;
+//	}
 	
+	// leaving this in in case we ever make it possible to remove components
 	public void calcWidth()
 	{
 		// check every component and keep track of leftmost and rightmost point
@@ -72,20 +110,13 @@ public class DraggableObj implements IRender
 	}
 	public void updateWidth(DraggableComponent c)
 	{
-		int left = (int)pos.getRelativeX();
-		int right = (int)pos.getRelativeX() + this.width;
-		
-		if (c.getAbsoluteX() < left)
+		if (c.getWidth() > this.width)
 		{
-			left = c.getAbsoluteX();
+			this.width = c.getWidth();
 		}
-		if (c.getAbsoluteX() + c.getWidth() > right)
-		{
-			right = c.getAbsoluteX() + c.getWidth();
-		}
-		this.width = right - left;
 	}
 	
+	// leaving this in in case we ever make it possible to remove components
 	public void calcHeight()
 	{
 		int top = Integer.MAX_VALUE;
@@ -107,26 +138,19 @@ public class DraggableObj implements IRender
 	}
 	public void updateHeight(DraggableComponent c)
 	{
-		int top = (int)pos.getRelativeY();
-		int bot = (int)pos.getRelativeY() + this.height;
-		
-		if (c.getAbsoluteY() < top)
+		if (c.getHeight() > this.height)
 		{
-			top = c.getAbsoluteY();
+			this.height = c.getAbsoluteY() + c.getHeight();
 		}
-		if (c.getAbsoluteY() + c.getHeight() > bot)
-		{
-			bot = c.getAbsoluteY() + c.getHeight();
-		}
-		this.height = bot - top;
 	}
 	
 	public void render()
 	{
 		// draw all the components
+		res = new ScaledResolution(Minecraft.getMinecraft());
 		for (DraggableComponent component : components)
 		{
-			component.checkPos((int)pos.getRelativeX(), (int)pos.getRelativeY());
+			component.checkPos((int)pos.getAbsoluteX(), (int)pos.getAbsoluteY());
 			component.render();
 		}
 		
@@ -136,6 +160,13 @@ public class DraggableObj implements IRender
 		// draw all the components with position given in pos 
 		// also draw another rect (this.width, this.height) and make it grey
 		// may do an outline in the future
+		res = new ScaledResolution(Minecraft.getMinecraft());
+		
+//		ScreenPosition pos2 = pos;
+//		pos = new ScreenPosition(
+//				(float)absCoordsX(pos.getRelativeX()),
+//				(float)absCoordsY(pos.getRelativeY())
+//				);
 		
 		for (DraggableComponent component : components)
 		{
@@ -144,12 +175,14 @@ public class DraggableObj implements IRender
 		
 		RenderUtil.setColor(0x8d8d8d80);
 		RenderUtil.renderRectSingle(
-					(int)pos.getRelativeX(),
-					(int)pos.getRelativeY(),
-					(int)pos.getRelativeX() + this.width,
-					(int)pos.getRelativeY() + this.height
+					(int)pos.getAbsoluteX(),
+					(int)pos.getAbsoluteY(),
+					(int)pos.getAbsoluteX() + this.width,
+					(int)pos.getAbsoluteY() + this.height
 				);
 		RenderUtil.resetColor();
+		
+//		pos = pos2;
 	}
 	
 	public ScreenPosition getPos()
@@ -162,7 +195,13 @@ public class DraggableObj implements IRender
 	}
 	public void setPos(int x, int y)
 	{
-		this.pos.setRelative(x,y);
+//		pos.setRelative(x, y);
+//		rx = x;
+//		ry = y;
+		this.pos.setRelative(x,y
+//				absCoordsX(x),
+//				absCoordsY(y)
+			);
 	}
 	public int getWidth()
 	{
@@ -183,11 +222,13 @@ public class DraggableObj implements IRender
 	
 	public void addComponent(DraggableComponent component)
 	{
+		component.setParentXY((int)pos.getAbsoluteX(), (int)pos.getAbsoluteY());
 		components.add(component);
 //		calcWidth();
 		updateWidth(component);
 //		calcHeight();
 		updateHeight(component);
+		
 	}
 	
 }

@@ -74,27 +74,17 @@ public class Client
 		
 //		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
 //		obj.setPos(res.getScaledWidth() - 40, res.getScaledHeight() - 40);
-		obj.setPos(20,20);
+		obj.setPos(900,900);
 		
 		
 		
-		RectComponent re = new RectComponent(0,0,4,30,
-				(int)obj.getPos().getRelativeX(),
-				(int)obj.getPos().getRelativeY(), -1);
+		RectComponent re = new RectComponent(0,0,4,30, -1);
 		
-		RectComponent re2 = new RectComponent(0,0,26,26,
-				(int)obj.getPos().getRelativeX(),
-				(int)obj.getPos().getRelativeY(), 0xFFFF00FF);
+		RectComponent re2 = new RectComponent(0,0,26,26, 0xFFFF00FF);
 		
-		TextComponent rt = new TextComponent(0,0,(float)2.5,(float)2.5,
-				(int)obj.getPos().getRelativeX(),
-				(int)obj.getPos().getRelativeY(),
-				"uwu", -1);
+		TextComponent rt = new TextComponent(0,0,(float)2.5,(float)2.5, "uwu", -1);
 		
-		ItemComponent ri = new ItemComponent(0,0, 16, 16,
-				new ItemStack(Item.itemRegistry.getObjectById(2)),
-				(int)obj.getPos().getRelativeX(),
-				(int)obj.getPos().getRelativeY());
+		ItemComponent ri = new ItemComponent(0,0, 16, 16, new ItemStack(Item.itemRegistry.getObjectById(2)));
 		
 		obj.addComponent(re2);
 		obj.addComponent(re);

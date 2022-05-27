@@ -21,10 +21,8 @@ public class DraggableComponent
 		
 		protected final Minecraft mc = Minecraft.getMinecraft();;
 		
-		public DraggableComponent(int relativeX, int relativeY, int width, int height, 
-				int parentX, int parentY, int color)
+		public DraggableComponent(int relativeX, int relativeY, int width, int height, int color)
 		{
-			
 			this.rx = relativeX;
 			this.ry = relativeY;
 			
@@ -33,11 +31,26 @@ public class DraggableComponent
 			this.width = width;
 			this.height = height;
 			
-			this.parentX = parentX;
-			this.parentY = parentY;
-			
-			this.color = color;			
+			this.color = color;		
 		}
+		
+//		public DraggableComponent(int relativeX, int relativeY, int width, int height, 
+//				int parentX, int parentY, int color)
+//		{
+//			
+//			this.rx = relativeX;
+//			this.ry = relativeY;
+//			
+//			this.x = rx + parentX;
+//			this.y = ry + parentY;
+//			this.width = width;
+//			this.height = height;
+//			
+////			this.parentX = parentX;
+////			this.parentY = parentY;
+//			
+//			this.color = color;			
+//		}
 		
 		public void render()
 		{
@@ -48,7 +61,16 @@ public class DraggableComponent
 		{
 			
 		}
+		public void renderDummy(double parentY, double parentX)
+		{
+			
+		}
 		
+		public void setParentXY(int x, int y)
+		{
+			this.parentX = x;
+			this.parentY = y;
+		}
 		// unlike whatever ScreenPosition does
 		// this should give position relative to parent
 		public int getAbsoluteX()
