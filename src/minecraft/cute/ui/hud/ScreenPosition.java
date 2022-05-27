@@ -1,4 +1,4 @@
-package cute.modules.gui.hud;
+package cute.ui.hud;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;

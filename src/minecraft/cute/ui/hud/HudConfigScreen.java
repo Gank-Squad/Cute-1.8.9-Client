@@ -1,4 +1,4 @@
-package cute.modules.gui.hud;
+package cute.ui.hud;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -85,7 +85,7 @@ public class HudConfigScreen extends GuiScreen
 			entry.getKey().setPos(entry.getValue());
 		});
 		
-		Minecraft.getMinecraft().displayGuiScreen(null);
+		HudManager.INSTANCE.restoreOldScreen();
 	}
 	
 

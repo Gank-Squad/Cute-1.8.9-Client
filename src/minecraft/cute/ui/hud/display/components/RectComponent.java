@@ -1,7 +1,7 @@
-package cute.modules.gui.hud.display.component;
+package cute.ui.hud.display.components;
 
-import cute.modules.gui.hud.ScreenPosition;
-import cute.modules.gui.hud.display.DraggableComponent;
+import cute.ui.hud.ScreenPosition;
+import cute.ui.hud.display.DraggableComponent;
 import cute.util.RenderUtil;
 
 public class RectComponent extends DraggableComponent

@@ -1,12 +1,12 @@
-package cute.ui.components.sub;
+package cute.ui.clickui.components.sub;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import cute.Client;
-import cute.ui.ClickUI;
-import cute.ui.components.Button;
-import cute.ui.components.Component;
+import cute.ui.clickui.ClickUI;
+import cute.ui.clickui.components.Button;
+import cute.ui.clickui.components.Component;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 import net.minecraft.client.Minecraft;

@@ -6,10 +6,10 @@ import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.HudManager;
 import cute.managers.ModuleManager;
-import cute.modules.gui.hud.display.DraggableObj;
-import cute.modules.gui.hud.display.component.ItemComponent;
-import cute.modules.gui.hud.display.component.RectComponent;
-import cute.modules.gui.hud.display.component.TextComponent;
+import cute.ui.hud.display.DraggableObj;
+import cute.ui.hud.display.components.ItemComponent;
+import cute.ui.hud.display.components.RectComponent;
+import cute.ui.hud.display.components.TextComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -18,7 +18,7 @@ public class Client
 	public static final String VERSION = "0.3.1";
 	public static final String NAME    = "Cute";
 	
-	private static final Client INSTANCE = new Client();
+	public static final Client INSTANCE = new Client();
 	
 	public static class GlobalColors 
 	{

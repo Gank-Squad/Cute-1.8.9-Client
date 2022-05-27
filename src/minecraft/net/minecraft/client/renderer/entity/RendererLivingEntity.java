@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import cute.eventapi.EventManager;
 import cute.events.RenderLivingEvent;
+import cute.events.RenderLivingModelEvent;
 import cute.modules.render.NameTags;
 
 import java.nio.FloatBuffer;
@@ -373,6 +374,8 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.alphaFunc(516, 0.003921569F);    
             }
             
+            EventManager.call(new RenderLivingModelEvent(entitylivingbaseIn, this.mainModel, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor));
+
             this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
             
             if (flag1)

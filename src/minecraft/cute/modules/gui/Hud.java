@@ -1,4 +1,4 @@
-package cute.modules.gui.hud;
+package cute.modules.gui;
 
 import cute.eventapi.EventTarget;
 import cute.events.SettingChangedEvent;
@@ -16,7 +16,6 @@ public class Hud extends Module
 	}
 
 	public static Checkbox draggable = new Checkbox("Draggable", false);
-	private static HudManager hudManager;
 
 		
 	@Override
@@ -29,22 +28,10 @@ public class Hud extends Module
 	@EventTarget
 	public void modeChangedEvent(SettingChangedEvent e)
 	{
-		if(e.settingName != draggable.getName())
+		if(e.settingID != draggable.getId())
 			return;
-		
-		if (e.args.length == 0)
-		{
-			return;
-		}
-		
-		if (!(boolean)e.args[0])
-		{
-			return;
-		}
-		
-		hudManager = HudManager.INSTANCE;
-		mc.displayGuiScreen(null);
-		hudManager.openConfigScreen();
+
+		HudManager.INSTANCE.openConfigScreen();
 	}
 	
 }

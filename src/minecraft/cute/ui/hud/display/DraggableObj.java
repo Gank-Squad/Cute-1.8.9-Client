@@ -1,10 +1,10 @@
-package cute.modules.gui.hud.display;
+package cute.ui.hud.display;
 
 import java.util.ArrayList;
 
 import cute.eventapi.EventManager;
-import cute.modules.gui.hud.IRender;
-import cute.modules.gui.hud.ScreenPosition;
+import cute.ui.hud.IRender;
+import cute.ui.hud.ScreenPosition;
 import cute.util.RenderUtil;
 //import cute.util.Util;
 import net.minecraft.client.Minecraft;

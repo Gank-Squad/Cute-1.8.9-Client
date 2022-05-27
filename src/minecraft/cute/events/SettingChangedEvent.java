@@ -9,9 +9,11 @@ public class SettingChangedEvent implements Event
 	public final boolean added;
 	public final SettingType type;
 	public final String settingName;
+	public final int settingID;
 	
-	public SettingChangedEvent(String name, SettingType type, boolean added, Object... args)
+	public SettingChangedEvent(int settingId, String name, SettingType type, boolean added, Object... args)
 	{
+		this.settingID = settingId;
 		this.settingName = name;
 		this.type = type;
 		this.added = added;

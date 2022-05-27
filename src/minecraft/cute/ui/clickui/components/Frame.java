@@ -1,4 +1,4 @@
-package cute.ui.components;
+package cute.ui.clickui.components;
 
 
 

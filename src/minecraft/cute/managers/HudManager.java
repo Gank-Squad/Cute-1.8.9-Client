@@ -4,16 +4,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 import com.google.common.collect.Sets;
 
 import cute.eventapi.EventTarget;
 import cute.events.RenderEvent;
-import cute.modules.gui.hud.HudConfigScreen;
-import cute.modules.gui.hud.IRender;
-import cute.modules.gui.hud.display.DraggableText;
-import cute.modules.gui.hud.display.DraggableObj;
+import cute.ui.hud.HudConfigScreen;
+import cute.ui.hud.IRender;
+import cute.ui.hud.display.DraggableObj;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 
 
@@ -24,6 +25,8 @@ public class HudManager extends BaseManager
 	private HudConfigScreen hudScreen;
 	
 	private Set<IRender> registeredRenderers = Sets.newHashSet();
+	
+	private Stack guiStack = new Stack();
 	
 	public static List<IRender> defaultRenders = Arrays.asList
 			(
@@ -73,7 +76,22 @@ public class HudManager extends BaseManager
 		if(this.hudScreen == null)
 			this.hudScreen = new HudConfigScreen(this);
 
+		this.guiStack.add(this.mc.currentScreen);
+		
 		this.mc.displayGuiScreen(this.hudScreen);
+	}
+	
+	public void restoreOldScreen()
+	{
+		if(this.guiStack.size() < 1)
+			return;
+		
+		GuiScreen screen = (GuiScreen)this.guiStack.pop();
+		
+		if (screen == null)
+			return;
+		
+		this.mc.displayGuiScreen(screen);
 	}
 	
 	@EventTarget

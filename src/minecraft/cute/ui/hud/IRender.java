@@ -1,4 +1,4 @@
-package cute.modules.gui.hud;
+package cute.ui.hud;
 
 public interface IRender
 {

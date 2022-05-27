@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL32;
 
 import cute.eventapi.EventTarget;
 import cute.events.RenderLivingEvent;
+import cute.events.RenderLivingModelEvent;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
 import cute.modules.client.Players;
@@ -31,7 +32,7 @@ public class ESPEntity extends Module
 		super("Entity ESP", Category.RENDER, "Highlights entities");
 	}
 	
-	public static Mode mode = new Mode("Mode", "Hitbox", "Wireframe");
+	public static Mode mode = new Mode("Mode", "Hitbox", "outline");
 
     public static Checkbox players = new Checkbox("Players", true);
     public static ColorPicker playerPicker = new ColorPicker(players, "Player Picker", new Color(215, 46, 46));
@@ -76,13 +77,13 @@ public class ESPEntity extends Module
     }
     
     
-	@EventTarget
-    public void onEntityRender(RenderLivingEvent event)
+    @EventTarget
+    public void entityModelRender(RenderLivingModelEvent e)
     {
     	if(mode.getValue() != 1)
     		return;
     	
-    	Entity entity = event.entity;
+    	Entity entity = e.entityLivingBaseIn;
     	
     	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
     		return;
@@ -113,20 +114,20 @@ public class ESPEntity extends Module
     		if(!neutral.getValue()) 
     			return;
     		RenderUtil.setColor(neutralPicker.getColor());
-    	}        	  	
+    	}        	
     	
-    	event.setCancelled(true);
-    	
-    	GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
     	GL11.glLineWidth((float)lineWidth.getValue());
+    	GL11.glPushMatrix();
         
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_LINE_SMOOTH);
+    	GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+    	
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		
+		GL11.glEnable(GL11.GL_LINE_SMOOTH);		
+		GL11.glEnable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
         GL11.glEnable(GL11.GL_STENCIL_TEST);
         GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
@@ -137,27 +138,17 @@ public class ESPEntity extends Module
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glHint(GL11.GL_LINE_SMOOTH_HINT,  GL11.GL_NICEST);
         
-        // render solid color of entity 
-        // event.livingBase.renderModelAccessor(event.entity, event.f6, event.f5, event.f8, event.f2, event.f7, 0.0625F);
-        
-        // render wire outline of entity in white 
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-        event.livingBase.renderModelAccessor(event.entity, event.f6, event.f5, event.f8, event.f2, event.f7, 0.0625F);
-
-          
-        GL11.glDisable(GL11.GL_POLYGON_OFFSET_LINE);
-        GL11.glDisable(GL11.GL_STENCIL_TEST);
-        GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
-        GL11.glDisable(GL11.GL_LINE_SMOOTH);
-        GL11.glDisable(GL11.GL_BLEND);
         
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glPopAttrib();
+		e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
+
+    	GL11.glPopAttrib();
+    
+        GL11.glPopMatrix();
+        
         RenderUtil.resetColor();
     }
+    
 
     @EventTarget
 	public void onRenderWorld(RenderWorldLastEvent event) 

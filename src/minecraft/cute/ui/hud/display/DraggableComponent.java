@@ -1,6 +1,6 @@
-package cute.modules.gui.hud.display;
+package cute.ui.hud.display;
 
-import cute.modules.gui.hud.ScreenPosition;
+import cute.ui.hud.ScreenPosition;
 import net.minecraft.client.Minecraft;
 
 public class DraggableComponent

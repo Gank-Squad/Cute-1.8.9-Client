@@ -1,49 +1,46 @@
-package cute.ui.components.sub;
-
-import java.util.List;
-import java.util.stream.Stream;
+package cute.ui.clickui.components.sub;
 
 import org.lwjgl.opengl.GL11;
 
 import cute.Client;
 import cute.settings.ListSelection;
 import cute.settings.enums.ListType;
-import cute.ui.components.Button;
-import cute.ui.components.Component;
-import cute.util.Cache;
-import cute.util.EntityUtil;
+import cute.ui.clickui.components.Button;
+import cute.ui.clickui.components.Component;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
-import cute.util.types.BlockInfo;
 import cute.util.types.VirtualBlock;
+import net.minecraft.potion.Potion;
 
-public class SearchButton extends TextButton  
+public class DropDownButton extends Component
 {
 	private final Button parent;
+	private final ListSelection setting;
+	private boolean hovered;
+	
+	private int offset;
+	private int x;
+	private int y;
 	
 	private int scrollButtonSize = this.height - 3;
 	private int scrollIndex = 0;
 	
-	private Object[] foundSearchTerms = new Object[0];
-	
 	private ListType type;
 	
-	ListSelection setting;
+	private int listCap = 7;
 	
-	private int listCap = 10;
-	
-	public SearchButton(Button button, int offset, ListSelection setting)
+	public DropDownButton(ListSelection setting, Button button, int offset) 
 	{
-		super(button, offset);
-		
+		this.setting = setting;
 		this.parent = button;
 		this.x = button.parent.getX() + button.parent.getWidth();
 		this.y = button.parent.getY() + button.offset;
 		this.offset = offset;
+		
 		this.type = setting.getListType();
-		this.setting = setting;
 	}
 	
+
 	@Override
 	public int getHeight() 
 	{
@@ -53,7 +50,7 @@ public class SearchButton extends TextButton
 	
 	public int getListHeight()
 	{
-		return this.height * Math.min(this.listCap, this.foundSearchTerms.length) + this.scrollButtonSize * 2;
+		return this.height * Math.min(this.listCap, this.setting.getSize()) + this.scrollButtonSize * 2;
 	}
 	
 	public int getListY()
@@ -71,19 +68,40 @@ public class SearchButton extends TextButton
 	{
 		this.offset = newOff;
 	}
+
 	
+
 	@Override
 	public void renderComponent() 
 	{
-		super.renderComponent();
+		RenderUtil.beginRenderRect();
+		
+//		background 
+		RenderUtil.setColor(Client.GlobalColors.backColor);
+		RenderUtil.renderRect(x + 2, y, x + width, y + this.getHeight());
+		RenderUtil.renderRect(x    , y, x + 2    , y + this.getHeight());
+		RenderUtil.endRenderRect();
+		
+		// draw the text for the setting 
+		GL11.glPushMatrix();
+		GL11.glScalef(0.75f,0.75f, 0.75f);
+
+		FontUtil.drawStringWithShadow(
+				this.setting.getName(), 
+				(this.x + 3) * Component.tScale + 4, 
+				(this.y + 2) * Component.tScale + 2,
+				Client.GlobalColors.textColorInt);
+		
+		GL11.glPopMatrix();
+		
 		
 		// if the block list isn't open we're done here
-		if(!this.binding)
+		if(!this.isOpen())
 			return;
 		
 		int lx = this.getListX();
 		int ly = this.getListY();
-		int range = Math.min(this.foundSearchTerms.length, scrollIndex + this.listCap);
+		int range = Math.min(this.setting.getSize(), scrollIndex + this.listCap);
 		
 		// render background for the list of blocks 
 		RenderUtil.setColor(Client.GlobalColors.backColor);
@@ -94,7 +112,7 @@ public class SearchButton extends TextButton
 		
 		// render up and down arrows for the scroll buttons 
 		FontUtil.drawStringWithShadow(
-				"/\\     " + String.valueOf(scrollIndex) + "-" + String.valueOf(range) + "/" + String.valueOf(this.foundSearchTerms.length), 
+				"/\\     " + String.valueOf(scrollIndex) + "-" + String.valueOf(range) + "/" + String.valueOf(this.setting.getSize()), 
 				lx * Component.tScale + 4, 
 				ly * Component.tScale + 4, 
 				Client.GlobalColors.textColorInt);
@@ -109,30 +127,41 @@ public class SearchButton extends TextButton
 		// render all the blocks 
 		ly += this.scrollButtonSize;
 		
-		for(int i = scrollIndex; i < Math.min(this.foundSearchTerms.length, scrollIndex + this.listCap); i++)
+		for(int i = scrollIndex; i < Math.min(this.setting.getSize(), scrollIndex + this.listCap); i++)
 		{
 			String display;
+			int textColor = Client.GlobalColors.textColorInt;
+					
+			// this control is also supposed to work for pots, so need the proper toString
 			
 			switch(this.type)
 			{
-			default:
-				display = "NULL";
-				break;
-			case BLOCK:
-				display = ((BlockInfo)this.foundSearchTerms[i]).displayName;
-				break;
-				
-			case PLAYERNAME:
-				display = (String)this.foundSearchTerms[i];
-				break;
+				default:
+					display = "NULL";
+					break;
+					
+				case BLOCK:
+					VirtualBlock vb = ((VirtualBlock)this.setting.getItem(i)); 
+					display = vb.displayName;
+					
+					if(!vb.enabled && this.setting.canToggleItems)
+						textColor = Client.GlobalColors.textColorIntDisabled;
+					break;
+					
+				case PLAYERNAME:
+					display = (String)this.setting.getItem(i);
+					break;
+					
+				case POTION:
+					display = ((Potion)this.setting.getItem(i)).getName();
+					break;
 			}
-			
 			
 			FontUtil.drawStringWithShadow(
 					display + " ", 
 					lx * Component.tScale + 4, 
 					ly * Component.tScale + 4, 
-					Client.GlobalColors.textColorInt);
+					textColor);
 
 			ly += this.height;
 		}
@@ -140,18 +169,15 @@ public class SearchButton extends TextButton
 		GL11.glPopMatrix();
 	}
 	
-//	@Override
-//	public void updateComponent(int mouseX, int mouseY) 
-//	{
-//		this.y = parent.parent.getY() + offset;
-//		this.x = parent.parent.getX();
-//	}
-	
-	public int getListHoverIndex(int x, int y)
-	{
-		return this.scrollIndex + (int)((y - this.y) / this.height);
-	}
 
+	@Override
+	public void updateComponent(int mouseX, int mouseY) 
+	{
+		this.y = parent.parent.getY() + offset;
+		this.x = parent.parent.getX();
+	}
+	
+	
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int button) 
 	{
@@ -160,43 +186,65 @@ public class SearchButton extends TextButton
 		
 		if(button == 1)
 		{
-			super.setBinding(false);
-			return;
-		}
-
-		if(button == 0)
-		{
-			if(this.isMouseOnSearch(mouseX, mouseY))
+			if(isMouseOnButton(mouseX, mouseY))
 			{
-				this.setBinding(true);
+				this.open = !this.open;
+				return;
+			}
+				
+			if(this.isMouseOnList(mouseX, mouseY))
+			{
+				int index = this.getListHoverIndex(mouseX, mouseY);
+				
+				if(index >= 0 && index < this.setting.getSize())
+				{
+					this.setting.disableItem(index);
+				}
 				return;
 			}
 			
-			if(!this.binding)
+			this.open = false;
+		}
+		
+		if(button == 0)
+		{
+			if(isMouseOnButton(mouseX, mouseY))
+			{
+				this.open = true;
+				return;
+			}
+			
+			if(!this.open)
 				return;
 			
 			if(this.isMouseOnList(mouseX, mouseY))
 			{
 				int index = this.getListHoverIndex(mouseX, mouseY);
 				
-				if(index >= 0 && index < this.foundSearchTerms.length)
+				if(index >= 0 && index < this.setting.getSize())
 				{
-					this.setBinding(false);
 					
 					switch(this.type)
 					{
 						case BLOCK:
-							this.setting.enableItem((VirtualBlock)this.foundSearchTerms[index]);
+							if(this.setting.canToggleItems)
+							{
+								VirtualBlock vb = ((VirtualBlock)this.setting.getItem(index)); 
+
+								vb.enabled = !vb.enabled;	
+							}
+							break;
+							
+						case POTION:
 							break;
 							
 						case PLAYERNAME:
-							this.setting.enableItem((String)this.foundSearchTerms[index]);
 							break;
 					}
 				}
 				return;
 			}
-
+			
 			if(this.isMouseOnScrollUp(mouseX, mouseY))
 			{
 				this.scrollIndex = Math.max(0, this.scrollIndex - 1);
@@ -205,49 +253,28 @@ public class SearchButton extends TextButton
 			
 			if(this.isMouseOnScrollDown(mouseX, mouseY))
 			{	
-				if(this.foundSearchTerms.length <= this.listCap)
+				if(this.setting.getSize() <= this.listCap)
 					return;
 				
-				this.scrollIndex = Math.min(this.foundSearchTerms.length - this.listCap, this.scrollIndex + 1);
+				this.scrollIndex = Math.min(this.setting.getSize()-this.listCap, this.scrollIndex + 1);
 				return;
 			}
 			
-			this.setBinding(false);
+			this.open = false;
 		}		
 	}	
 	
-
 	@Override
-	public boolean isOpen()
+	public void mouseReleased(int mouseX, int mouseY, int mouseButton) 
 	{
-		return this.foundSearchTerms.length != 0;
+		
 	}
 	
-	@Override 
-	public void onEnter(String search)
+	public int getListHoverIndex(int x, int y)
 	{
-		switch(this.type)
-		{
-		case PLAYERNAME:
-			
-			this.scrollIndex = 0;
-			
-			List<String> names = EntityUtil.getTabMenuPlayerNames();
-			
-			Stream<String> s = names.stream().
-					filter(x -> x.toLowerCase().contains(search));
-
-			this.foundSearchTerms = s.toArray();
-			break;
-			
-		case BLOCK:
-			this.scrollIndex = 0;
-			this.foundSearchTerms = Cache.searchForBlock(search);
-			break;
-		}
-		
-	}	
-
+		return this.scrollIndex + (int)((y - this.y) / this.height);
+	}
+	
 	public boolean isMouseOnScrollUp(int x, int y)
 	{
 		if(!this.isOpen())
@@ -300,7 +327,3 @@ public class SearchButton extends TextButton
 			   y < this.y + this.height;
 	}
 }
-
-
-
-

@@ -1,4 +1,4 @@
-package cute.ui.components;
+package cute.ui.clickui.components;
 
 
 import java.awt.Color;
@@ -13,15 +13,14 @@ import cute.settings.Mode;
 import cute.settings.Setting;
 import cute.settings.Slider;
 import cute.settings.SubSetting;
-import cute.ui.ClickUI;
-import cute.ui.components.sub.CheckboxButton;
-import cute.ui.components.sub.ColorPickerButton;
-import cute.ui.components.sub.DropDownButton;
-import cute.ui.components.sub.KeybindButton;
-import cute.ui.components.sub.ModeButton;
-import cute.ui.components.sub.SearchButton;
-import cute.ui.components.sub.SliderButton;
-import cute.ui.components.sub.TextButton;
+import cute.ui.clickui.ClickUI;
+import cute.ui.clickui.components.sub.CheckboxButton;
+import cute.ui.clickui.components.sub.ColorPickerButton;
+import cute.ui.clickui.components.sub.DropDownButton;
+import cute.ui.clickui.components.sub.KeybindButton;
+import cute.ui.clickui.components.sub.ModeButton;
+import cute.ui.clickui.components.sub.SearchButton;
+import cute.ui.clickui.components.sub.SliderButton;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 

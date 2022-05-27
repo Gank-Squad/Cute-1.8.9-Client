@@ -4,7 +4,7 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.mojang.authlib.GameProfile;
 
-import cute.modules.gui.hud.Hud;
+import cute.modules.gui.Hud;
 
 import java.util.Comparator;
 import java.util.List;

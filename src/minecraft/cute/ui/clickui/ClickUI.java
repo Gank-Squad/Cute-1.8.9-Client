@@ -1,4 +1,4 @@
-package cute.ui;
+package cute.ui.clickui;
 
 
 import java.awt.Color;
@@ -7,10 +7,10 @@ import java.util.ArrayList;
 
 import org.lwjgl.input.Keyboard;
 
-import cute.ui.components.Component;
-import cute.ui.components.Frame;
 import cute.managers.ModuleManager;
 import cute.modules.enums.Category;
+import cute.ui.clickui.components.Component;
+import cute.ui.clickui.components.Frame;
 import net.minecraft.client.gui.GuiScreen;
 
 

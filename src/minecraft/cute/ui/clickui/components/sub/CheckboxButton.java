@@ -1,14 +1,14 @@
-package cute.ui.components.sub;
+package cute.ui.clickui.components.sub;
 
 
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import cute.ui.components.Button;
-import cute.ui.components.Component;
 import cute.Client;
 import cute.settings.Checkbox;
+import cute.ui.clickui.components.Button;
+import cute.ui.clickui.components.Component;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 
