@@ -26,9 +26,6 @@ public class DraggableObj implements IRender
 	private int height;
 	private int width;
 	
-	private int t;
-	private int l;
-	
 	public DraggableObj()
 	{
 		this.pos.setRelative(0, 0);
@@ -73,6 +70,22 @@ public class DraggableObj implements IRender
 
 		this.width = right - left;
 	}
+	public void updateWidth(DraggableComponent c)
+	{
+		int left = (int)pos.getRelativeX();
+		int right = (int)pos.getRelativeX() + this.width;
+		
+		if (c.getAbsoluteX() < left)
+		{
+			left = c.getAbsoluteX();
+		}
+		if (c.getAbsoluteX() + c.getWidth() > right)
+		{
+			right = c.getAbsoluteX() + c.getWidth();
+		}
+		this.width = right - left;
+	}
+	
 	public void calcHeight()
 	{
 		int top = Integer.MAX_VALUE;
@@ -92,7 +105,21 @@ public class DraggableObj implements IRender
 		
 		this.height = bot - top;
 	}
-	
+	public void updateHeight(DraggableComponent c)
+	{
+		int top = (int)pos.getRelativeY();
+		int bot = (int)pos.getRelativeY() + this.height;
+		
+		if (c.getAbsoluteY() < top)
+		{
+			top = c.getAbsoluteY();
+		}
+		if (c.getAbsoluteY() + c.getHeight() > bot)
+		{
+			bot = c.getAbsoluteY() + c.getHeight();
+		}
+		this.height = bot - top;
+	}
 	
 	public void render()
 	{
@@ -117,7 +144,6 @@ public class DraggableObj implements IRender
 		
 		RenderUtil.setColor(0x8d8d8d80);
 		RenderUtil.renderRectSingle(
-//					this.l, this.t,
 					(int)pos.getRelativeX(),
 					(int)pos.getRelativeY(),
 					(int)pos.getRelativeX() + this.width,
@@ -158,8 +184,10 @@ public class DraggableObj implements IRender
 	public void addComponent(DraggableComponent component)
 	{
 		components.add(component);
-		calcWidth();
-		calcHeight();
+//		calcWidth();
+		updateWidth(component);
+//		calcHeight();
+		updateHeight(component);
 	}
 	
 }
