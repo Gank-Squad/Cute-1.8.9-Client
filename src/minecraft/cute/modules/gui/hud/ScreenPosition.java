@@ -56,9 +56,9 @@ public class ScreenPosition
 	public void setAbsolute(int x, int y)
 	{
 		ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
-		
-		this.x = (double)(x / res.getScaledWidth() * baseScale);
-		this.y = (double)(y / res.getScaledHeight() * baseScale);
+
+		this.x = (double)x / (double)res.getScaledWidth() * (double)baseScale;
+		this.y = (double)y / (double)res.getScaledHeight() * (double)baseScale;
 	}
 	
 	public void setRelative(double x, double y)
