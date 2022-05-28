@@ -34,4 +34,4 @@
 
 - Then you need to find and open the 1.8.9.jar file with 7zip/winrar, should be located somewhere in the `/.minecraft/versions/1.8.9` folder, and copy the `assets` folder, `log4j2.xml` and `pack.png` into the jar file you made
 
-- Lastly, in the repo you need `jars\libraries\io\netty\netty-all\4.0.23.Final\netty-all-4.0.23.Final.jar`, open this with 7zip/winrar and copy it into the jar you made with Eclipse, once you've done that you're done, and it should work following the install guide above
+- Lastly, in the repo you need `jars\libraries\io\netty\netty-all\4.0.23.Final\netty-all-4.0.23.Final.jar`, open this with 7zip/winrar and copy `io` into the jar you made with Eclipse, once you've done that you're done, and it should work following the install guide above
