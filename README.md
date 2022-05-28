@@ -28,7 +28,7 @@
 
 ### How To Compile From Eclipse 
 
-- Assuming you've done the setup for Eclipse and can run minecraft from it, hit `File > Export > Java > Jar File > *Drop Down Client* > Check 'src' > Uncheck everything else > Finish` this will get you a jar file
+- Assuming you've done the setup for Eclipse and can run minecraft from it, hit `File > Export > Java > Jar File > *Drop Down Client* > Check 'src' > *Uncheck Everything Else* > Finish` this will get you a jar file
 
 - Once you've done the above step, open the jar file with 7zip/winrar and delete `start.class` and `META-INF`
 
