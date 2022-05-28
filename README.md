@@ -1,5 +1,15 @@
+### How To Install 
 
-## How To Setup 
+- Download the release you want (cute.zip not the source) 
+
+- Extract the *cute* folder into */.minecraft/versions/* or extract the content of the *cute* folder into */.minecraft/version/cute/*
+ 
+- Add the new version in the minecraft launcher 
+
+- Then just run the release like normal, if the game crashes and you have updated the version try deleting the */.minecraft/cute/* folder, it's likely a settings related crash
+
+
+### How To Setup For Eclipse 
 
 - Open the [Eclipse](./eclipse) folder as the workspace directory in Eclipse
 
