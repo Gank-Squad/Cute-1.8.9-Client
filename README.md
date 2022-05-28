@@ -1,6 +1,6 @@
 ### How To Install 
 
-- Download the release you want (cute.zip not the source) 
+- Download the release you want (cute.zip / cute.7z not the source) 
 
 - Extract the `cute` folder into `/.minecraft/versions/` or extract the content of the `cute` folder into `/.minecraft/version/cute/`
  
