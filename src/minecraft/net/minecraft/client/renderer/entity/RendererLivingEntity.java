@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import cute.eventapi.EventManager;
 import cute.events.RenderLivingEvent;
 import cute.events.RenderLivingModelEvent;
+import cute.modules.render.ESPEntity;
 import cute.modules.render.NameTags;
 
 import java.nio.FloatBuffer;
@@ -111,11 +112,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     {
     }
 
-    public void renderModelAccessor(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor)
-    {
-    	this.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
-    }
-    
+
     /**
      * Renders the desired {@code T} type Entity.
      */
@@ -355,36 +352,39 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     protected void renderModel(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor)
     {
         boolean flag = !entitylivingbaseIn.isInvisible();
-        boolean flag1 = !flag && !entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer);
+        boolean flag1 = !flag && 
+        		( ESPEntity.isOn() || 
+				  !entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer));
 
+        
         if (flag || flag1)
         {
             if (!this.bindEntityTexture(entitylivingbaseIn))
             {
                 return;
             }
-
+            
+            EventManager.call(new RenderLivingModelEvent(entitylivingbaseIn, this.mainModel, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor));
+            
             if (flag1)
             {
                 GlStateManager.pushMatrix();
-                GlStateManager.color(1.0F, 1.0F, 1.0F, 0.15F);
-                GlStateManager.depthMask(false);
+                GlStateManager.color(1.0F, 1.0F, 1.0F, 0.25F);
+//                GlStateManager.depthMask(false);
                 GlStateManager.enableBlend();
                 GlStateManager.blendFunc(770, 771);
-                GlStateManager.alphaFunc(516, 0.003921569F);    
-            }
-            
-            EventManager.call(new RenderLivingModelEvent(entitylivingbaseIn, this.mainModel, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor));
-
-            this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
-            
-            if (flag1)
-            {
-            	
+                GlStateManager.alphaFunc(516, 0.003921569F);
+                
+                this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
+                
                 GlStateManager.disableBlend();
                 GlStateManager.alphaFunc(516, 0.1F);
                 GlStateManager.popMatrix();
                 GlStateManager.depthMask(true);
+            }
+            else 
+            {
+            	this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);	
             }
         }
     }

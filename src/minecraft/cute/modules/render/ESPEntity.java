@@ -18,6 +18,7 @@ import cute.settings.Mode;
 import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
+import cute.util.types.VirtualBlock;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -54,6 +55,14 @@ public class ESPEntity extends Module
 
     public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
     
+    private static boolean globalEnabled = false;
+    
+ 	public static boolean isOn()
+ 	{
+ 		return globalEnabled;
+ 	}
+ 	
+    
     @Override
     public void setup() 
 	{
@@ -66,6 +75,24 @@ public class ESPEntity extends Module
         addSetting(items);
         addSetting(lineWidth);
     }
+    
+
+	@Override
+	public void onEnable()
+	{
+		super.onEnable();
+		
+		globalEnabled = true;
+	}
+	
+	@Override 
+	public void onDisable()
+	{
+		super.onDisable();
+		
+		globalEnabled = false;
+	}
+	
     
     @Override
     public boolean nullCheck() 
@@ -149,7 +176,7 @@ public class ESPEntity extends Module
         RenderUtil.resetColor();
     }
     
-
+    
     @EventTarget
 	public void onRenderWorld(RenderWorldLastEvent event) 
 	{
@@ -180,7 +207,6 @@ public class ESPEntity extends Module
         	if(entity instanceof EntityPlayerSP )//|| !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
         		continue;
         	
-        
         	if(entity instanceof EntityPlayer) 
         	{
         		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName())) 
