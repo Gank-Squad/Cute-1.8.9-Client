@@ -638,6 +638,16 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
             long l = Minecraft.getSystemTime() - this.lastMouseEvent;
             this.mouseClickMove(i, j, this.eventButton, l);
         }
+        else if (Mouse.getEventDWheel() < 0) 
+        {
+        	
+//        	System.out.println(Mouse.getEventDWheel());
+            this.mouseScrollDown(i, j, k);
+        }
+        else if (Mouse.getEventDWheel() > 0)
+        {
+        	this.mouseScrollUp(i, j, k);
+        }
     }
 
     /**
