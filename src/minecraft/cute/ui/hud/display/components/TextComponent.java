@@ -43,20 +43,20 @@ public class TextComponent extends DraggableComponent
 		this.scaleY = scaleY;
 	}
 	
-	public void setScaleX(float width)
+	public void setScaleX(float scaleX)
 	{
-		this.scaleX = width / Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
+		this.scaleX = scaleX;
 	}
-	public void setScaleY(float height)
+	public void setScaleY(float scaleY)
 	{
-		this.scaleY = height / Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
+		this.scaleY = scaleY;
 	}
 	
 	public void setText(String text)
 	{
 		this.text = text;
 		this.width = (int)(this.mc.fontRendererObj.getStringWidth(text));
-		this.height = (int)((this.mc.fontRendererObj.FONT_HEIGHT + 3) );
+		this.height = (int)((this.mc.fontRendererObj.FONT_HEIGHT));
 	}
 	
 	public String getText()
@@ -70,10 +70,10 @@ public class TextComponent extends DraggableComponent
 	{
 		GL11.glPushMatrix();
 		
-		setScaleX(this.width);
-		setScaleY(this.height);
+//		setScaleX(this.width);
+//		setScaleY(this.height);
 
-		GL11.glScalef((float)this.scaleX, (float)this.scaleY, (float)1);
+		GL11.glScalef((float)this.scaleX, (float)this.scaleX, (float)1);
 		
 		this.mc.fontRendererObj.drawStringWithShadow(
 				this.text,
@@ -81,7 +81,6 @@ public class TextComponent extends DraggableComponent
 				(int)this.y / this.scaleY,
 				(int)this.color
 				);
-		
 		
 		GL11.glPopMatrix();
 	}
@@ -91,8 +90,8 @@ public class TextComponent extends DraggableComponent
 	{
 		GL11.glPushMatrix();
 		
-		setScaleX(this.width);
-		setScaleY(this.height);
+//		setScaleX(this.width);
+//		setScaleY(this.height);
 
 		GL11.glScalef((float)this.scaleX, (float)this.scaleY, (float)1);
 		

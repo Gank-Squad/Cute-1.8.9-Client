@@ -153,7 +153,8 @@ public class DraggableObj implements IRender
 //				(float)absCoordsX(pos.getRelativeX()),
 //				(float)absCoordsY(pos.getRelativeY())
 //				);
-		
+		calcWidth();
+		calcHeight();
 		for (DraggableComponent component : components)
 		{
 			component.renderDummy(pos);
