@@ -52,12 +52,12 @@ public class DraggableComponent
 //			this.color = color;			
 //		}
 		
-		public void render()
+		public void render(float scaleX, float scaleY)
 		{
 			
 		}
 		
-		public void renderDummy(ScreenPosition pos)
+		public void renderDummy(ScreenPosition pos, float scaleX, float scaleY)
 		{
 			
 		}

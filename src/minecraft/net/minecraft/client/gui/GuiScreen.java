@@ -529,7 +529,14 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
             this.selectedButton = null;
         }
     }
-
+    protected void mouseScrollDown(int mouseX, int mouseY, int state)
+    {
+    	
+    }
+    protected void mouseScrollUp(int mouseX, int mouseY, int state)
+    {
+    	
+    }
     /**
      * Called when a mouse button is pressed and the mouse is moved around. Parameters are : mouseX, mouseY,
      * lastButtonClicked & timeSinceMouseClick.

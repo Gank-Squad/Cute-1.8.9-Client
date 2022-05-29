@@ -2,6 +2,8 @@ package cute.ui.hud.display;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import cute.eventapi.EventManager;
 import cute.ui.hud.IRender;
 import cute.ui.hud.ScreenPosition;
@@ -26,25 +28,30 @@ public class DraggableObj implements IRender
 	private int height;
 	private int width;
 	
-//	public final int baseScale = 1000;
-//	
-//	private double rx;
-//	private double ry;
+	private float scaleX;
+	private float scaleY;
 	
 	public DraggableObj()
 	{
 		this.pos.setRelative(0, 0);
 		setEnabled(isEnabled);
-		
+
 		this.width = 0;
 		this.height = 0;
+		
+		this.scaleX = 1;
+		this.scaleY = 1;
 	}
 	public DraggableObj(int x, int y)
 	{
 		this.pos.setRelative(x, y);
 		setEnabled(isEnabled);
+		
 		this.width = 0;
 		this.height = 0;
+		
+		this.scaleX = 1;
+		this.scaleY = 3;
 	}
 	
 	public void setEnabled(boolean isEnabled)
@@ -59,28 +66,20 @@ public class DraggableObj implements IRender
 		EventManager.unregister(this);
 	}
 	
-//	public int absCoordsX(double relativePosX)
-//	{
-//		double mod = relativePosX / baseScale;
-//		return (int)(res.getScaledWidth() * mod);
-//	}
-//	public int absCoordsY(double relativePosY)
-//	{
-//		double mod = relativePosY / baseScale;
-//		return (int)(res.getScaledHeight() * mod);
-//	}
-//	public double relCoordsX(int absolutePosX)
-//	{
-//		double mod = absolutePosX / res.getScaledWidth();
-//		return baseScale * mod;
-//	}
-//	public double relCoordsY(int absolutePosY)
-//	{
-//		double mod = absolutePosY / res.getScaledWidth();
-//		return baseScale * mod;
-//	}
+	public void setScale(float scaleX, float scaleY)
+	{
+		this.scaleX =  scaleX;
+		this.scaleY = scaleY;
+	}
+	public float getScaleX()
+	{
+		return this.scaleX;
+	}
+	public float getScaleY()
+	{
+		return this.scaleY;
+	}
 	
-	// leaving this in in case we ever make it possible to remove components
 	public void calcWidth()
 	{
 		// check every component and keep track of leftmost and rightmost point
@@ -99,13 +98,13 @@ public class DraggableObj implements IRender
 			}
 		}
 
-		this.width = right - left;
+		this.width = (int)((right - left) * this.scaleX);
 	}
 	public void updateWidth(DraggableComponent c)
 	{
 		if (c.getWidth() > this.width)
 		{
-			this.width = c.getWidth();
+			this.width = (int)(c.getWidth() * this.scaleX);
 		}
 	}
 	
@@ -127,13 +126,13 @@ public class DraggableObj implements IRender
 			}
 		}
 		
-		this.height = bot - top;
+		this.height = (int)((bot - top) * scaleY);
 	}
 	public void updateHeight(DraggableComponent c)
 	{
 		if (c.getHeight() > this.height)
 		{
-			this.height = c.getAbsoluteY() + c.getHeight();
+			this.height = (int)(c.getHeight() * scaleY); // c.getAbsoluteY() + // I'm not sure why this was here
 		}
 	}
 	
@@ -142,24 +141,18 @@ public class DraggableObj implements IRender
 		for (DraggableComponent component : components)
 		{
 			component.checkPos((int)pos.getAbsoluteX(), (int)pos.getAbsoluteY());
-			component.render();
+			component.render(this.scaleX, this.scaleY);
 		}
-		
 	}
 	public void renderDummy(ScreenPosition pos)
 	{	
-//		ScreenPosition pos2 = pos;
-//		pos = new ScreenPosition(
-//				(float)absCoordsX(pos.getRelativeX()),
-//				(float)absCoordsY(pos.getRelativeY())
-//				);
 		calcWidth();
 		calcHeight();
+
 		for (DraggableComponent component : components)
 		{
-			component.renderDummy(pos);
+			component.renderDummy(pos, this.scaleX, this.scaleY);
 		}
-		
 		RenderUtil.setColor(0x8d8d8d80);
 		RenderUtil.renderRectSingle(
 					(int)pos.getAbsoluteX(),
@@ -168,8 +161,6 @@ public class DraggableObj implements IRender
 					(int)pos.getAbsoluteY() + this.height
 				);
 		RenderUtil.resetColor();
-		
-//		pos = pos2;
 	}
 	
 	public ScreenPosition getPos()

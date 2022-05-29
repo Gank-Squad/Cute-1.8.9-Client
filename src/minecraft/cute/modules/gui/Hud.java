@@ -13,7 +13,7 @@ public class Hud extends Module
 {
 	public Hud() 
 	{
-		super("Hud", Category.CLIENT, "a in game hud");
+		super("Hud", Category.CLIENT, "an in game hud");
 		
 	}
 
@@ -27,7 +27,6 @@ public class Hud extends Module
 	@Override
 	public void delayedSetup()
 	{
-//		positionHudText = new TextComponent(0, 0, 2.5f, 2.5f, String.format("%.02f %.02f %.02f", 0f,0f,0f), -1);
 		positionHudText = new TextComponent(0, 0, 1f, 1f, "", -1);
 		positionHud.addComponent(positionHudText);
 

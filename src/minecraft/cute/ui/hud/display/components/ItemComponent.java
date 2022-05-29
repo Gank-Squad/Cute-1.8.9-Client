@@ -46,8 +46,10 @@ public class ItemComponent extends DraggableComponent
 	}
 	
 	@Override
-	public void render()
+	public void render(float scaleX, float scaleY)
 	{
+		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
+		
 		RenderItem renderitem = this.mc.getRenderItem();
 
 		GL11.glPushMatrix();
@@ -61,11 +63,15 @@ public class ItemComponent extends DraggableComponent
         		(int)((this.y) / getScaleY(this.height)), 10);
 
         GL11.glPopMatrix();
+        
+        GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
 	}
 	
 	@Override
-	public void renderDummy(ScreenPosition pos)
+	public void renderDummy(ScreenPosition pos, float scaleX, float scaleY)
 	{
+		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
+		
 		RenderItem renderitem = this.mc.getRenderItem();
 		
 		GL11.glPushMatrix();
@@ -79,6 +85,8 @@ public class ItemComponent extends DraggableComponent
         
 		
         GL11.glPopMatrix();
+        
+        GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
     }
 
 }
