@@ -95,6 +95,24 @@ public class ClickUI extends GuiScreen
 		}
 	}
 	
+	@Override 
+	protected void mouseWheel(int mouseX, int mouseY, int delta)
+	{
+		for(Frame frame : frames) 
+		{
+			if(!frame.isOpen())
+				continue;
+			
+			if(frame.getComponents().isEmpty())
+				continue;
+			
+			for(Component component : frame.getComponents()) 
+			{
+				component.mouseWheel(mouseX, mouseY, delta);
+			}
+		}
+	}
+	
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) 
 	{

@@ -197,6 +197,14 @@ public class Button extends Component
 		}
 	}
 	
+	@Override
+	public void mouseWheel(int mouseX, int mouseY, int delta) 
+	{
+		for(Component comp : this.subcomponents) 
+		{
+			comp.mouseWheel(mouseX, mouseY, delta);
+		}
+	}
 	
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int button) 

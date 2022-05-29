@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import org.lwjgl.input.Keyboard;
 
 import cute.managers.HudManager;
-import net.minecraft.client.Minecraft;
+import cute.ui.hud.display.DraggableObj;
 import net.minecraft.client.gui.GuiScreen;
 
 public class HudConfigScreen extends GuiScreen 
@@ -88,7 +88,38 @@ public class HudConfigScreen extends GuiScreen
 		HudManager.INSTANCE.restoreOldScreen();
 	}
 	
-
+	
+	@Override
+	protected void mouseWheel(int x, int y, int delta)
+	{
+		this.loadMouseOver(x, y);
+		
+		if(selectedRenderer.isPresent())
+		{
+			IRender render = selectedRenderer.get();
+			
+			if(render instanceof DraggableObj)
+			{
+				DraggableObj obj = (DraggableObj)render;
+				
+				if(delta > 0)
+				{
+					obj.setScale(
+							Math.min(3f, obj.getScaleX() + 0.1f), 
+							Math.min(3f, obj.getScaleY() + 0.1f));
+				}
+				else if(delta < 0)
+				{
+					obj.setScale(
+							Math.max(0.25f, obj.getScaleX() - 0.1f), 
+							Math.max(0.25f, obj.getScaleY() - 0.1f));
+				}
+			}
+			
+			selectedRenderer = Optional.empty();
+		}
+	}
+	
 	@Override
 	protected void mouseReleased(int x, int y, int btn)
 	{

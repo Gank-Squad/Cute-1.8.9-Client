@@ -140,12 +140,24 @@ public class SearchButton extends TextButton
 		GL11.glPopMatrix();
 	}
 	
-//	@Override
-//	public void updateComponent(int mouseX, int mouseY) 
-//	{
-//		this.y = parent.parent.getY() + offset;
-//		this.x = parent.parent.getX();
-//	}
+	@Override
+	public void mouseWheel(int mouseX, int mouseY, int delta)
+	{
+		if(!this.isMouseOnListAndScrolls(mouseX, mouseY))
+			return;
+			
+		if(delta > 0) // wheel up
+		{
+			this.scrollIndex = Math.max(0, this.scrollIndex - 1);
+		}
+		else if (delta < 0) // wheel down
+		{
+			if(this.foundSearchTerms.length <= this.listCap)
+				return;
+			
+			this.scrollIndex = Math.min(this.foundSearchTerms.length - this.listCap, this.scrollIndex + 1);
+		}
+	}
 	
 	public int getListHoverIndex(int x, int y)
 	{
@@ -298,6 +310,21 @@ public class SearchButton extends TextButton
 			   x < this.x + this.width && 
 			   y > this.y &&
 			   y < this.y + this.height;
+	}
+	
+	public boolean isMouseOnListAndScrolls(int x, int y)
+	{
+		if(!this.isOpen())
+			return false;
+		
+		int lx = this.getListX();
+		int ly = this.getListY();
+		int height = this.getListHeight();
+		
+		return x > lx && 
+			   x < lx + this.width && 
+			   y > ly &&
+			   y < ly + height;
 	}
 }
 

@@ -44,6 +44,10 @@ public class Component
 	{
 	}
 	
+	public void mouseWheel(int mouseX, int mouseY, int delta) 
+	{
+	}
+	
 	public int getParentHeight() 
 	{
 		return 0;

@@ -4,14 +4,9 @@ import org.lwjgl.opengl.GL11;
 
 import cute.ui.hud.ScreenPosition;
 import cute.ui.hud.display.DraggableComponent;
-import cute.util.RenderUtil;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.Config;
-import net.optifine.shaders.Shaders;
 
 public class ItemComponent extends DraggableComponent
 {
@@ -31,11 +26,11 @@ public class ItemComponent extends DraggableComponent
 		this.item = item;
 	}
 	
+	public void setItem(ItemStack item)
+	{
+		this.item = item;
+	}
 	
-//	public void renderItem(float x, float y)
-//	{
-//		
-//	}
 	public float getScaleX(int x)
 	{
 		return x / 16;	
@@ -48,6 +43,9 @@ public class ItemComponent extends DraggableComponent
 	@Override
 	public void render(float scaleX, float scaleY)
 	{
+		if(this.item == null)
+			return;
+		
 		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
 		
 		RenderItem renderitem = this.mc.getRenderItem();
@@ -62,6 +60,13 @@ public class ItemComponent extends DraggableComponent
         		(int)((this.x) / getScaleX(this.width)),
         		(int)((this.y) / getScaleY(this.height)), 10);
 
+		
+		renderitem.renderItemOverlayIntoGUI(
+				this.mc.fontRendererObj, 
+				this.item, 
+				(int)((this.x) / getScaleX(this.width)), 
+				(int)((this.y) / getScaleY(this.height)), null);
+		
         GL11.glPopMatrix();
         
         GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
@@ -70,6 +75,9 @@ public class ItemComponent extends DraggableComponent
 	@Override
 	public void renderDummy(ScreenPosition pos, float scaleX, float scaleY)
 	{
+		if(this.item == null)
+			return;
+		
 		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
 		
 		RenderItem renderitem = this.mc.getRenderItem();
@@ -83,7 +91,11 @@ public class ItemComponent extends DraggableComponent
         		(int)((pos.getAbsoluteX() + (this.rx)) / getScaleX(this.width)), 
         		(int)((pos.getAbsoluteY() + (this.ry)) / getScaleY(this.height)), 10);
         
-		
+		renderitem.renderItemOverlayIntoGUI(
+				this.mc.fontRendererObj, 
+				this.item, 
+				(int)((pos.getAbsoluteX() + (this.rx)) / getScaleX(this.width)), 
+				(int)((pos.getAbsoluteY() + (this.ry)) / getScaleY(this.height)), null);
         GL11.glPopMatrix();
         
         GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
