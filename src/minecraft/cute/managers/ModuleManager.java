@@ -63,10 +63,10 @@ public class ModuleManager extends BaseManager
 		modules.add(new Players());
 		modules.add(new ESPBlocks());
 		modules.add(new ESPEntity());
+		modules.add(new DataViewer());
 		modules.add(new Fullbright());
 		modules.add(new Tracers());
 		modules.add(new ProjectileTracer());
-		modules.add(new DataViewer());
 		modules.add(new NameTags());
 		modules.add(new NoRender());
 		modules.add(new XRay());
