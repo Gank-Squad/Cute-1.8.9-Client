@@ -67,15 +67,15 @@ public class TextComponent extends DraggableComponent
 	
 	
 	@Override
-	public void render(float scaleX, float scaleY)
+	public void render(ScreenPosition pos, float scaleX, float scaleY)
 	{
 		GL11.glPushMatrix();
-		GL11.glScalef((float)this.scaleX, (float)this.scaleX, (float)1);
+		GL11.glScalef((float)this.scaleX, (float)this.scaleY, (float)1);
 		
 		this.mc.fontRendererObj.drawStringWithShadow(
-				this.text,
-				(int)((this.x / this.scaleX) / scaleX),
-				(int)((this.y / this.scaleY) / scaleY),
+				 this.text,
+				(int)((pos.getAbsoluteX() / this.scaleX) / scaleX ) + this.rx,
+				(int)((pos.getAbsoluteY() / this.scaleY) / scaleY ) + this.ry,
 				(int)this.color
 				);
 		

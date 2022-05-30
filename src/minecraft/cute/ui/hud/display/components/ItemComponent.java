@@ -41,30 +41,27 @@ public class ItemComponent extends DraggableComponent
 	}
 	
 	@Override
-	public void render(float scaleX, float scaleY)
+	public void render(ScreenPosition pos, float scaleX, float scaleY)
 	{
 		if(this.item == null)
 			return;
 		
 		RenderItem renderitem = this.mc.getRenderItem();
-
+		
 		GL11.glPushMatrix();
 		GL11.glScalef((float)getScaleX(this.width), (float)getScaleY(this.height), (float)1);
 		
 		// bless GuiContainer.java, this make the lighting work
 		RenderHelper.enableGUIStandardItemLighting();
-
-		renderitem.renderItemForHUD(this.item,
-        		(int)((this.x / getScaleX(this.width)) / scaleX),
-        		(int)((this.y / getScaleY(this.height)) / scaleY), 10);
-
-		
+		renderitem.renderItemForHUD(this.item, 
+        		(int)((pos.getAbsoluteX() / getScaleX(this.width)) / scaleX) + this.rx, 
+        		(int)((pos.getAbsoluteY() / getScaleY(this.height)) / scaleY) + this.ry, 10);
+        
 		renderitem.renderItemOverlayIntoGUI(
 				this.mc.fontRendererObj, 
 				this.item, 
-				(int)((this.x / getScaleX(this.width)) / scaleX), 
-				(int)((this.y / getScaleY(this.height)) / scaleY), null);
-		
+				(int)((pos.getAbsoluteX() / getScaleX(this.width)) / scaleX) + this.rx, 
+				(int)((pos.getAbsoluteY() / getScaleY(this.height)) / scaleY) + this.ry, null);
         GL11.glPopMatrix();
 	}
 	

@@ -16,15 +16,15 @@ public class RectComponent extends DraggableComponent
 	}
 	
 	@Override
-	public void render(float scaleX, float scaleY)
+	public void render(ScreenPosition pos, float scaleX, float scaleY)
 	{
-//		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
-		
 		RenderUtil.setColor(this.color);
-		RenderUtil.renderRectSingle(this.x / scaleX, this.y / scaleY, (this.x + this.width) / scaleX, (this.y + this.height) / scaleY);
+		RenderUtil.renderRectSingle(
+				(pos.getAbsoluteX() + this.rx) / scaleX,
+				(pos.getAbsoluteY() + this.ry) / scaleY,
+				(pos.getAbsoluteX() + this.rx + this.width) / scaleX,
+				(pos.getAbsoluteY() + this.ry + this.height) / scaleY);
 		RenderUtil.resetColor();
-		
-//		GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
 	}
 	
 	@Override

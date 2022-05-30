@@ -138,13 +138,16 @@ public class DraggableObj implements IRender
 	
 	public void render()
 	{
+		calcWidth();
+		calcHeight();
+
 		GL11.glPushMatrix();
 		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
 		
 		for (DraggableComponent component : components)
 		{
-			component.checkPos((int)pos.getAbsoluteX(), (int)pos.getAbsoluteY());
-			component.render(this.scaleX, this.scaleY);
+//			component.checkPos((int)pos.getAbsoluteX(), (int)pos.getAbsoluteY());
+			component.render(pos, this.scaleX, this.scaleY);
 		}
 		GL11.glPopMatrix();
 		RenderUtil.resetColor();
