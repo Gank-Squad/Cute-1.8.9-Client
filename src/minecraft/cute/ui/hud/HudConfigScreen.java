@@ -156,35 +156,6 @@ public class HudConfigScreen extends GuiScreen
 	}
 
 	@Override
-	protected void mouseScrollDown(int mouseX, int mouseY, int state)
-	{
-		System.out.println("down");
-		
-//		this.loadMouseOver(mouseX, mouseY); // set the selected renderer 
-		
-		// if the renderer was selected, adjust the prevXY so it's not 0
-//		if (selectedRenderer.isPresent()) 
-//		{
-//			System.out.println("on");
-//		}
-	}
-	
-	@Override
-	protected void mouseScrollUp(int mouseX, int mouseY, int state)
-    {
-    	System.out.println("up");
-    	
-		this.loadMouseOver(mouseX, mouseY); // set the selected renderer 
-		
-		// if the renderer was selected, adjust the prevXY so it's not 0
-		if (selectedRenderer.isPresent()) 
-		{
-			System.out.println("on");
-		}
-		
-    }
-	
-	@Override
 	public void onGuiClosed()
 	{
 		for (IRender renderer : renderers.keySet())

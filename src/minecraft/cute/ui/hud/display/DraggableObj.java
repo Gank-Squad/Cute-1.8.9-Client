@@ -138,28 +138,39 @@ public class DraggableObj implements IRender
 	
 	public void render()
 	{
+		GL11.glPushMatrix();
+		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
+		
 		for (DraggableComponent component : components)
 		{
 			component.checkPos((int)pos.getAbsoluteX(), (int)pos.getAbsoluteY());
 			component.render(this.scaleX, this.scaleY);
 		}
+		GL11.glPopMatrix();
+		RenderUtil.resetColor();
 	}
 	public void renderDummy(ScreenPosition pos)
 	{	
 		calcWidth();
 		calcHeight();
 
+		GL11.glPushMatrix();
+		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
+		
 		for (DraggableComponent component : components)
 		{
 			component.renderDummy(pos, this.scaleX, this.scaleY);
 		}
+		
 		RenderUtil.setColor(0x8d8d8d80);
 		RenderUtil.renderRectSingle(
-					(int)pos.getAbsoluteX(),
-					(int)pos.getAbsoluteY(),
-					(int)pos.getAbsoluteX() + this.width,
-					(int)pos.getAbsoluteY() + this.height
+					(int)((pos.getAbsoluteX()) / this.scaleX),
+					(int)((pos.getAbsoluteY()) / this.scaleY),
+					(int)((pos.getAbsoluteX() + this.width) / this.scaleX),
+					(int)((pos.getAbsoluteY() + this.height) / this.scaleY)
 				);
+		
+		GL11.glPopMatrix();
 		RenderUtil.resetColor();
 	}
 	

@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import cute.ui.hud.ScreenPosition;
 import cute.ui.hud.display.DraggableComponent;
+import cute.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 
 
@@ -68,50 +69,33 @@ public class TextComponent extends DraggableComponent
 	@Override
 	public void render(float scaleX, float scaleY)
 	{
-		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
-		
 		GL11.glPushMatrix();
-		
-//		setScaleX(this.width);
-//		setScaleY(this.height);
-
 		GL11.glScalef((float)this.scaleX, (float)this.scaleX, (float)1);
 		
 		this.mc.fontRendererObj.drawStringWithShadow(
 				this.text,
-				(int)(this.x / this.scaleX) / scaleX,
-				(int)(this.y / this.scaleY) / scaleY,
+				(int)((this.x / this.scaleX) / scaleX),
+				(int)((this.y / this.scaleY) / scaleY),
 				(int)this.color
 				);
 		
 		GL11.glPopMatrix();
-		
-		GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
 	}
 	
 	@Override
 	public void renderDummy(ScreenPosition pos, float scaleX, float scaleY)
 	{
-		
-		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
-		
 		GL11.glPushMatrix();
-		
-//		setScaleX(this.width);
-//		setScaleY(this.height);
-
 		GL11.glScalef((float)this.scaleX, (float)this.scaleY, (float)1);
 		
 		this.mc.fontRendererObj.drawStringWithShadow(
 				 this.text,
-				(int)((pos.getAbsoluteX() + this.rx) / this.scaleX) / scaleX,
-				(int)((pos.getAbsoluteY() + this.ry) / this.scaleY) / scaleY,
+				(int)((pos.getAbsoluteX() / this.scaleX) / scaleX ) + this.rx,
+				(int)((pos.getAbsoluteY() / this.scaleY) / scaleY ) + this.ry,
 				(int)this.color
 				);
 		
 		GL11.glPopMatrix();
-		
-		GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
 	}
 }
 

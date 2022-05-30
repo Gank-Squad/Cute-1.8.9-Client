@@ -46,8 +46,6 @@ public class ItemComponent extends DraggableComponent
 		if(this.item == null)
 			return;
 		
-		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
-		
 		RenderItem renderitem = this.mc.getRenderItem();
 
 		GL11.glPushMatrix();
@@ -57,19 +55,17 @@ public class ItemComponent extends DraggableComponent
 		RenderHelper.enableGUIStandardItemLighting();
 
 		renderitem.renderItemForHUD(this.item,
-        		(int)((this.x) / getScaleX(this.width)),
-        		(int)((this.y) / getScaleY(this.height)), 10);
+        		(int)((this.x / getScaleX(this.width)) / scaleX),
+        		(int)((this.y / getScaleY(this.height)) / scaleY), 10);
 
 		
 		renderitem.renderItemOverlayIntoGUI(
 				this.mc.fontRendererObj, 
 				this.item, 
-				(int)((this.x) / getScaleX(this.width)), 
-				(int)((this.y) / getScaleY(this.height)), null);
+				(int)((this.x / getScaleX(this.width)) / scaleX), 
+				(int)((this.y / getScaleY(this.height)) / scaleY), null);
 		
         GL11.glPopMatrix();
-        
-        GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
 	}
 	
 	@Override
@@ -77,8 +73,6 @@ public class ItemComponent extends DraggableComponent
 	{
 		if(this.item == null)
 			return;
-		
-		GL11.glScalef((float)scaleX, (float)scaleY, (float)1);
 		
 		RenderItem renderitem = this.mc.getRenderItem();
 		
@@ -88,17 +82,15 @@ public class ItemComponent extends DraggableComponent
 		// bless GuiContainer.java, this make the lighting work
 		RenderHelper.enableGUIStandardItemLighting();
 		renderitem.renderItemForHUD(this.item, 
-        		(int)((pos.getAbsoluteX() + (this.rx)) / getScaleX(this.width)), 
-        		(int)((pos.getAbsoluteY() + (this.ry)) / getScaleY(this.height)), 10);
+        		(int)((pos.getAbsoluteX() / getScaleX(this.width)) / scaleX) + this.rx, 
+        		(int)((pos.getAbsoluteY() / getScaleY(this.height)) / scaleY) + this.ry, 10);
         
 		renderitem.renderItemOverlayIntoGUI(
 				this.mc.fontRendererObj, 
 				this.item, 
-				(int)((pos.getAbsoluteX() + (this.rx)) / getScaleX(this.width)), 
-				(int)((pos.getAbsoluteY() + (this.ry)) / getScaleY(this.height)), null);
+				(int)((pos.getAbsoluteX() / getScaleX(this.width)) / scaleX) + this.rx, 
+				(int)((pos.getAbsoluteY() / getScaleY(this.height)) / scaleY) + this.ry, null);
         GL11.glPopMatrix();
-        
-        GL11.glScalef((float)(1 / scaleX), (float)(1 /scaleY), (float)1);
     }
 
 }
