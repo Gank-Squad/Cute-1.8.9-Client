@@ -1,6 +1,9 @@
 package net.minecraft.block;
 
 import com.google.common.cache.LoadingCache;
+
+import cute.modules.audio.Sounds;
+
 import java.util.Random;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -206,7 +209,7 @@ public class BlockPortal extends BlockBreakable
     {
         if (rand.nextInt(100) == 0)
         {
-            worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "portal.portal", 0.5F, rand.nextFloat() * 0.4F + 0.8F, false);
+            worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, "portal.portal",Sounds.isOn() ? (float)Sounds.portal.getValue() : 0.5F, rand.nextFloat() * 0.4F + 0.8F, false);
         }
 
         for (int i = 0; i < 4; ++i)

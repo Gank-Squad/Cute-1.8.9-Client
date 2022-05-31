@@ -1,6 +1,8 @@
 package net.minecraft.block;
 
 import java.util.Random;
+
+import cute.modules.audio.Sounds;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
@@ -237,7 +239,7 @@ public abstract class BlockLiquid extends Block
             {
                 if (rand.nextInt(64) == 0)
                 {
-                    worldIn.playSound(d0 + 0.5D, d1 + 0.5D, d2 + 0.5D, "liquid.water", rand.nextFloat() * 0.25F + 0.75F, rand.nextFloat() * 1.0F + 0.5F, false);
+                    worldIn.playSound(d0 + 0.5D, d1 + 0.5D, d2 + 0.5D, "liquid.water", Sounds.isOn()&&Sounds.water.getValue()<Sounds.water.getMaxValue() ? (float)Sounds.water.getValue() : (rand.nextFloat() * 0.25F + 0.75F), rand.nextFloat() * 1.0F + 0.5F, false);
                 }
             }
             else if (rand.nextInt(10) == 0)
@@ -254,12 +256,12 @@ public abstract class BlockLiquid extends Block
                 double d4 = d1 + this.maxY;
                 double d6 = d2 + (double)rand.nextFloat();
                 worldIn.spawnParticle(EnumParticleTypes.LAVA, d8, d4, d6, 0.0D, 0.0D, 0.0D, new int[0]);
-                worldIn.playSound(d8, d4, d6, "liquid.lavapop", 0.2F + rand.nextFloat() * 0.2F, 0.9F + rand.nextFloat() * 0.15F, false);
+                worldIn.playSound(d8, d4, d6, "liquid.lavapop",Sounds.isOn()&&Sounds.lava.getValue()<Sounds.lava.getMaxValue() ? (float)Sounds.lava.getValue() : ( 0.2F + rand.nextFloat() * 0.2F), 0.9F + rand.nextFloat() * 0.15F, false);
             }
 
             if (rand.nextInt(200) == 0)
             {
-                worldIn.playSound(d0, d1, d2, "liquid.lava", 0.2F + rand.nextFloat() * 0.2F, 0.9F + rand.nextFloat() * 0.15F, false);
+                worldIn.playSound(d0, d1, d2, "liquid.lava", Sounds.isOn()&&Sounds.lava.getValue()<Sounds.lava.getMaxValue() ? (float)Sounds.lava.getValue() : (0.2F + rand.nextFloat() * 0.2F), 0.9F + rand.nextFloat() * 0.15F, false);
             }
         }
 

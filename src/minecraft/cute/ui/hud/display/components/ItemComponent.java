@@ -53,6 +53,8 @@ public class ItemComponent extends DraggableComponent
 		
 		// bless GuiContainer.java, this make the lighting work
 		RenderHelper.enableGUIStandardItemLighting();
+		GL11.glEnable(GL11.GL_BLEND);
+		
 		renderitem.renderItemForHUD(this.item, 
         		(int)((pos.getAbsoluteX() / getScaleX(this.width)) / scaleX) + this.rx, 
         		(int)((pos.getAbsoluteY() / getScaleY(this.height)) / scaleY) + this.ry, 10);
@@ -62,7 +64,10 @@ public class ItemComponent extends DraggableComponent
 				this.item, 
 				(int)((pos.getAbsoluteX() / getScaleX(this.width)) / scaleX) + this.rx, 
 				(int)((pos.getAbsoluteY() / getScaleY(this.height)) / scaleY) + this.ry, null);
-        GL11.glPopMatrix();
+		
+		GL11.glDisable(GL11.GL_BLEND);
+		RenderHelper.disableStandardItemLighting();
+		GL11.glPopMatrix();
 	}
 	
 	@Override
@@ -78,6 +83,8 @@ public class ItemComponent extends DraggableComponent
 		
 		// bless GuiContainer.java, this make the lighting work
 		RenderHelper.enableGUIStandardItemLighting();
+		GL11.glEnable(GL11.GL_BLEND);
+		
 		renderitem.renderItemForHUD(this.item, 
         		(int)((pos.getAbsoluteX() / getScaleX(this.width)) / scaleX) + this.rx, 
         		(int)((pos.getAbsoluteY() / getScaleY(this.height)) / scaleY) + this.ry, 10);
@@ -87,6 +94,9 @@ public class ItemComponent extends DraggableComponent
 				this.item, 
 				(int)((pos.getAbsoluteX() / getScaleX(this.width)) / scaleX) + this.rx, 
 				(int)((pos.getAbsoluteY() / getScaleY(this.height)) / scaleY) + this.ry, null);
+		
+		GL11.glDisable(GL11.GL_BLEND);
+		RenderHelper.disableStandardItemLighting();
         GL11.glPopMatrix();
     }
 

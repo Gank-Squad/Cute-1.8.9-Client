@@ -75,6 +75,8 @@ public class ProjectileTracer extends Module
 	@EventTarget
     public void drawTrajectory(RenderWorldLastEvent event) 
     {
+		ProjectileTracer.onTarget = false;
+		
 		if(nullCheck())
 			return;
 		
@@ -92,7 +94,6 @@ public class ProjectileTracer extends Module
 		float size = 0.0F;
 		
 		// Check items
-		this.onTarget = false;
 		if (item instanceof ItemBow) 
 		{
 			if (!thePlayer.isUsingItem())
@@ -308,7 +309,8 @@ public class ProjectileTracer extends Module
 		
 		GL11.glPushMatrix();
 		
-		this.onTarget = hitEntity;
+		ProjectileTracer.onTarget = hitEntity;
+		
 		if(hitEntity)
 		{
 			// entity has been hit so swap to red color 

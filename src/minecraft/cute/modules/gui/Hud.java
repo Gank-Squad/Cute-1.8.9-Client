@@ -62,6 +62,7 @@ public class Hud extends Module
 		hitSquare = new RectComponent(0,0,5,10,0xFFFFFFFF);
 		hitMarker.addComponent(hitSquare);
 		
+		
 		HudManager.INSTANCE.register(positionHud);
 		HudManager.INSTANCE.register(armorStatus);
 		HudManager.INSTANCE.register(hitMarker);
@@ -86,29 +87,40 @@ public class Hud extends Module
 		legs.setItem(this.mc.thePlayer.getEquipmentInSlot(2));
 		boots.setItem(this.mc.thePlayer.getEquipmentInSlot(1));
 		
-		Item item = this.mc.thePlayer.getHeldItem().getItem();
+//		Item item = this.mc.thePlayer.getHeldItem().getItem();
 		
-		if (item instanceof ItemBow ||
-				item instanceof ItemSnowball ||
-				item instanceof ItemEgg ||
-				item instanceof ItemPotion && ItemPotion.isSplash(this.mc.thePlayer.getHeldItem().getMetadata()) ||
-				item instanceof ItemFishingRod
-				)
+		
+
+		if (ProjectileTracer.onTarget)
 		{
-			if (ProjectileTracer.onTarget)
-			{
-				hitSquare.setColor(0xFF00008F);
-			}
-			else
-			{
-				hitSquare.setColor(0x0000008D);
-			}
+			hitSquare.setColor(0xFF00008F);
 		}
 		else
 		{
-			hitSquare.setColor(0x00000000);
-//			ProjectileTracer.onTarget = false;
+			hitSquare.setColor(0x0000008D);
 		}
+//		
+//		if (item instanceof ItemBow ||
+//				item instanceof ItemSnowball ||
+//				item instanceof ItemEgg ||
+//				item instanceof ItemPotion && ItemPotion.isSplash(this.mc.thePlayer.getHeldItem().getMetadata()) ||
+//				item instanceof ItemFishingRod
+//				)
+//		{
+//			if (ProjectileTracer.onTarget)
+//			{
+//				hitSquare.setColor(0xFF00008F);
+//			}
+//			else
+//			{
+//				hitSquare.setColor(0x0000008D);
+//			}
+//		}
+//		else
+//		{
+//			hitSquare.setColor(0x00000000);
+////			ProjectileTracer.onTarget = false;
+//		}
 		
 		
 		

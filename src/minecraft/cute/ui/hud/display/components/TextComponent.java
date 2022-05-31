@@ -70,6 +70,8 @@ public class TextComponent extends DraggableComponent
 	public void render(ScreenPosition pos, float scaleX, float scaleY)
 	{
 		GL11.glPushMatrix();
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
 		GL11.glScalef((float)this.scaleX, (float)this.scaleY, (float)1);
 		
 		this.mc.fontRendererObj.drawStringWithShadow(
@@ -78,6 +80,7 @@ public class TextComponent extends DraggableComponent
 				(int)((pos.getAbsoluteY() / this.scaleY) / scaleY ) + this.ry,
 				(int)this.color
 				);
+		
 		
 		GL11.glPopMatrix();
 	}
@@ -86,6 +89,7 @@ public class TextComponent extends DraggableComponent
 	public void renderDummy(ScreenPosition pos, float scaleX, float scaleY)
 	{
 		GL11.glPushMatrix();
+
 		GL11.glScalef((float)this.scaleX, (float)this.scaleY, (float)1);
 		
 		this.mc.fontRendererObj.drawStringWithShadow(
@@ -94,7 +98,6 @@ public class TextComponent extends DraggableComponent
 				(int)((pos.getAbsoluteY() / this.scaleY) / scaleY ) + this.ry,
 				(int)this.color
 				);
-		
 		GL11.glPopMatrix();
 	}
 }
