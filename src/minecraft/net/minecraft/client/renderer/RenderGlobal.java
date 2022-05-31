@@ -28,6 +28,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonSyntaxException;
 
+import cute.modules.render.ESPEntity;
 import cute.modules.render.XRay;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -740,7 +741,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
                     if ((entity3 != this.mc.getRenderViewEntity() || this.mc.gameSettings.showDebugInfo != 0 || flag2) && flag3)
                     {
-                        this.renderManager.renderEntitySimple(entity3, partialTicks);
+                        this.renderManager.renderEntitySimple(entity3, partialTicks);   
                     }
                 }
 
@@ -801,7 +802,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                             {
                                 flag4 = this.renderManager.shouldRender(entity2, camera, d0, d1, d2) || entity2.riddenByEntity == this.mc.thePlayer;
 
-                                if (!flag4)
+                                if (!flag4 && !(ESPEntity.isOn() && ESPEntity.forceRender.getValue()))
                                 {
                                     break;
                                 }

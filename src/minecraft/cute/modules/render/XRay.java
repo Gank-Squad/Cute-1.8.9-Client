@@ -61,7 +61,7 @@ public class XRay extends Module
 	public static Set<Block> blocks = new HashSet<Block>();
 
 	public static ListSelection vblocks = new ListSelection<VirtualBlock>("Blocks", new ArrayList<VirtualBlock>(), ListType.BLOCK);
-	public static Checkbox checkSides = new Checkbox("Check Sides", true);
+	public static Checkbox checkSides = new Checkbox("Check Sides", false);
 	
 	@Override
 	public void setup()
