@@ -20,6 +20,7 @@ import cute.util.EntityUtil;
 import cute.util.RenderUtil;
 import cute.util.types.VirtualBlock;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -53,7 +54,11 @@ public class ESPEntity extends Module
     public static Checkbox items = new Checkbox("Items", true);
     public static ColorPicker itemsPicker = new ColorPicker(items, "Item Picker", new Color(199, 196, 19));
 
+    public static Slider invisAlpha = new Slider("Invis Opacity", 0D, 0.5D, 1.0D, 1);
+    
     public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
+    
+    public static Checkbox forceRender = new Checkbox("Force Render", true);
     
     private static boolean globalEnabled = false;
     
@@ -73,7 +78,9 @@ public class ESPEntity extends Module
         addSetting(neutral);
         addSetting(vehicles);
         addSetting(items);
+        addSetting(invisAlpha);
         addSetting(lineWidth);
+        addSetting(forceRender);
     }
     
 
@@ -144,8 +151,9 @@ public class ESPEntity extends Module
     	}        	
     	
     	GL11.glLineWidth((float)lineWidth.getValue());
-    	GL11.glPushMatrix();
-        
+    	
+    
+//    	GL11.glPushMatrix();
     	GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
     	
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -168,10 +176,10 @@ public class ESPEntity extends Module
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
         
 		e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
-
+		
     	GL11.glPopAttrib();
     
-        GL11.glPopMatrix();
+//        GL11.glPopMatrix();
         
         RenderUtil.resetColor();
     }

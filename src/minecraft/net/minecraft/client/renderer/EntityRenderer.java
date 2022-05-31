@@ -27,6 +27,7 @@ import cute.events.EntityViewRenderEvent;
 import cute.events.RenderEvent;
 import cute.events.RenderHandEvent;
 import cute.events.RenderWorldLastEvent;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;

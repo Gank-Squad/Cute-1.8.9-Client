@@ -23,6 +23,7 @@ import com.google.gson.JsonPrimitive;
 
 import cute.modules.Module;
 import cute.modules.render.ESPBlocks;
+import cute.modules.render.XRay;
 import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
 import cute.settings.Keybind;
@@ -75,7 +76,8 @@ public class ConfigManager extends BaseManager
         {
         	createDirectory();
             saveModules();
-            saveBlockList();
+            saveBlockList("esp");
+            saveBlockList("xray");
 //            saveGUI();
 //            saveHUD();
 //            saveFriends();
@@ -92,7 +94,8 @@ public class ConfigManager extends BaseManager
         try 
         {
             createDirectory();
-            LoadBlockList();
+            LoadBlockList("esp");
+            LoadBlockList("xray");
             loadModules();
             
 //            loadGUI();
@@ -274,14 +277,28 @@ public class ConfigManager extends BaseManager
         }
     }
     
-    public static void saveBlockList() throws IOException
+    public static void saveBlockList(String name) throws IOException
     {
-    	registerFiles("Virtual Block List", "modules");
-        OutputStreamWriter fileOutputStreamWriter = new OutputStreamWriter(new FileOutputStream("cute/modules/Virtual Block List.json"), StandardCharsets.UTF_8);
+    	if(name != "xray" && name != "esp")
+    		return;
+    	
+    	String path = "cute/modules/Virtual Block List " + name + ".json";
+    	
+    	registerFiles("Virtual Block List " + name, "modules");
+        OutputStreamWriter fileOutputStreamWriter = new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8);
 
         JsonArray moduleObject = new JsonArray();
         
-        ArrayList<Object> _enabled = ESPBlocks.blocks.getEnabledItems();
+        ArrayList<Object> _enabled = null;
+        
+        if(name == "xray")
+        {
+        	_enabled = XRay.vblocks.getEnabledItems();
+        }
+        else if(name == "esp")
+        {
+        	_enabled = ESPBlocks.blocks.getEnabledItems();
+        }
         
         for(Object _ : _enabled) 
         {
@@ -306,12 +323,14 @@ public class ConfigManager extends BaseManager
     }
 
     
-    public static void LoadBlockList() throws IOException 
+    public static void LoadBlockList(String name) throws IOException 
     {
-    	if (!Files.exists(Paths.get("cute/modules/Virtual Block List.json")))
+    	String path = "cute/modules/Virtual Block List " + name + ".json";
+    	
+    	if (!Files.exists(Paths.get(path)))
             return;
 
-        InputStream inputStream = Files.newInputStream(Paths.get("cute/modules/Virtual Block List.json"));
+        InputStream inputStream = Files.newInputStream(Paths.get(path));
         JsonArray blockListObject = new JsonParser().parse(new InputStreamReader(inputStream)).getAsJsonArray();
 
         for (int i = 0; i < blockListObject.size(); i++) 
@@ -341,7 +360,14 @@ public class ConfigManager extends BaseManager
 					x.displayName = displayName;
 					x.enabled = enabled;
 					
-					ESPBlocks.blocks.enableItem(x);
+					if(name == "xray")
+			    	{
+						XRay.vblocks.enableItem(x);
+			    	}
+					else if(name == "esp") 
+					{
+						ESPBlocks.blocks.enableItem(x);	
+					}
 				}
 				catch(NumberFormatException e) {}
 			});	
