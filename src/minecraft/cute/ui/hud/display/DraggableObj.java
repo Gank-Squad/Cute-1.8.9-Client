@@ -51,7 +51,7 @@ public class DraggableObj implements IRender
 		this.height = 0;
 		
 		this.scaleX = 1;
-		this.scaleY = 3;
+		this.scaleY = 1;
 	}
 	
 	public void setEnabled(boolean isEnabled)

@@ -54,6 +54,8 @@ public class ProjectileTracer extends Module
     public static ColorPicker tracerColorPicker = new ColorPicker(renderTargetBlock, "Tracer Color", new Color(255,255,255));
 	public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
 	
+	public static boolean onTarget = false;
+	
 	@Override
     public void setup() 
 	{
@@ -90,6 +92,7 @@ public class ProjectileTracer extends Module
 		float size = 0.0F;
 		
 		// Check items
+		this.onTarget = false;
 		if (item instanceof ItemBow) 
 		{
 			if (!thePlayer.isUsingItem())
@@ -305,11 +308,11 @@ public class ProjectileTracer extends Module
 		
 		GL11.glPushMatrix();
 		
-
+		this.onTarget = hitEntity;
 		if(hitEntity)
 		{
 			// entity has been hit so swap to red color 
-			RenderUtil.setColor(new Color(255, 0, 0, 150));			
+			RenderUtil.setColor(new Color(255, 0, 0, 150));
 		}
 		else if (renderTargetBlock.getValue() && landingPosition != null)
 		{

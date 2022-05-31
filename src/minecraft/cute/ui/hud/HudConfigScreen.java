@@ -105,8 +105,8 @@ public class HudConfigScreen extends GuiScreen
 				if(delta > 0)
 				{
 					obj.setScale(
-							Math.min(3f, obj.getScaleX() + 0.1f), 
-							Math.min(3f, obj.getScaleY() + 0.1f));
+							Math.min(5f, obj.getScaleX() + 0.1f), 
+							Math.min(5f, obj.getScaleY() + 0.1f));
 				}
 				else if(delta < 0)
 				{

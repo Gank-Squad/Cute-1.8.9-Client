@@ -105,7 +105,7 @@ public class DraggableComponent
 			checkPos(this.parentX, this.parentY);
 		}
 		
-		public void setColor(byte color)
+		public void setColor(int color)
 		{
 			this.color = color;
 		}

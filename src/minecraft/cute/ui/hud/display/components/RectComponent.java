@@ -20,10 +20,10 @@ public class RectComponent extends DraggableComponent
 	{
 		RenderUtil.setColor(this.color);
 		RenderUtil.renderRectSingle(
-				(pos.getAbsoluteX() + this.rx) / scaleX,
-				(pos.getAbsoluteY() + this.ry) / scaleY,
-				(pos.getAbsoluteX() + this.rx + this.width) / scaleX,
-				(pos.getAbsoluteY() + this.ry + this.height) / scaleY);
+				(pos.getAbsoluteX()) / scaleX  + this.rx,
+				(pos.getAbsoluteY()) / scaleY + this.ry,
+				(pos.getAbsoluteX() + this.width * scaleX) / scaleX + this.rx,
+				(pos.getAbsoluteY() + this.height * scaleY) / scaleY + this.ry);
 		RenderUtil.resetColor();
 	}
 	
@@ -32,15 +32,15 @@ public class RectComponent extends DraggableComponent
 	{
 //		GL11.glPushMatrix();
 //		GL11.glScalef((float)this.scaleX, (float)scaleY, (float)1);
-		
+
 		RenderUtil.setColor(this.color);
 		RenderUtil.renderRectSingle(
-				(pos.getAbsoluteX() + this.rx) / scaleX,
-				(pos.getAbsoluteY() + this.ry) / scaleY,
-				(pos.getAbsoluteX() + this.rx + this.width) / scaleX,
-				(pos.getAbsoluteY() + this.ry + this.height) / scaleY);
+				(pos.getAbsoluteX() / scaleX)+ this.rx,
+				(pos.getAbsoluteY() / scaleY) + this.ry,
+				(pos.getAbsoluteX() + this.width * scaleX) / scaleX + this.rx,
+				(pos.getAbsoluteY() + this.height * scaleY) / scaleY + this.ry);
 		RenderUtil.resetColor();
-		
+
 //		GL11.glPopMatrix();
 	}
 }
