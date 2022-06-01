@@ -19,6 +19,7 @@ import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
 import cute.settings.Slider;
 import cute.util.RenderUtil;
+import cute.util.point;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -56,6 +57,9 @@ public class ProjectileTracer extends Module
     public static ColorPicker tracerColorPicker = new ColorPicker(renderTargetBlock, "Tracer Color", new Color(255,255,255));
 	public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
 	
+	public static Slider projectileSpeed = new Slider("arrow speed", 0.0001D, 3D, 5D, 1);
+	public static Checkbox renderHitTargets = new Checkbox("Aim Assist (beta?)", false);
+	
 	public static boolean onTarget = false;
 	
 	@Override
@@ -63,6 +67,8 @@ public class ProjectileTracer extends Module
 	{
         addSetting(renderTargetBlock);
         addSetting(lineWidth);
+        addSetting(projectileSpeed);
+        addSetting(renderHitTargets);
     }
 	
 	@Override
@@ -73,41 +79,61 @@ public class ProjectileTracer extends Module
 			   mc.thePlayer.getHeldItem() == null;
 	}
 
+//	public double dotProduct(double x1, double y1,double x2, double y2)
+//	{
+//		return x1 * x2 + y1 * y2;
+//	}
+//	public double magnitude(double x, double y)
+//	{
+//		return Math.sqrt(x*x + y*y);
+//	}
+//	public double angleBetween(double x1, double y1, double x2, double y2)
+//	{
+//		return Math.acos(dotProduct(x1,y1,x2,y2) / (magnitude(x1,y1) * magnitude(x2,y2)));
+//	}
+	
 	public Vec3 futureHitBox(Entity e)
 	{
-//		float yawRadians =   yaw   / 180.0F * (float) Math.PI;
 		
-//		double walkingSpeed = 4.317;
-//		double yaw = e.rotationYaw / 180.0 * Math.PI;
-//		double eVelX = walkingSpeed * Math.cos(yaw);
-//		double eVelZ = walkingSpeed * Math.sin(yaw);
+		point ePos = new point(e.posX, e.posZ);
+		point eVel = new point(e.motionX, e.motionZ);
+		point pPos = new point(mc.thePlayer.posX, mc.thePlayer.posZ);
+//		double pSpeed = 2.713146225;
+		double pSpeed = projectileSpeed.getValue();
 		
-		double eVelX = e.motionX;
-		double eVelZ = e.motionZ;
 		
-		double playerX = mc.thePlayer.posX, playerZ = mc.thePlayer.posZ;
-		double entityX = e.posX, entityZ = e.posZ;
+//		// get average arrow velocity ?
+//		int ticks;
+////		pSpeed *= Math.pow(0.99, ticks);
+//		double distance = Math.sqrt(Math.pow(ePos.x - pPos.x, 2) + Math.pow(ePos.y - pPos.y, 2));
+//		for (ticks = 0; ticks < 200; ticks++)
+//		{
+//			distance -= pSpeed;
+//			pSpeed *= 0.99;
+//			if (distance <= 0)
+//			{
+//				break;
+//			}
+//		}
+//		pSpeed = (pSpeed + 3) / 2;
+//		
+//		ePos = new point(120,40);
+//		eVel = new point(5,2);
+//		pPos = new point(80,80);
+//		pSpeed = 10;
 		
-		double targetMagnitude = Math.sqrt(Math.pow(eVelX, 2) + Math.pow(eVelZ, 2));
-		double arrowSpeed = 20;
-		double k = targetMagnitude / arrowSpeed;
-		double c = Math.sqrt(
-				Math.pow(playerX - entityX, 2) +
-				Math.pow(playerZ - entityZ, 2)
-				);
+//		if (eVel.x == 0 && eVel.y == 0)
+//		{
+//			return new Vec3(e.posX,e.posY,e.posZ);
+//		}
 		
-		double bVecX = eVelX, bVecZ = eVelZ;
-		double cVecX = playerX - entityX;
-		double cVecZ = playerZ - entityZ;
+		double k = eVel.magnitude() / pSpeed;
+		double c = pPos.sub(ePos).magnitude();
 		
-		double CAB = 
-				Math.acos(
-						//dot product	bVec,Cvec
-						(bVecX * cVecX + bVecZ * cVecZ) /
-						(Math.sqrt(bVecX*bVecX + bVecZ*bVecZ) *
-						Math.sqrt(cVecX*cVecX + cVecZ*cVecZ)
-						)
-						);
+		point bVec = eVel;
+		point cVec = pPos.sub(ePos);
+		
+		double CAB = bVec.angleBetween(cVec);
 		double ABC = Math.asin(Math.sin(CAB) * k);
 		double ACB = (Math.PI) - (CAB + ABC);
 		
@@ -115,16 +141,12 @@ public class ProjectileTracer extends Module
 		double a = j * Math.sin(CAB);
 		double b = j * Math.sin(ABC);
 		
-		double t = b / targetMagnitude;
+		double t = b / eVel.magnitude();
 		
-		double collisionOffsetX = eVelX * t;
-		double collisionOffsetZ = eVelZ * t;
-		
-		double collisionPosX = entityX + (eVelX * t);
-		double collisionPosZ = entityZ + (eVelZ * t);
-		
-		Vec3 futurePos = new Vec3(collisionOffsetX,0,collisionOffsetZ);
-		return futurePos;
+		point collisionPos = ePos.add(eVel.mul(t));
+//		System.out.println(collisionPos.x + " " + collisionPos.y);
+
+		return new Vec3(collisionPos.x, e.posY, collisionPos.y);
 	}
 	
 
@@ -239,7 +261,7 @@ public class ProjectileTracer extends Module
 		GL11.glLineWidth((float)lineWidth.getValue());
 		
 		worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-		Entity entity = null;
+
 		while (!hasLanded && posY > 0.0D) 
 		{
 			// Set pos before and after
@@ -312,15 +334,30 @@ public class ProjectileTracer extends Module
 					break;
 				}
 			
+			if (this.renderHitTargets.getValue())
+			{
+				for (Entity entity2 : this.mc.theWorld.loadedEntityList)
+				{
+					
+					if (entity2 != thePlayer)
+					{
+						
+						Vec3 offset = futureHitBox(entity2);
+						GL11.glPushMatrix();
+						RenderUtil.setColor(0xFF0000FF);
+						RenderUtil.renderEntityHitboxAbs(entity2, offset.xCoord, offset.yCoord, offset.zCoord);
+						GL11.glPopMatrix();
+					}
+					
+				}
+			}
+			
+			
 			// Check all possible entities
 			for (Entity possibleEntity : collidedEntities) 
 			{
 				
-//				Vec3 offset = futureHitBox(possibleEntity);
-//				GL11.glPushMatrix();
-//				RenderUtil.setColor(0xFF0000FF);
-//				RenderUtil.renderEntityHitbox(possibleEntity, offset.xCoord, offset.yCoord, offset.zCoord);
-//				GL11.glPopMatrix();
+				
 				if (possibleEntity.canBeCollidedWith() && (possibleEntity != thePlayer)) 
 				{
 
@@ -328,7 +365,6 @@ public class ProjectileTracer extends Module
 					if (possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter) != null) 
 					{
 						MovingObjectPosition possibleEntityLanding = possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
-						entity = possibleEntity;
 						hitEntity = true;
 						hasLanded = true;
 						landingPosition = possibleEntityLanding;

@@ -253,6 +253,56 @@ public class RenderUtil
 			
 			GL11.glEnd();
 	    }
+	    public static void renderEntityHitboxAbs(Entity e, double x, double y, double z)
+	    {
+	    	double renderPosX = mc.getRenderManager().viewerPosX;
+			double renderPosY = mc.getRenderManager().viewerPosY;
+			double renderPosZ = mc.getRenderManager().viewerPosZ;
+	        
+			double hw = e.width / 2;
+			
+	    	double x1 = x + hw - renderPosX;
+			double x2 = x - hw - renderPosX;
+			
+			double y1 = y            - renderPosY;
+			double y2 = y + e.height - renderPosY;
+			
+			double z1 = z + hw - renderPosZ;
+			double z2 = z - hw - renderPosZ;
+			
+			GL11.glBegin(2);
+			
+			GL11.glVertex3d(x1, y1, z1);
+			GL11.glVertex3d(x2, y1, z1);
+			GL11.glVertex3d(x2, y1, z2);
+			GL11.glVertex3d(x1, y1, z2);
+			
+			GL11.glEnd();
+			
+			GL11.glBegin(1);
+			
+			GL11.glVertex3d(x1, y1, z1);
+			GL11.glVertex3d(x1, y2, z1);
+			
+			GL11.glVertex3d(x1, y1, z2);
+			GL11.glVertex3d(x1, y2, z2);
+			
+			GL11.glVertex3d(x2, y1, z1);
+			GL11.glVertex3d(x2, y2, z1);
+			
+			GL11.glVertex3d(x2, y1, z2);
+			GL11.glVertex3d(x2, y2, z2);
+			
+			GL11.glEnd();
+			
+			GL11.glBegin(2);
+			GL11.glVertex3d(x1, y2, z1);
+			GL11.glVertex3d(x2, y2, z1);
+			GL11.glVertex3d(x2, y2, z2);
+			GL11.glVertex3d(x1, y2, z2);
+			
+			GL11.glEnd();
+	    }
 	
 	    public static void renderBlock(int x, int y, int z, VirtualBlock block) 
 	    {
