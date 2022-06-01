@@ -418,8 +418,21 @@ public class ProjectileTracer extends Module
 		}
 		else if (renderTargetBlock.getValue() && landingPosition != null)
 		{
+			double doubleX = this.mc.thePlayer.lastTickPosX
+	                + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
+	                * event.partialTicks;
+
+	        double doubleY = this.mc.thePlayer.lastTickPosY
+	                + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY)
+	                * event.partialTicks;
+
+	        double doubleZ = this.mc.thePlayer.lastTickPosZ
+	                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
+	                * event.partialTicks;
+
 			// translate graphics for the block render
-			GL11.glTranslated(-mc.thePlayer.lastTickPosX, -mc.thePlayer.lastTickPosY, -mc.thePlayer.lastTickPosZ);
+	        GL11.glTranslated(-doubleX, -doubleY, -doubleZ);
+
 			GL11.glBegin(GL11.GL_LINES);
 			
 	        // landing block position 

@@ -10,6 +10,7 @@ import cute.events.SettingChangedEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
 import cute.settings.ListSelection;
+import cute.settings.enums.ListInputType;
 import cute.settings.enums.ListType;
 
 public class Players extends Module 
@@ -22,7 +23,7 @@ public class Players extends Module
 	
 	public static HashSet<String> playerNameBlacklist = new HashSet<String>();
 	
-	public static ListSelection playerNames = new ListSelection<String>("Ignore ESP/Tracers", new ArrayList<String>(), ListType.PLAYERNAME);
+	public static ListSelection playerNames = new ListSelection<String>("Ignore ESP/Tracers", new ArrayList<String>(), ListType.PLAYERNAME, ListInputType.SEARCH_AND_TEXT);
 	
 	@Override
 	public void setup()
