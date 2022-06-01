@@ -3,10 +3,12 @@ package cute.modules.render;
 
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
+//import org.lwjgl.util.Point;
 import org.lwjgl.util.glu.Cylinder;
 
 import cute.eventapi.EventTarget;
@@ -71,6 +73,60 @@ public class ProjectileTracer extends Module
 			   mc.thePlayer.getHeldItem() == null;
 	}
 
+	public Vec3 futureHitBox(Entity e)
+	{
+//		float yawRadians =   yaw   / 180.0F * (float) Math.PI;
+		
+//		double walkingSpeed = 4.317;
+//		double yaw = e.rotationYaw / 180.0 * Math.PI;
+//		double eVelX = walkingSpeed * Math.cos(yaw);
+//		double eVelZ = walkingSpeed * Math.sin(yaw);
+		
+		double eVelX = e.motionX;
+		double eVelZ = e.motionZ;
+		
+		double playerX = mc.thePlayer.posX, playerZ = mc.thePlayer.posZ;
+		double entityX = e.posX, entityZ = e.posZ;
+		
+		double targetMagnitude = Math.sqrt(Math.pow(eVelX, 2) + Math.pow(eVelZ, 2));
+		double arrowSpeed = 20;
+		double k = targetMagnitude / arrowSpeed;
+		double c = Math.sqrt(
+				Math.pow(playerX - entityX, 2) +
+				Math.pow(playerZ - entityZ, 2)
+				);
+		
+		double bVecX = eVelX, bVecZ = eVelZ;
+		double cVecX = playerX - entityX;
+		double cVecZ = playerZ - entityZ;
+		
+		double CAB = 
+				Math.acos(
+						//dot product	bVec,Cvec
+						(bVecX * cVecX + bVecZ * cVecZ) /
+						(Math.sqrt(bVecX*bVecX + bVecZ*bVecZ) *
+						Math.sqrt(cVecX*cVecX + cVecZ*cVecZ)
+						)
+						);
+		double ABC = Math.asin(Math.sin(CAB) * k);
+		double ACB = (Math.PI) - (CAB + ABC);
+		
+		double j = c / Math.sin(ACB);
+		double a = j * Math.sin(CAB);
+		double b = j * Math.sin(ABC);
+		
+		double t = b / targetMagnitude;
+		
+		double collisionOffsetX = eVelX * t;
+		double collisionOffsetZ = eVelZ * t;
+		
+		double collisionPosX = entityX + (eVelX * t);
+		double collisionPosZ = entityZ + (eVelZ * t);
+		
+		Vec3 futurePos = new Vec3(collisionOffsetX,0,collisionOffsetZ);
+		return futurePos;
+	}
+	
 
 	@EventTarget
     public void drawTrajectory(RenderWorldLastEvent event) 
@@ -183,7 +239,7 @@ public class ProjectileTracer extends Module
 		GL11.glLineWidth((float)lineWidth.getValue());
 		
 		worldRenderer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-		
+		Entity entity = null;
 		while (!hasLanded && posY > 0.0D) 
 		{
 			// Set pos before and after
@@ -259,17 +315,23 @@ public class ProjectileTracer extends Module
 			// Check all possible entities
 			for (Entity possibleEntity : collidedEntities) 
 			{
+				
+//				Vec3 offset = futureHitBox(possibleEntity);
+//				GL11.glPushMatrix();
+//				RenderUtil.setColor(0xFF0000FF);
+//				RenderUtil.renderEntityHitbox(possibleEntity, offset.xCoord, offset.yCoord, offset.zCoord);
+//				GL11.glPopMatrix();
 				if (possibleEntity.canBeCollidedWith() && (possibleEntity != thePlayer)) 
 				{
+
 					AxisAlignedBB possibleEntityBoundingBox = possibleEntity.getEntityBoundingBox().expand(size, size, size);
 					if (possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter) != null) 
 					{
 						MovingObjectPosition possibleEntityLanding = possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
-						
+						entity = possibleEntity;
 						hitEntity = true;
 						hasLanded = true;
 						landingPosition = possibleEntityLanding;
-						
 						continue;
 					}
 					possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
@@ -310,11 +372,13 @@ public class ProjectileTracer extends Module
 		GL11.glPushMatrix();
 		
 		ProjectileTracer.onTarget = hitEntity;
-		
 		if(hitEntity)
 		{
+			RenderUtil.renderEntityHitbox(entity);
+			
 			// entity has been hit so swap to red color 
 			RenderUtil.setColor(new Color(255, 0, 0, 150));
+			
 		}
 		else if (renderTargetBlock.getValue() && landingPosition != null)
 		{

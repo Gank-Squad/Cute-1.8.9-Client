@@ -41,7 +41,7 @@ public class Hud extends Module
 	public static ItemComponent legs;
 	public static ItemComponent boots;
 	
-	public static DraggableObj hitMarker = new DraggableObj();
+	public static DraggableObj hitMarker = new DraggableObj(52000,48500);
 	public static RectComponent hitSquare;
 	
 	@Override
@@ -59,7 +59,7 @@ public class Hud extends Module
 		armorStatus.addComponent(legs);
 		armorStatus.addComponent(boots);
 		
-		hitSquare = new RectComponent(0,0,5,10,0xFFFFFFFF);
+		hitSquare = new RectComponent(0,0,5,10,0x00000000);
 		hitMarker.addComponent(hitSquare);
 		
 		
@@ -87,40 +87,39 @@ public class Hud extends Module
 		legs.setItem(this.mc.thePlayer.getEquipmentInSlot(2));
 		boots.setItem(this.mc.thePlayer.getEquipmentInSlot(1));
 		
-//		Item item = this.mc.thePlayer.getHeldItem().getItem();
-		
+		Item item = this.mc.thePlayer.getHeldItem().getItem();
 		
 
-		if (ProjectileTracer.onTarget)
-		{
-			hitSquare.setColor(0xFF00008F);
-		}
-		else
-		{
-			hitSquare.setColor(0x0000008D);
-		}
-//		
-//		if (item instanceof ItemBow ||
-//				item instanceof ItemSnowball ||
-//				item instanceof ItemEgg ||
-//				item instanceof ItemPotion && ItemPotion.isSplash(this.mc.thePlayer.getHeldItem().getMetadata()) ||
-//				item instanceof ItemFishingRod
-//				)
+//		if (ProjectileTracer.onTarget)
 //		{
-//			if (ProjectileTracer.onTarget)
-//			{
-//				hitSquare.setColor(0xFF00008F);
-//			}
-//			else
-//			{
-//				hitSquare.setColor(0x0000008D);
-//			}
+//			hitSquare.setColor(0xFF00008F);
 //		}
 //		else
 //		{
-//			hitSquare.setColor(0x00000000);
-////			ProjectileTracer.onTarget = false;
+//			hitSquare.setColor(0x0000008D);
 //		}
+		
+		// need this so the marker disappears when not holding a bow so screen isn't covered unnecessarily
+		if (item instanceof ItemBow ||
+				item instanceof ItemSnowball ||
+				item instanceof ItemEgg ||
+				item instanceof ItemPotion && ItemPotion.isSplash(this.mc.thePlayer.getHeldItem().getMetadata()) ||
+				item instanceof ItemFishingRod
+				)
+		{
+			if (ProjectileTracer.onTarget)
+			{
+				hitSquare.setColor(0xFF0000CF);
+			}
+			else
+			{
+				hitSquare.setColor(0x8D8D8D8D);
+			}
+		}
+		else
+		{
+			hitSquare.setColor(0x00000000);
+		}
 		
 		
 		
