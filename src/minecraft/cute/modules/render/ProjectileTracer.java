@@ -374,7 +374,7 @@ public class ProjectileTracer extends Module
 		ProjectileTracer.onTarget = hitEntity;
 		if(hitEntity)
 		{
-			RenderUtil.renderEntityHitbox(entity);
+//			RenderUtil.renderEntityHitbox(entity);
 			
 			// entity has been hit so swap to red color 
 			RenderUtil.setColor(new Color(255, 0, 0, 150));
@@ -383,7 +383,7 @@ public class ProjectileTracer extends Module
 		else if (renderTargetBlock.getValue() && landingPosition != null)
 		{
 			// translate graphics for the block render
-			GL11.glTranslated(-mc.thePlayer.posX, -mc.thePlayer.posY, -mc.thePlayer.posZ);
+			GL11.glTranslated(-mc.thePlayer.lastTickPosX, -mc.thePlayer.lastTickPosY, -mc.thePlayer.lastTickPosZ);
 			GL11.glBegin(GL11.GL_LINES);
 			
 	        // landing block position 

@@ -44,6 +44,10 @@ public class Hud extends Module
 	public static DraggableObj hitMarker = new DraggableObj(52000,48500);
 	public static RectComponent hitSquare;
 	
+	public static Checkbox armorStatusCheck = new Checkbox("Armor", true);
+	public static Checkbox positionCheck    = new Checkbox("Position", true);
+	public static Checkbox arrowCheck       = new Checkbox("Arrow", true);
+	
 	@Override
 	public void delayedSetup()
 	{
@@ -62,16 +66,23 @@ public class Hud extends Module
 		hitSquare = new RectComponent(0,0,5,10,0x00000000);
 		hitMarker.addComponent(hitSquare);
 		
+		if(armorStatusCheck.getValue())
+			HudManager.INSTANCE.register(armorStatus);
 		
-		HudManager.INSTANCE.register(positionHud);
-		HudManager.INSTANCE.register(armorStatus);
-		HudManager.INSTANCE.register(hitMarker);
+		if(positionCheck.getValue())
+			HudManager.INSTANCE.register(positionHud);
+		
+		if(arrowCheck.getValue())
+			HudManager.INSTANCE.register(hitMarker);
 	}
 	
 	@Override
     public void setup() 
 	{
 		this.addSetting(draggable);
+		this.addSetting(armorStatusCheck);
+		this.addSetting(positionCheck);
+		this.addSetting(arrowCheck);
     }
 
 	@Override
@@ -128,6 +139,45 @@ public class Hud extends Module
 	@EventTarget
 	public void modeChangedEvent(SettingChangedEvent e)
 	{
+		if(e.settingID == armorStatusCheck.getId())
+		{
+			if(armorStatusCheck.getValue())
+			{
+				HudManager.INSTANCE.register(armorStatus);
+			}
+			else 
+			{
+				HudManager.INSTANCE.unregister(armorStatus);
+			}
+			return;
+		}
+		
+		if(e.settingID == positionCheck.getId())
+		{
+			if(positionCheck.getValue())
+			{
+				HudManager.INSTANCE.register(positionHud);
+			}
+			else 
+			{
+				HudManager.INSTANCE.unregister(positionHud);
+			}
+			return;
+		}
+		
+		if(e.settingID == arrowCheck.getId())
+		{
+			if(arrowCheck.getValue())
+			{
+				HudManager.INSTANCE.register(hitMarker);
+			}
+			else 
+			{
+				HudManager.INSTANCE.unregister(hitMarker);
+			}
+			return;
+		}
+		
 		if(e.settingID != draggable.getId())
 			return;
 
