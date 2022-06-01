@@ -6,12 +6,6 @@ import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.HudManager;
 import cute.managers.ModuleManager;
-import cute.ui.hud.display.DraggableObj;
-import cute.ui.hud.display.components.ItemComponent;
-import cute.ui.hud.display.components.RectComponent;
-import cute.ui.hud.display.components.TextComponent;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 public class Client 
 {

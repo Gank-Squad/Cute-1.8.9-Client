@@ -13,6 +13,7 @@ import cute.settings.Mode;
 import cute.settings.Setting;
 import cute.settings.Slider;
 import cute.settings.SubSetting;
+import cute.settings.enums.ListInputType;
 import cute.ui.clickui.ClickUI;
 import cute.ui.clickui.components.sub.CheckboxButton;
 import cute.ui.clickui.components.sub.ColorPickerButton;
@@ -21,6 +22,7 @@ import cute.ui.clickui.components.sub.KeybindButton;
 import cute.ui.clickui.components.sub.ModeButton;
 import cute.ui.clickui.components.sub.SearchButton;
 import cute.ui.clickui.components.sub.SliderButton;
+import cute.ui.clickui.components.sub.TextInputButton;
 import cute.util.FontUtil;
 import cute.util.RenderUtil;
 
@@ -54,12 +56,14 @@ public class Button extends Component
 				default:
 					last = null;
 					continue;
+					
 				case LIST:
 					last =  new DropDownButton((ListSelection)s, this, opY);;
 					this.subcomponents.add(last);
 					opY += this.height;
 					hasList = s; 
 					break;
+					
 				case CHECKBOX:
 					last = new CheckboxButton((Checkbox)s, this, opY);
 					this.subcomponents.add(last);
@@ -87,12 +91,40 @@ public class Button extends Component
 				opY2 += this.height;
 			}
 			
-			if(hasList != null)
+			if(hasList != null && hasList instanceof ListSelection)
 			{
-				this.subcomponents.add(new SearchButton(this, opY, (ListSelection)hasList));
-				opY += this.height;
+				ListInputType t = ((ListSelection)hasList).listInputType;
 				
-				hasList = null;
+				switch(t)
+				{
+					case NONE:
+						hasList = null;
+						continue;
+						
+					case TEXT:
+						this.subcomponents.add(new TextInputButton(this, opY, (ListSelection)hasList));
+						opY += this.height;
+						
+						hasList = null;
+						continue;
+						
+					case SEARCH:
+						this.subcomponents.add(new SearchButton(this, opY, (ListSelection)hasList));
+						opY += this.height;
+						
+						hasList = null;
+						continue;
+						
+					case SEARCH_AND_TEXT:
+						this.subcomponents.add(new SearchButton(this, opY, (ListSelection)hasList));
+						opY += this.height;
+						
+						this.subcomponents.add(new TextInputButton(this, opY, (ListSelection)hasList));
+						opY += this.height;
+						
+						hasList = null;
+						continue;
+				}
 			}
 		}
 		

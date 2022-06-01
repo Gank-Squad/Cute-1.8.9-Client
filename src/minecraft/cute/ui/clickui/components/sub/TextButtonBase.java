@@ -12,7 +12,7 @@ import cute.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
-public class TextButton extends Component   
+public class TextButtonBase extends Component   
 {
 	private final Button parent;
 	
@@ -27,7 +27,9 @@ public class TextButton extends Component
 	private boolean backSpaceDown = false;
 	private Long backSpaceDelay = Minecraft.getSystemTime(); 
 	
-	public TextButton(Button button, int offset)
+	public String idleTextDisplay = "[ Search ]";
+	
+	public TextButtonBase(Button button, int offset)
 	{
 		this.parent = button;
 		this.x = button.parent.getX() + button.parent.getWidth();
@@ -63,7 +65,7 @@ public class TextButton extends Component
 		GL11.glPushMatrix();
 		GL11.glScalef(0.75f,0.75f, 0.75f);
 		
-		String text = this.binding ? this.searchTerm : "Search";
+		String text = this.binding ? this.searchTerm : idleTextDisplay;
 		
 		FontUtil.drawStringWithShadow(
 				text, 
@@ -117,8 +119,6 @@ public class TextButton extends Component
 			
 			this.setBinding(false);	
 		}
-		
-		System.out.println("sex");
 	}	
 	
 	public void setBinding(boolean state)

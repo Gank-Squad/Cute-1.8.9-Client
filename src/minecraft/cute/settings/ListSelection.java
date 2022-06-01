@@ -3,6 +3,7 @@ package cute.settings;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import cute.settings.enums.ListInputType;
 import cute.settings.enums.ListType;
 import cute.settings.enums.SettingType;
 
@@ -12,6 +13,8 @@ public class ListSelection<T> extends Setting
 	private ArrayList<T> enabledItems;
 	public boolean canToggleItems = false;
 	
+	public final ListInputType listInputType;
+	
 	public ListSelection(String name, ArrayList<T> enabled, ListType type) 
 	{
 		this.enabledItems = enabled;
@@ -20,8 +23,19 @@ public class ListSelection<T> extends Setting
 		this._opened = false;
 		this._settingType = SettingType.LIST;
 		this._type = type;
+		this.listInputType  = ListInputType.SEARCH;
 	}
 	
+	public ListSelection(String name, ArrayList<T> enabled, ListType type, ListInputType ltype) 
+	{
+		this.enabledItems = enabled;
+		
+		this._name = name;
+		this._opened = false;
+		this._settingType = SettingType.LIST;
+		this._type = type;
+		this.listInputType = ltype;
+	}
 	
 	public String getName() 
 	{

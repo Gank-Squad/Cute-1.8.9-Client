@@ -6,11 +6,13 @@ import cute.managers.HudManager;
 import cute.modules.Module;
 import cute.modules.enums.Category;
 import cute.modules.render.ProjectileTracer;
+import cute.modules.render.XRay;
 import cute.settings.Checkbox;
 import cute.ui.hud.display.DraggableObj;
 import cute.ui.hud.display.components.ItemComponent;
 import cute.ui.hud.display.components.RectComponent;
 import cute.ui.hud.display.components.TextComponent;
+import cute.util.types.VirtualBlock;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
@@ -85,6 +87,33 @@ public class Hud extends Module
 		this.addSetting(arrowCheck);
     }
 
+
+	@Override
+	public void onEnable()
+	{
+		super.onEnable();
+		
+		if(armorStatusCheck.getValue())
+			HudManager.INSTANCE.register(armorStatus);
+		
+		if(positionCheck.getValue())
+			HudManager.INSTANCE.register(positionHud);
+		
+		if(arrowCheck.getValue())
+			HudManager.INSTANCE.register(hitMarker);
+	}
+	
+	@Override 
+	public void onDisable()
+	{
+		super.onDisable();
+				
+		HudManager.INSTANCE.unregister(armorStatus);
+		HudManager.INSTANCE.unregister(positionHud);
+		HudManager.INSTANCE.unregister(hitMarker);
+	}
+	
+	
 	@Override
 	public void onUpdate()
 	{

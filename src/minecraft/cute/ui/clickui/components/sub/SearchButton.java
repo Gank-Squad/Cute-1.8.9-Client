@@ -17,20 +17,18 @@ import cute.util.RenderUtil;
 import cute.util.types.BlockInfo;
 import cute.util.types.VirtualBlock;
 
-public class SearchButton extends TextButton  
+public class SearchButton extends TextButtonBase  
 {
 	private final Button parent;
+	private final ListType type;
+	private final ListSelection setting;
+	
+	private final int listCap = 10;
 	
 	private int scrollButtonSize = this.height - 3;
 	private int scrollIndex = 0;
 	
 	private Object[] foundSearchTerms = new Object[0];
-	
-	private ListType type;
-	
-	ListSelection setting;
-	
-	private int listCap = 10;
 	
 	public SearchButton(Button button, int offset, ListSelection setting)
 	{
