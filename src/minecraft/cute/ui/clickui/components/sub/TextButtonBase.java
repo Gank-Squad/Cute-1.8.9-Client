@@ -191,9 +191,9 @@ public class TextButtonBase extends Component
 				return;
 				
 			default:
-				if(typedChar >= 'a' && typedChar <= 'z' ||
-				   typedChar >= 'A' && typedChar <= 'Z' || 
-				   typedChar >= '0' && typedChar <= '9' ||
+				if(// typedChar >= 'a' && typedChar <= 'z' ||
+				   typedChar >= 'A' && typedChar <= 'z' || 
+				   // typedChar >= '0' && typedChar <= '9' ||
 				   typedChar >= ' ' && typedChar <= '?')
 				{
 					this.searchTerm += typedChar;

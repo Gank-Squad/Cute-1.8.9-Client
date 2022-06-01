@@ -3,7 +3,6 @@ package cute.modules.render;
 
 
 import java.awt.Color;
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class ProjectileTracer extends Module
 	public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
 	
 	public static Slider projectileSpeed = new Slider("arrow speed", 0.0001D, 3D, 5D, 1);
-	public static Checkbox renderHitTargets = new Checkbox("Aim Assist (beta?)", false);
+	public static Checkbox renderHitTargets = new Checkbox("Aim Assist [BETA]", false);
 	
 	public static boolean onTarget = false;
 	
