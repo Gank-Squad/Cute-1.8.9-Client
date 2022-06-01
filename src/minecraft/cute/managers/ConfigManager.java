@@ -31,6 +31,7 @@ import cute.settings.Mode;
 import cute.settings.Setting;
 import cute.settings.Slider;
 import cute.settings.SubSetting;
+import cute.settings.enums.ListType;
 import cute.util.Cache;
 import cute.util.types.VirtualBlock;
 import cute.settings.ListSelection;
@@ -76,8 +77,6 @@ public class ConfigManager extends BaseManager
         {
         	createDirectory();
             saveModules();
-            saveBlockList("esp");
-            saveBlockList("xray");
 //            saveGUI();
 //            saveHUD();
 //            saveFriends();
@@ -94,8 +93,6 @@ public class ConfigManager extends BaseManager
         try 
         {
             createDirectory();
-            LoadBlockList("esp");
-            LoadBlockList("xray");
             loadModules();
             
 //            loadGUI();
@@ -149,19 +146,65 @@ public class ConfigManager extends BaseManager
                     }
                 }
 
-                if (setting instanceof Slider) 
+                else if (setting instanceof Slider) 
                 {
                     settingObject.add(((Slider) setting).getName(), new JsonPrimitive(((Slider) setting).getValue()));
                 }
 
-                if (setting instanceof Mode) 
+                else if (setting instanceof Mode) 
                 {
                     settingObject.add(((Mode) setting).getName(), new JsonPrimitive(((Mode) setting).getValue()));
                 }
 
-                if (setting instanceof Keybind) 
+                else if (setting instanceof Keybind) 
                 {
                     settingObject.add(((Keybind) setting).getName(), new JsonPrimitive(((Keybind) setting).getKey()));
+                }
+                else if (setting instanceof ListSelection)
+                {
+                	ListSelection ls = (ListSelection)setting;
+                	JsonArray items = new JsonArray();
+                	
+                	switch(ls.getListType())
+                	{
+	                	case BLOCK:
+	                		
+	                		for(Object _ : ls.getEnabledItems()) 
+	                        {
+	                        	VirtualBlock b = (VirtualBlock)_;
+	                        	
+	                        	JsonObject jo = new JsonObject();
+	                        	jo.add("Id",  new JsonPrimitive(b.blockID));
+	                        	jo.add("Red",  new JsonPrimitive(b.r));
+	                        	jo.add("Green",  new JsonPrimitive(b.g));
+	                        	jo.add("Blue",  new JsonPrimitive(b.b));
+	                        	jo.add("Alpha",  new JsonPrimitive(b.a));
+	                        	jo.add("Meta",  new JsonPrimitive(b.meta));
+	                        	jo.add("Enabled",  new JsonPrimitive(b.enabled));
+	                        	jo.add("DisplayName",  new JsonPrimitive(b.displayName));
+	                        	
+	                        	items.add(jo);
+	                        }
+	                	
+	                		break;
+	                		
+	                	case PLAYERNAME:
+	                		
+	                		for(Object _ : ls.getEnabledItems()) 
+	                        {
+	                        	String b = (String)_;
+	                        	
+	                        	items.add(new JsonPrimitive(b));
+	                        }
+	                		
+	                		break;
+	                		
+	                	case POTION:
+	                		continue;
+                	}
+                	
+                	
+                	settingObject.add(ls.getName(), items);
                 }
             }
 
@@ -240,19 +283,24 @@ public class ConfigManager extends BaseManager
                     }
                 }
 
-                if (setting instanceof Slider) 
+                else if (setting instanceof Slider) 
                 {
                     settingValueObject = settingObject.get(((Slider) setting).getName());
                 }
 
-                if (setting instanceof Mode) 
+                else if (setting instanceof Mode) 
                 {
                     settingValueObject = settingObject.get(((Mode) setting).getName());
                 }
 
-                if (setting instanceof Keybind) 
+                else if (setting instanceof Keybind) 
                 {
                     settingValueObject = settingObject.get(((Keybind) setting).getName());
+                }
+                
+                else if (setting instanceof ListSelection)
+                {
+                	settingValueObject = settingObject.get(((ListSelection) setting).getName());
                 }
 
                 if (settingValueObject != null) 
@@ -260,14 +308,97 @@ public class ConfigManager extends BaseManager
                     if (setting instanceof Checkbox)
                         ((Checkbox) setting).setChecked(settingValueObject.getAsBoolean());
 
-                    if (setting instanceof Slider)
+                    else if (setting instanceof Slider)
                         ((Slider) setting).setValue(settingValueObject.getAsDouble());
 
-                    if (setting instanceof Mode)
+                    else if (setting instanceof Mode)
                         ((Mode) setting).setMode(settingValueObject.getAsInt());
 
-                    if (setting instanceof Keybind)
+                    else if (setting instanceof Keybind)
                         ((Keybind) setting).setKey(settingValueObject.getAsInt());
+                    
+                    else if (setting instanceof ListSelection)
+                    {
+                    	ListSelection ls = (ListSelection)setting;
+                    	JsonArray items = (JsonArray)settingValueObject;
+                    	
+                    	switch(ls.getListType())
+                    	{
+    	                	case BLOCK:
+    	                		
+    	                		for (int i = 0; i < items.size(); i++) 
+    	                        {
+    	                			int id;
+    	                			int r;
+    	                			int g;
+    	                			int b;
+    	                			int a;
+    	                			int meta;
+    	                			boolean enabled;
+    	                			String displayName;
+    	                			
+    	                			try
+    	                			{
+    	                				JsonObject jsonObj = items.get(i).getAsJsonObject();
+        	                        	
+        	                        	id = jsonObj.get("Id").getAsInt();
+        	                        	r  = jsonObj.get("Red").getAsInt();
+        	                        	g  = jsonObj.get("Green").getAsInt();
+        	                        	b  = jsonObj.get("Blue").getAsInt();
+        	                        	a  = jsonObj.get("Alpha").getAsInt();
+        	                        	meta = jsonObj.get("Meta").getAsInt();
+        	                        	enabled = jsonObj.get("Enabled").getAsBoolean();
+        	                        	displayName = jsonObj.get("DisplayName").getAsString();
+    	                			}
+    	                        	catch(Exception ignored)
+    	                        	{
+    	                        		continue;
+    	                        	}
+    	                		
+    	                			Stream<VirtualBlock> s = Cache.BLOCKS.stream().filter(x -> x.blockID == id);
+    	                			
+    	                			s.forEach(x -> 
+    	                			{
+    	                				try 
+    	                				{
+    	                					x.r =  (byte) r;
+    	                					x.g =  (byte) g;
+    	                					x.b =  (byte) b;
+    	                					x.a =  (byte) a;
+    	                					x.meta    =   meta;
+    	                					x.displayName = displayName;
+    	                					x.enabled = enabled;
+    	                					
+    	                					ls.enableItem(x);
+    	                				}
+    	                				catch(Exception ignored) {}
+    	                			});	
+    	                        }
+    	                		break;
+    	                		
+    	                	case PLAYERNAME:
+    	                		
+    	                		for (int i = 0; i < items.size(); i++) 
+    	                        {
+    	                			String name;
+    	                			
+    	                			try
+    	                			{
+    	                				name = items.get(i).getAsString();
+    	                			}
+    	                        	catch(Exception ignored)
+    	                        	{
+    	                        		continue;
+    	                        	}
+    	                		
+    	                			ls.enableItem(name);	
+    	                        }
+    	                		break;
+    	                		
+    	                	case POTION:
+    	                		continue;
+                    	}
+                    }
                 }
             }
 
@@ -373,6 +504,8 @@ public class ConfigManager extends BaseManager
 			});	
         }
     }
+    
+    
 //    public static void saveGUI() throws IOException 
 //    {
 //        registerFiles("GUI", "gui");

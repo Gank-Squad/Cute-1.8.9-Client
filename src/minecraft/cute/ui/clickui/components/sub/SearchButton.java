@@ -191,7 +191,7 @@ public class SearchButton extends TextButtonBase
 				
 				if(index >= 0 && index < this.foundSearchTerms.length)
 				{
-					this.setBinding(false);
+//					this.setBinding(false);
 					
 					switch(this.type)
 					{

@@ -53,7 +53,6 @@ public class TextInputButton extends TextButtonBase
 		this.setting.enableItem(input.trim());
 		
 		this.searchTerm = "";
-		super.setBinding(false);	
 	}
 }
 

@@ -37,7 +37,7 @@ public class VirtualBlock extends BlockInfo
 		
 		this.displayName = displayName;
 		this.meta = -1;
-		this.enabled = false;
+		this.enabled = true;
 		this.r = 0;
 		this.g = 0;
 		this.b = 0;
