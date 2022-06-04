@@ -1,7 +1,6 @@
 package cute.managers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import cute.eventapi.EventTarget;
@@ -11,6 +10,7 @@ import cute.events.KeyUpEvent;
 import cute.modules.Module;
 import cute.modules.audio.Sounds;
 import cute.modules.bot.FakePlayer;
+import cute.modules.bot.test;
 import cute.modules.client.Players;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
@@ -56,6 +56,7 @@ public class ModuleManager extends BaseManager
 	public static void initModule()
 	{
 		modules.add(new FakePlayer());
+		modules.add(new test());
 		
 		modules.add(new ClickGUI());
 		modules.add(new Hud());

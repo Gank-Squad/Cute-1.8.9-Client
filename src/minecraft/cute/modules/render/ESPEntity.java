@@ -187,6 +187,7 @@ public class ESPEntity extends Module
                 GL11.glEnable(GL11.GL_STENCIL_TEST);
                 GL11.glEnable(GL11.GL_BLEND);
                 
+                // like 90% sure this does nothing
                 GL11.glClearStencil(STENCIL_MASK);
 
                 GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
@@ -200,14 +201,14 @@ public class ESPEntity extends Module
                 e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
                 
                 // draw 0s in the stencil buffer over the whole model to cover the wire frame above
-                GL11.glStencilFunc(GL11.GL_NEVER         , GL11.GL_ZERO    , STENCIL_MASK);
+                GL11.glStencilFunc(GL11.GL_NEVER         , GL11.GL_ZERO   , STENCIL_MASK);
                 GL11.glStencilOp  (GL11.GL_REPLACE       , GL11.GL_REPLACE, GL11.GL_REPLACE);
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                 e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
                 
                 // only draw where the stencil buffer is equal to 1, and draw an outline
-                GL11.glStencilFunc(GL11.GL_EQUAL, GL11.GL_ONE , STENCIL_MASK);
-                GL11.glStencilOp  (GL11.GL_KEEP , GL11.GL_KEEP, GL11.GL_KEEP);
+                GL11.glStencilFunc(GL11.GL_EQUAL         , GL11.GL_ONE , STENCIL_MASK);
+                GL11.glStencilOp  (GL11.GL_KEEP          , GL11.GL_KEEP, GL11.GL_KEEP);
                 GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 
                 GL11.glDepthMask(false);
@@ -215,10 +216,10 @@ public class ESPEntity extends Module
                 
                 e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
                 
-                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-                
                 GL11.glEnable(GL11.GL_DEPTH_TEST);
                 GL11.glDepthMask(true);
+                
+                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
                 
                 GL11.glDisable(GL11.GL_BLEND);
                 GL11.glDisable(GL11.GL_STENCIL_TEST);
