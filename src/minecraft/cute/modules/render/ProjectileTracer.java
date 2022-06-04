@@ -93,65 +93,164 @@ public class ProjectileTracer extends Module
 	
 	public Vec3 futureHitBox(Entity e)
 	{
-		
-		point ePos = new point(e.posX, e.posZ);
-		point eVel = new point(e.motionX, e.motionZ);
-		point pPos = new point(mc.thePlayer.posX, mc.thePlayer.posZ);
+//		
+//		point ePos = new point(e.posX, e.posZ);
+//		point eVel = new point(e.motionX, e.motionZ);
+//		point pPos = new point(mc.thePlayer.posX, mc.thePlayer.posZ);
+		Vec3 playerPos = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
 //		double pSpeed = 2.713146225;
 		double pSpeed = projectileSpeed.getValue();
+		pSpeed = 3;
 		
 		
-//		// get average arrow velocity ?
-//		int ticks;
-////		pSpeed *= Math.pow(0.99, ticks);
-//		double distance = Math.sqrt(Math.pow(ePos.x - pPos.x, 2) + Math.pow(ePos.y - pPos.y, 2));
-//		for (ticks = 0; ticks < 200; ticks++)
-//		{
-//			distance -= pSpeed;
-//			pSpeed *= 0.99;
-//			if (distance <= 0)
-//			{
-//				break;
-//			}
-//		}
-//		pSpeed = (pSpeed + 3) / 2;
+		//motionX is in blocks/tick
+		// so if motionX is 3, and x=5, the following tick, x=8
+
+		//every tick, motion x,y, & z are multiplied by .99, it doesn't do it to net motion
+		//so even if net motion is increasing from downwards acceleration, x & z will decrease at same rate
+		
+		
+//		a possible approach:
+//		find minimum time to reach target
+//		to do this, ignore y component, only use x & z
+//		once this is found binary search pitch values until one is found that will result in interception
+//		then find out where the target will be after arrow arrives
+//		if it wont result in interception any more, adjust yaw and repeat calculations
+//		theoretically this will result in an accurate target, however it will become incredibely inefficient at long distances
 //		
-//		ePos = new point(120,40);
-//		eVel = new point(5,2);
-//		pPos = new point(80,80);
-//		pSpeed = 10;
+//		
+//		another, likely better approach:
+//		work in 3d coordinate system, with a constant speed vector being the target,
+//		and a sphere representing where the projectile could be after t ticks
+//		problems I'm not sure how to deal with for this appraoch:
+//		non constant acceleration, and the constant acceleration in the y-axis
+//		the sphere will almost instantly stop being a sphere after just 1 tick
+//		and I'm not sure how to account for this.
+//		However, if I can figure it out, this method should be able to instantly figure out
+//		the interception coordinates, and by extension the yaw & pitch necessary needed by the shooter to hit the target
+//		
+//		
+		Vec3 eFPos = new Vec3(e.posX, e.posY, e.posZ);
+		Vec3 pFPos = playerPos;
 		
-//		if (eVel.x == 0 && eVel.y == 0)
+		
+		boolean lastPosGreater = false;
+		boolean posGreater = lastPosGreater;
+		boolean validY = false;
+		double yawToTarget;
+		double yawToTargetDeg;
+		
+//		System.out.println(yawToTargetDeg);
+//		if (clockwise)
 //		{
-//			return new Vec3(e.posX,e.posY,e.posZ);
+//			
 //		}
-		
-		double k = eVel.magnitude() / pSpeed;
-		double c = pPos.sub(ePos).magnitude();
-		
-		point bVec = eVel;
-		point cVec = pPos.sub(ePos);
-		
-		double CAB = bVec.angleBetween(cVec);
-		double ABC = Math.asin(Math.sin(CAB) * k);
-		double ACB = (Math.PI) - (CAB + ABC);
-		
-		double j = c / Math.sin(ACB);
-		double a = j * Math.sin(CAB);
-		double b = j * Math.sin(ABC);
-		
-		double t = b / eVel.magnitude();
-		
-		point collisionPos = ePos.add(eVel.mul(t));
+//		else
+//		{
+//			
+//		}
+//		
+//		for (int yaw = (int)yawToTargetDeg;yaw<0;yaw++)
+//		{
+//			
+//		}
+//		double difx = playerPos.xCoord - e.posX;
+//		double difz = playerPos.zCoord - e.posZ;
+		yawToTarget = Math.asin((playerPos.xCoord - e.posX) / Math.sqrt(
+				Math.pow((playerPos.xCoord - e.posX),2) +
+				Math.pow((playerPos.zCoord - e.posZ), 2)));
+//		yawToTargetDeg = yawToTarget * 180 / Math.PI;
+//		System.out.println(yawToTargetDeg);
+
+		for (int p = -30; p < 45; p++)
+		{
+//			double yawToTargetDeg = yawToTarget * 180 / (Math.PI);
+			double pr = p * Math.PI / 180;
+			
+			yawToTarget = Math.asin((playerPos.xCoord - e.posX) / Math.sqrt(
+					Math.pow(playerPos.xCoord - e.posX,2) +
+					Math.pow(playerPos.zCoord - e.posX, 2)));
+			Vec3 snt = null;
+			Vec3 slt = snt;
+			for (int t = 0; t < 100; t++)
+			{
+				
+				yawToTarget = Math.asin((playerPos.xCoord - eFPos.xCoord) / Math.sqrt(
+						Math.pow(playerPos.xCoord - eFPos.xCoord,2) +
+						Math.pow(playerPos.zCoord - eFPos.zCoord, 2)));
+				
+				slt = snt;
+				
+				
+				snt = new Vec3(pSpeed * Math.sin(yawToTarget) * Math.cos(pr),
+						pSpeed * Math.sin(pr),
+						pSpeed * Math.cos(yawToTarget) * Math.cos(pr));
+				
+				
+				eFPos = new Vec3(eFPos.xCoord + e.motionX, 
+						eFPos.yCoord + e.motionY,
+						eFPos.zCoord + e.motionZ
+						);
+				
+				snt = new Vec3(snt.xCoord * 0.99,snt.yCoord * 0.99 - 0.05,snt.zCoord * 0.99);
+				//arrows have an acceleration of -0.05b/t^2, v2=v1+a*t
+//				snt = new Vec3(snt.xCoord, snt.yCoord - 0.05, snt.zCoord);
+//				Vec3 pnt = new Vec3(playerPos.xCoord + snt.xCoord, playerPos.yCoord + snt.yCoord, playerPos.zCoord);
+//				Math.sqrt(snt.xCoord*snt.xCoord + snt.yCoord*snt.yCoord + snt.zCoord*snt.zCoord);
+				
+				pFPos = new Vec3(
+						pFPos.xCoord + snt.xCoord,
+						pFPos.yCoord + snt.yCoord,
+						pFPos.zCoord + snt.zCoord
+						);
+				System.out.println(pFPos);
+				if (Math.sqrt(Math.pow(pFPos.xCoord - eFPos.xCoord, 2) + Math.pow(pFPos.yCoord - eFPos.yCoord, 2) + Math.pow(pFPos.zCoord - eFPos.zCoord, 2)) > 500)
+				{
+					break;
+				}
+				Vec3 IdealTarget = new Vec3(eFPos.xCoord + (e.width / 2), eFPos.yCoord + (e.height / 2), eFPos.zCoord + (e.width / 2));
+				posGreater = pFPos.xCoord > eFPos.xCoord && pFPos.zCoord > eFPos.zCoord;
+				validY = pFPos.yCoord > e.posY && pFPos.yCoord < e.posY + e.height;
+				if (posGreater != lastPosGreater && validY)
+				{
+//					System.out.println("interseption at " + pFPos + " " + yawToTarget * 180 / Math.PI + " " + eFPos);
+					return pFPos;
+				}
+				
+				
+			}
+			
+		}
+
+//		double k = eVel.magnitude() / pSpeed;
+//		double c = pPos.sub(ePos).magnitude();
+//		
+//		point bVec = eVel;
+//		point cVec = pPos.sub(ePos);
+//		
+//		double CAB = bVec.angleBetween(cVec);
+//		double ABC = Math.asin(Math.sin(CAB) * k);
+//		double ACB = (Math.PI) - (CAB + ABC);
+//		
+//		double j = c / Math.sin(ACB);
+//		double a = j * Math.sin(CAB);
+//		double b = j * Math.sin(ABC);
+//		
+//		double t = b / eVel.magnitude();
+//		
+//		point collisionPos = ePos.add(eVel.mul(t));
 //		System.out.println(collisionPos.x + " " + collisionPos.y);
 
-		return new Vec3(collisionPos.x, e.posY, collisionPos.y);
+		return new Vec3(0, 0, 0);
 	}
 	
 
 	@EventTarget
     public void drawTrajectory(RenderWorldLastEvent event) 
     {
+		// v = 3 * 0.99^t
+		// t = ln(v/3) / ln(0.99)
+		
 		ProjectileTracer.onTarget = false;
 		
 		if(nullCheck())
