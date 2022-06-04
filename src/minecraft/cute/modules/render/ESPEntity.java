@@ -2,7 +2,9 @@ package cute.modules.render;
 
 import java.awt.Color;
 
+import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 
 import cute.eventapi.EventTarget;
@@ -18,9 +20,8 @@ import cute.settings.Mode;
 import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
-import cute.util.types.VirtualBlock;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -34,7 +35,7 @@ public class ESPEntity extends Module
 		super("Entity ESP", Category.RENDER, "Highlights entities");
 	}
 	
-	public static Mode mode = new Mode("Mode", "Hitbox", "outline");
+	public static Mode mode = new Mode("Mode", "Hitbox", "Outline", "Wire Frame");
 
     public static Checkbox players = new Checkbox("Players", true);
     public static ColorPicker playerPicker = new ColorPicker(players, "Player Picker", new Color(215, 46, 46));
@@ -110,11 +111,11 @@ public class ESPEntity extends Module
 			   mc.getRenderManager().options == null;
     }
     
-    
+
     @EventTarget
     public void entityModelRender(RenderLivingModelEvent e)
     {
-    	if(mode.getValue() != 1)
+    	if(mode.getValue() < 1)
     		return;
     	
     	Entity entity = e.entityLivingBaseIn;
@@ -152,36 +153,122 @@ public class ESPEntity extends Module
     	
     	GL11.glLineWidth((float)lineWidth.getValue());
     	
-    
-//    	GL11.glPushMatrix();
-    	GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-    	
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		
-		GL11.glEnable(GL11.GL_LINE_SMOOTH);		
-		GL11.glEnable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
-        GL11.glEnable(GL11.GL_STENCIL_TEST);
-        GL11.glEnable(GL11.GL_POLYGON_OFFSET_LINE);
-        
-        GL11.glClear(GL11.GL_FRONT_LEFT);
-        GL11.glClearStencil(15);
+    	switch(mode.getValue())
+    	{
+	    	case 1:
+	    		
+	    		final int STENCIL_MASK = 15;
+                
+                // https://learnopengl.com/Advanced-OpenGL/Stencil-testing
+                GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+                
+                // tf does this do, i have no idea
+                Framebuffer fbo = mc.getFramebuffer();
+                
+                if (fbo != null && fbo.depthBuffer > -1) 
+                {
+                	// disable the depthBuffer?????
+                	EXTFramebufferObject.glDeleteRenderbuffersEXT(fbo.depthBuffer);  
+                	int stencil_depth_buffer_ID = EXTFramebufferObject.glGenRenderbuffersEXT();
+  
+                	EXTFramebufferObject.glBindRenderbufferEXT(GL30.GL_RENDERBUFFER, stencil_depth_buffer_ID);
+                	EXTFramebufferObject.glRenderbufferStorageEXT(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH_STENCIL, mc.displayWidth, mc.displayHeight);                        	    
+                	EXTFramebufferObject.glFramebufferRenderbufferEXT(GL30.GL_FRAMEBUFFER, GL30.GL_STENCIL_ATTACHMENT, GL30.GL_RENDERBUFFER, stencil_depth_buffer_ID);
+                	EXTFramebufferObject.glFramebufferRenderbufferEXT(GL30.GL_FRAMEBUFFER, EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT, GL30.GL_RENDERBUFFER, stencil_depth_buffer_ID);
+                	fbo.depthBuffer = -1;
+                }
+                
+                GL11.glDisable(GL11.GL_ALPHA_TEST);
+                GL11.glDisable(GL11.GL_TEXTURE_2D);
+                GL11.glDisable(GL11.GL_LIGHTING);
+                
+                GL11.glEnable(GL11.GL_LINE_SMOOTH);
+                GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
+                GL11.glEnable(GL11.GL_STENCIL_TEST);
+                GL11.glEnable(GL11.GL_BLEND);
+                
+                GL11.glClearStencil(STENCIL_MASK);
 
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glHint(GL11.GL_LINE_SMOOTH_HINT,  GL11.GL_NICEST);
-        
-        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-        
-		e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
+                GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+
+                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+                
+                // draw 1s in the stencil buffer where the outlines goes (this is will be a wire frame of the model)
+                GL11.glStencilFunc(GL11.GL_NEVER         , GL11.GL_ONE    , STENCIL_MASK);
+                GL11.glStencilOp  (GL11.GL_REPLACE       , GL11.GL_REPLACE, GL11.GL_REPLACE);
+                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+                e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
+                
+                // draw 0s in the stencil buffer over the whole model to cover the wire frame above
+                GL11.glStencilFunc(GL11.GL_NEVER         , GL11.GL_ZERO    , STENCIL_MASK);
+                GL11.glStencilOp  (GL11.GL_REPLACE       , GL11.GL_REPLACE, GL11.GL_REPLACE);
+                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+                e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
+                
+                // only draw where the stencil buffer is equal to 1, and draw an outline
+                GL11.glStencilFunc(GL11.GL_EQUAL, GL11.GL_ONE , STENCIL_MASK);
+                GL11.glStencilOp  (GL11.GL_KEEP , GL11.GL_KEEP, GL11.GL_KEEP);
+                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+
+                GL11.glDepthMask(false);
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                
+                e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
+                
+                GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+                
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glDepthMask(true);
+                
+                GL11.glDisable(GL11.GL_BLEND);
+                GL11.glDisable(GL11.GL_STENCIL_TEST);
+                GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+                GL11.glDisable(GL11.GL_LINE_SMOOTH);
+
+                GL11.glEnable(GL11.GL_LIGHTING);
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
+                GL11.glEnable(GL11.GL_ALPHA_TEST);
+                
+                GL11.glPopAttrib();
+                RenderUtil.resetColor();
+	    		break;
+	    		
+	    	case 2:
+		    	
+	    		GL11.glDisable(GL11.GL_ALPHA_TEST);
+                GL11.glDisable(GL11.GL_TEXTURE_2D);
+                GL11.glDisable(GL11.GL_LIGHTING);
+                GL11.glDisable(GL11.GL_DEPTH_TEST);
+                
+                GL11.glEnable(GL11.GL_LINE_SMOOTH);
+                GL11.glEnable(GL11.GL_POLYGON_SMOOTH);
+                GL11.glEnable(GL11.GL_STENCIL_TEST);
+                GL11.glEnable(GL11.GL_BLEND);
+                
+		        GL11.glClear(GL11.GL_FRONT_LEFT);
 		
-    	GL11.glPopAttrib();
-    
-//        GL11.glPopMatrix();
-        
-        RenderUtil.resetColor();
+		        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		        GL11.glHint(GL11.GL_LINE_SMOOTH_HINT,  GL11.GL_NICEST);
+		        
+		        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		        
+				e.modelBase.render(e.entityLivingBaseIn, e.p2, e.p3, e.p4, e.p5, e.p6, e.scaleFactor);
+				
+				GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+				
+				GL11.glDisable(GL11.GL_BLEND);
+                GL11.glDisable(GL11.GL_STENCIL_TEST);
+                GL11.glDisable(GL11.GL_POLYGON_SMOOTH);
+                GL11.glDisable(GL11.GL_LINE_SMOOTH);
+
+                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                GL11.glEnable(GL11.GL_LIGHTING);
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
+                GL11.glEnable(GL11.GL_ALPHA_TEST);
+				
+				RenderUtil.resetColor();
+	    		return;
+    	}
     }
     
     
