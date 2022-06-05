@@ -7,7 +7,9 @@ import java.math.RoundingMode;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.Vec3;
 
 public class Util
 {
@@ -71,6 +73,24 @@ public class Util
 		return res;
 	}
 	
+	
+	public static Vec3 bowPredictionTarget(Entity entity)
+	{
+		final boolean sprint = entity.isSprinting();
+		final double xDelta = (entity.posX - entity.lastTickPosX) * 0.4;
+		final double zDelta = (entity.posZ - entity.lastTickPosZ) * 0.4;
+		final double dist = Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entity);
+  
+		final double d = dist - dist % 0.8;
+  
+		double xMulti = d / 0.8 * xDelta * (sprint ? 1.25 : 1.0);
+		double zMulti = d / 0.8 * zDelta * (sprint ? 1.25 : 1.0);
+		
+		final double x = entity.posX + xMulti;
+		final double z = entity.posZ + zMulti;
+		
+	    return new Vec3(x, entity.posY, z);
+	}
 }
 
 

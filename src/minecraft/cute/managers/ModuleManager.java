@@ -10,8 +10,8 @@ import cute.events.KeyUpEvent;
 import cute.modules.Module;
 import cute.modules.audio.Sounds;
 import cute.modules.bot.FakePlayer;
-import cute.modules.bot.test;
 import cute.modules.client.Players;
+import cute.modules.combat.BowAimbot;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
 import cute.modules.gui.Hud;
@@ -21,6 +21,7 @@ import cute.modules.render.ESPEntity;
 import cute.modules.render.Fullbright;
 import cute.modules.render.NameTags;
 import cute.modules.render.NoRender;
+import cute.modules.render.PredictTargets;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
 import cute.modules.render.XRay;
@@ -56,7 +57,7 @@ public class ModuleManager extends BaseManager
 	public static void initModule()
 	{
 		modules.add(new FakePlayer());
-		modules.add(new test());
+		modules.add(new BowAimbot());
 		
 		modules.add(new ClickGUI());
 		modules.add(new Hud());
@@ -68,6 +69,7 @@ public class ModuleManager extends BaseManager
 		modules.add(new Fullbright());
 		modules.add(new Tracers());
 		modules.add(new ProjectileTracer());
+		modules.add(new PredictTargets());
 		modules.add(new NameTags());
 		modules.add(new NoRender());
 		modules.add(new XRay());

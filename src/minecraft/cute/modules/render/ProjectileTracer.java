@@ -301,6 +301,7 @@ public class ProjectileTracer extends Module
 			// Calculate power of bow
 			float power = thePlayer.getItemInUseDuration() / 20.0F;
 			power = (power * power + power * 2.0F) / 3.0F;
+			
 			if (power < 0.1F)
 				return;
 			
@@ -451,32 +452,9 @@ public class ProjectileTracer extends Module
 					break;
 				}
 			
-			if (this.renderHitTargets.getValue())
-			{
-				if (item instanceof ItemBow)
-				{
-					for (Entity entity2 : this.mc.theWorld.loadedEntityList)
-					{
-						
-						if (entity2 != thePlayer)
-						{
-							
-							Vec3 offset = futureHitBox2(entity2);
-							GL11.glPushMatrix();
-							RenderUtil.setColor(0xFF0000FF);
-							RenderUtil.renderEntityHitboxAbs(entity2, offset.xCoord, offset.yCoord, offset.zCoord);
-							GL11.glPopMatrix();
-						}
-					}
-				}
-			}
-			
-			
 			// Check all possible entities
 			for (Entity possibleEntity : collidedEntities) 
 			{
-				
-				
 				if (possibleEntity.canBeCollidedWith() && (possibleEntity != thePlayer)) 
 				{
 
@@ -529,8 +507,6 @@ public class ProjectileTracer extends Module
 		ProjectileTracer.onTarget = hitEntity;
 		if(hitEntity)
 		{
-//			RenderUtil.renderEntityHitbox(entity);
-			
 			// entity has been hit so swap to red color 
 			RenderUtil.setColor(new Color(255, 0, 0, 150));
 			

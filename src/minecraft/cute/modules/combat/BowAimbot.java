@@ -1,4 +1,4 @@
-package cute.modules.bot;
+package cute.modules.combat;
 
 import cute.modules.Module;
 import cute.modules.enums.Category;
@@ -6,12 +6,13 @@ import cute.settings.Checkbox;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemBow;
 
-public class test extends Module 
+public class BowAimbot extends Module 
 {
-	public test()
+	public BowAimbot()
 	{
-		super("UwU", Category.BOT, "Summons a copy of the player at the players position");
+		super("Bow Aimbot", Category.COMBAT, "Aims the bow at the closest target");
 	}
 	
 	public static Checkbox predict = new Checkbox("Predict Movement", false);
@@ -24,8 +25,20 @@ public class test extends Module
 	}
 	
 	@Override
+	public boolean nullCheck() 
+	{
+		return mc.theWorld == null ||
+			   mc.thePlayer == null ||
+			   mc.thePlayer.getHeldItem() == null ||
+			   !(mc.thePlayer.getHeldItem().getItem() instanceof ItemBow);
+	}
+	
+	@Override
 	public void onUpdate()
 	{
+		if(nullCheck())
+			return;
+		
 		// https://github.com/zPeanut/Hydrogen
 		// https://github.com/Team-Pepsi/pepsimod
 		
