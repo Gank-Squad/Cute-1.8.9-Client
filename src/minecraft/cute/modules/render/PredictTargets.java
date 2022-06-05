@@ -18,8 +18,6 @@ import cute.util.RenderUtil;
 import cute.util.Util;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBow;
 import net.minecraft.util.Vec3;
@@ -28,7 +26,7 @@ public class PredictTargets extends Module
 {
 	public PredictTargets()
 	{
-		super("Predict Targets", Category.RENDER, "");
+		super("Predict Targets", Category.RENDER, "Tries to show where you would need to shoot with a bow to hit a target");
 	}
 	
     public static Checkbox players = new Checkbox("Players", true);
@@ -104,21 +102,21 @@ public class PredictTargets extends Module
 			else if(EntityUtil.isHostileMob(entity))
         	{
         		if(!mobs.getValue()) 
-        			return;
+        			continue;
         		
         		RenderUtil.setColor(mobsPicker.getColor());
         	}
         	else if(EntityUtil.isPassive(entity)) 
         	{
         		if(!animals.getValue()) 
-        			return;
+        			continue;
         		
         		RenderUtil.setColor(animalPicker.getColor());
         	}
         	else if(EntityUtil.isNeutralMob(entity)) 
         	{
         		if(!neutral.getValue())
-        			return;
+        			continue;
         		
         		RenderUtil.setColor(neutralPicker.getColor());
         	}        	
