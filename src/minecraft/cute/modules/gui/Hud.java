@@ -162,17 +162,6 @@ public class Hud extends Module
 			hitSquare.setColor(0x00000000);
 		}
 		
-		for (Entity e : this.mc.theWorld.loadedEntityList)
-		{
-			if (e != mc.thePlayer)
-			{
-//				double v = Math.sqrt(e.motionX*e.motionX + e.motionY*e.motionY + e.motionZ*e.motionZ);
-//				System.out.println(v);
-//				System.out.println(e.motionZ + " " + e.motionY + " " + e.motionX);
-//				System.out.println(mc.thePlayer.rotationYaw);
-			}
-		}
-		
 	}
 	
 	@EventTarget
