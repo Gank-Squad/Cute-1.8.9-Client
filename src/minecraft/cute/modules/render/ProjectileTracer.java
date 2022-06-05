@@ -38,6 +38,7 @@ import net.minecraft.item.ItemSnowball;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
@@ -90,7 +91,25 @@ public class ProjectileTracer extends Module
 //	{
 //		return Math.acos(dotProduct(x1,y1,x2,y2) / (magnitude(x1,y1) * magnitude(x2,y2)));
 //	}
-	
+	public Vec3 futureHitBox2(Entity entity)
+	{
+
+		final boolean sprint = entity.isSprinting();
+		final double xDelta = (entity.posX - entity.lastTickPosX) * 0.4;
+		final double zDelta = (entity.posZ - entity.lastTickPosZ) * 0.4;
+		final double dist = mc.thePlayer.getDistanceToEntity(entity);
+  
+		final double d = dist - dist % 0.8;
+  
+		double xMulti = d / 0.8 * xDelta * (sprint ? 1.25 : 1.0);
+		double zMulti = d / 0.8 * zDelta * (sprint ? 1.25 : 1.0);
+		final double x = entity.posX + xMulti - mc.thePlayer.posX;
+//		            final double y = mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - (entity.posY + entity.getEyeHeight());
+		final double y = mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - (entity.posY + entity.getEyeHeight()) - 0.15D;
+		final double z = entity.posZ + zMulti - mc.thePlayer.posZ;
+		System.out.println(x + " " + y + " " + z);
+	    return new Vec3(x + mc.thePlayer.posX,entity.posY,z + mc.thePlayer.posZ);
+	}
 	public Vec3 futureHitBox(Entity e)
 	{
 //		
@@ -140,87 +159,87 @@ public class ProjectileTracer extends Module
 		double yawToTarget;
 		double yawToTargetDeg;
 		
-//		System.out.println(yawToTargetDeg);
-//		if (clockwise)
-//		{
-//			
-//		}
-//		else
-//		{
-//			
-//		}
-//		
-//		for (int yaw = (int)yawToTargetDeg;yaw<0;yaw++)
-//		{
-//			
-//		}
-//		double difx = playerPos.xCoord - e.posX;
-//		double difz = playerPos.zCoord - e.posZ;
-		yawToTarget = Math.asin((playerPos.xCoord - e.posX) / Math.sqrt(
-				Math.pow((playerPos.xCoord - e.posX),2) +
-				Math.pow((playerPos.zCoord - e.posZ), 2)));
+		double posX = e.posX - mc.thePlayer.posX;
+		double posY = e.posY + e.getEyeHeight() - 0.15D - mc.thePlayer.posY - mc.thePlayer.getEyeHeight();
+		double posZ = e.posZ - mc.thePlayer.posZ;
+		double yaw = (float) (Math.atan2(posZ, posX) * 180.0D / Math.PI) - 90.0F;
+		
+		
+//		yawToTarget = Math.asin((playerPos.xCoord - e.posX) / Math.sqrt(
+//				Math.pow((playerPos.xCoord - e.posX),2) +
+//				Math.pow((playerPos.zCoord - e.posZ), 2)));
+		yawToTarget = yaw;
 //		yawToTargetDeg = yawToTarget * 180 / Math.PI;
 //		System.out.println(yawToTargetDeg);
 
-		for (int p = -30; p < 45; p++)
+
+		yawToTarget = (Math.atan2(posZ, posX) * 180.0D / 3.141592653589793D) - 90.0F;
+		Vec3 snt = null;
+		Vec3 slt = snt;
+		
+		double velocity = mc.thePlayer.getItemInUseDuration() / 20.0F;
+        
+        velocity = ((velocity * velocity + velocity * 2.0F) / 3.0F);
+
+        if (velocity < 0.1D) 
+            return new Vec3(e.posX, e.posY, e.posZ);
+        
+        if (velocity > 1.0F) 
+            velocity = 1.0F;
+		
+		double y2 = Math.sqrt(posX * posX + posZ * posZ);
+        float g = 0.006F;
+        float tmp = (float) (velocity * velocity * velocity * velocity - g * (g * (y2 * y2) + 2.0D * posY * (velocity * velocity)));
+        
+        float pitch = (float) -Math.toDegrees(Math.atan((velocity * velocity - Math.sqrt(tmp)) / (g * y2)));
+	        
+		
+		for (int t = 0; t < 100; t++)
 		{
-//			double yawToTargetDeg = yawToTarget * 180 / (Math.PI);
-			double pr = p * Math.PI / 180;
+//				(Math.atan2(posZ, posX) * 180.0D / 3.141592653589793D) - 90.0F;
 			
-			yawToTarget = Math.asin((playerPos.xCoord - e.posX) / Math.sqrt(
-					Math.pow(playerPos.xCoord - e.posX,2) +
-					Math.pow(playerPos.zCoord - e.posX, 2)));
-			Vec3 snt = null;
-			Vec3 slt = snt;
-			for (int t = 0; t < 100; t++)
-			{
-				
-				yawToTarget = Math.asin((playerPos.xCoord - eFPos.xCoord) / Math.sqrt(
-						Math.pow(playerPos.xCoord - eFPos.xCoord,2) +
-						Math.pow(playerPos.zCoord - eFPos.zCoord, 2)));
-				
-				slt = snt;
-				
-				
-				snt = new Vec3(pSpeed * Math.sin(yawToTarget) * Math.cos(pr),
-						pSpeed * Math.sin(pr),
-						pSpeed * Math.cos(yawToTarget) * Math.cos(pr));
-				
-				
-				eFPos = new Vec3(eFPos.xCoord + e.motionX, 
-						eFPos.yCoord + e.motionY,
-						eFPos.zCoord + e.motionZ
-						);
-				
-				snt = new Vec3(snt.xCoord * 0.99,snt.yCoord * 0.99 - 0.05,snt.zCoord * 0.99);
+			eFPos = new Vec3(
+					eFPos.xCoord + e.motionX, 
+					eFPos.yCoord + e.motionY,
+					eFPos.zCoord + e.motionZ
+					);
+			
+			posX = eFPos.xCoord - mc.thePlayer.posX;
+			posY = e.posY + e.getEyeHeight() - 0.15D - mc.thePlayer.posY - mc.thePlayer.getEyeHeight();
+			posZ = eFPos.zCoord - mc.thePlayer.posZ;
+			yawToTarget = (Math.atan2(posZ, posX) * 180.0D / Math.PI) - 90.0F;
+			
+			snt = new Vec3(
+					pSpeed * Math.sin(yawToTarget) * Math.cos(pitch),
+					pSpeed * Math.sin(pitch),
+					pSpeed * Math.cos(yawToTarget) * Math.cos(pitch)
+					);	
+			
+			snt = new Vec3(snt.xCoord * 0.99,snt.yCoord * 0.99,snt.zCoord * 0.99);
 				//arrows have an acceleration of -0.05b/t^2, v2=v1+a*t
-//				snt = new Vec3(snt.xCoord, snt.yCoord - 0.05, snt.zCoord);
+//			snt = new Vec3(snt.xCoord, snt.yCoord - 0.05, snt.zCoord);
 //				Vec3 pnt = new Vec3(playerPos.xCoord + snt.xCoord, playerPos.yCoord + snt.yCoord, playerPos.zCoord);
 //				Math.sqrt(snt.xCoord*snt.xCoord + snt.yCoord*snt.yCoord + snt.zCoord*snt.zCoord);
-				
-				pFPos = new Vec3(
-						pFPos.xCoord + snt.xCoord,
-						pFPos.yCoord + snt.yCoord,
-						pFPos.zCoord + snt.zCoord
-						);
-				System.out.println(pFPos);
-				if (Math.sqrt(Math.pow(pFPos.xCoord - eFPos.xCoord, 2) + Math.pow(pFPos.yCoord - eFPos.yCoord, 2) + Math.pow(pFPos.zCoord - eFPos.zCoord, 2)) > 500)
-				{
-					break;
-				}
-				Vec3 IdealTarget = new Vec3(eFPos.xCoord + (e.width / 2), eFPos.yCoord + (e.height / 2), eFPos.zCoord + (e.width / 2));
-				posGreater = pFPos.xCoord > eFPos.xCoord && pFPos.zCoord > eFPos.zCoord;
-				validY = pFPos.yCoord > e.posY && pFPos.yCoord < e.posY + e.height;
-				if (posGreater != lastPosGreater && validY)
-				{
-//					System.out.println("interseption at " + pFPos + " " + yawToTarget * 180 / Math.PI + " " + eFPos);
-					return pFPos;
-				}
-				
-				
+			
+			pFPos = new Vec3(
+					pFPos.xCoord + snt.xCoord,
+					pFPos.yCoord + snt.yCoord,
+					pFPos.zCoord + snt.zCoord
+					);
+
+			
+			posGreater = pFPos.xCoord > eFPos.xCoord && pFPos.zCoord > eFPos.zCoord;
+			validY = pFPos.yCoord > e.posY && pFPos.yCoord < e.posY + e.height;
+			if (posGreater != lastPosGreater)
+			{
+//				System.out.println("interseption at " + pFPos + " " + yawToTarget * 180 / Math.PI + " " + eFPos);
+				return pFPos;
 			}
+			lastPosGreater = posGreater;
 			
 		}
+			
+		
 
 //		double k = eVel.magnitude() / pSpeed;
 //		double c = pPos.sub(ePos).magnitude();
@@ -434,19 +453,21 @@ public class ProjectileTracer extends Module
 			
 			if (this.renderHitTargets.getValue())
 			{
-				for (Entity entity2 : this.mc.theWorld.loadedEntityList)
+				if (item instanceof ItemBow)
 				{
-					
-					if (entity2 != thePlayer)
+					for (Entity entity2 : this.mc.theWorld.loadedEntityList)
 					{
 						
-						Vec3 offset = futureHitBox(entity2);
-						GL11.glPushMatrix();
-						RenderUtil.setColor(0xFF0000FF);
-						RenderUtil.renderEntityHitboxAbs(entity2, offset.xCoord, offset.yCoord, offset.zCoord);
-						GL11.glPopMatrix();
+						if (entity2 != thePlayer)
+						{
+							
+							Vec3 offset = futureHitBox2(entity2);
+							GL11.glPushMatrix();
+							RenderUtil.setColor(0xFF0000FF);
+							RenderUtil.renderEntityHitboxAbs(entity2, offset.xCoord, offset.yCoord, offset.zCoord);
+							GL11.glPopMatrix();
+						}
 					}
-					
 				}
 			}
 			
