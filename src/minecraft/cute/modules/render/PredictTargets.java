@@ -44,6 +44,10 @@ public class PredictTargets extends Module
     public static Checkbox vehicles = new Checkbox("Vehicles", true);
     public static ColorPicker vehiclesPicker = new ColorPicker(vehicles, "Vehicle Picker", new Color(0, 255, 255));
 
+    public static Checkbox hitbox = new Checkbox("Render Hitbox", true);
+    public static Checkbox target = new Checkbox("Target", true);
+    public static Slider magnitude = new Slider("Target Distance", 1D, 2.5D, 25.0D, 1);
+    
     public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
     
     @Override
@@ -55,6 +59,10 @@ public class PredictTargets extends Module
         addSetting(neutral);
         addSetting(vehicles);
         addSetting(lineWidth);
+        
+        addSetting(hitbox);
+        addSetting(target);
+        addSetting(magnitude);
     }
 	
 	@Override
@@ -131,9 +139,19 @@ public class PredictTargets extends Module
         	{
         		continue;
         	}
-        	Vec3 offset = Util.bowPredictionTarget(entity);
+			Vec3[] a = Util.bowPredictionTarget(entity, magnitude.getValue());
 			
-			RenderUtil.renderEntityHitboxAbs(entity, offset.xCoord, offset.yCoord, offset.zCoord);
+        	if (hitbox.getValue())
+        	{
+        		RenderUtil.renderEntityHitboxAbs(entity, a[0].xCoord, a[0].yCoord, a[0].zCoord);
+        	}
+        	
+        	if (target.getValue())
+        	{
+        		//this needs to use a small square as the target, not the actual entity hitbox size
+        		RenderUtil.renderEntityHitboxAbs(entity, a[1].xCoord, a[1].yCoord, a[1].zCoord);
+        	}
+			
 		}
 		
 		GL11.glDisable(GL32.GL_DEPTH_CLAMP);

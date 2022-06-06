@@ -9,6 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class Util
@@ -74,24 +75,44 @@ public class Util
 	}
 	
 	
-	public static Vec3 bowPredictionTarget(Entity entity)
+	public static Vec3[] bowPredictionTarget(Entity entity, double magnitude)
 	{
+		Minecraft mc = Minecraft.getMinecraft();
 		final boolean sprint = entity.isSprinting();
 		final double xDelta = (entity.posX - entity.lastTickPosX) * 0.4;
 		final double zDelta = (entity.posZ - entity.lastTickPosZ) * 0.4;
 		final double dist = Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entity);
-  
+		
 		final double d = dist - dist % 0.8;
-  
+		
 		double xMulti = d / 0.8 * xDelta * (sprint ? 1.25 : 1.0);
 		double zMulti = d / 0.8 * zDelta * (sprint ? 1.25 : 1.0);
-		
+			
 		final double x = entity.posX + xMulti;
+		final double y = entity.posY + entity.getEyeHeight() - 0.15D - mc.thePlayer.posY - mc.thePlayer.getEyeHeight();
 		final double z = entity.posZ + zMulti;
 		
-	    return new Vec3(x, entity.posY, z);
+		Vec3 ret[] = new Vec3[2];
+		ret[0] = new Vec3(x,entity.posY, z);
+		
+		double velocity = 1.0F;
+		
+		final double x2 = entity.posX + xMulti - mc.thePlayer.posX;
+        final double z2 = entity.posZ + zMulti - mc.thePlayer.posZ;
+        
+		final float yaw = (float)(Math.atan2(z2, x2)) - (float)(Math.PI / 2);
+		
+        final double y2 = Math.sqrt(x2 * x2 + z2 * z2);
+        final float g = 0.006F; 
+        
+        final float tmp = (float) (Math.pow(velocity, 4) - g * (g * (y2 * y2) + 2.0D * y * (velocity * velocity)));
+        final float pitch2 = (float) Math.toDegrees(Math.atan((velocity * velocity - Math.sqrt(tmp)) / (g * y2)));
+        ret[1] = UtilMathHelper.getVectorForRotation((float)-pitch2, (float)Math.toDegrees(yaw));
+		ret[1] = new Vec3(
+				ret[1].xCoord * magnitude + mc.thePlayer.posX,
+				ret[1].yCoord * magnitude + mc.thePlayer.posY,
+				ret[1].zCoord * magnitude + mc.thePlayer.posZ
+				);
+		return ret;
 	}
 }
-
-
-
