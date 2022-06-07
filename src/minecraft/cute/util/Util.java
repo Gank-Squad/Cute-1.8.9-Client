@@ -116,7 +116,7 @@ public class Util
         ret[1] = UtilMathHelper.getVectorForRotation((float)-pitch2, (float)Math.toDegrees(yaw));
 		ret[1] = new Vec3(
 				ret[1].xCoord * magnitude + mc.thePlayer.posX,
-				ret[1].yCoord * magnitude + mc.thePlayer.posY,
+				ret[1].yCoord * magnitude + mc.thePlayer.posY + mc.thePlayer.getEyeHeight(),
 				ret[1].zCoord * magnitude + mc.thePlayer.posZ
 				);
 		return ret;

@@ -149,7 +149,50 @@ public class PredictTargets extends Module
         	if (target.getValue())
         	{
         		//this needs to use a small square as the target, not the actual entity hitbox size
-        		RenderUtil.renderEntityHitboxAbs(entity, a[1].xCoord, a[1].yCoord, a[1].zCoord);
+        		
+        		GL11.glPushMatrix();
+        		
+        		GL11.glEnable(GL11.GL_BLEND);
+        		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        		GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+        		GL11.glDepthMask(false);
+
+        		GL11.glDisable(GL11.GL_TEXTURE_2D);
+        		GL11.glDisable(GL11.GL_DEPTH_TEST);
+        		GL11.glDisable(GL11.GL_ALPHA_TEST);
+        		
+        		GL11.glEnable(GL11.GL_LINE_SMOOTH);
+        		GL11.glEnable(GL32.GL_DEPTH_CLAMP);
+        		
+        		GL11.glLineWidth((float)lineWidth.getValue());
+        		
+        		
+        		GL11.glTranslated(-mc.thePlayer.posX, -mc.thePlayer.posY, -mc.thePlayer.posZ);
+        		GL11.glBegin(GL11.GL_LINES);
+        		
+        		
+        		RenderUtil.setColor(0x00FF00FF);
+        		RenderUtil.renderBlock(
+        				(float)a[1].xCoord - 0.1f, (float)a[1].yCoord - 0.1f, (float)a[1].zCoord - 0.1f,
+        				(float)a[1].xCoord + 0.1f, (float)a[1].yCoord + 0.1f, (float)a[1].zCoord + 0.1f);
+        		
+        		
+        		GL11.glEnd();
+        		GL11.glDisable(GL32.GL_DEPTH_CLAMP);
+        		GL11.glDisable(GL11.GL_LINE_SMOOTH);
+        		
+        		GL11.glEnable(GL11.GL_ALPHA_TEST);
+        		GL11.glEnable(GL11.GL_DEPTH_TEST);
+        		GL11.glEnable(GL11.GL_TEXTURE_2D);
+        		
+        		GL11.glDisable(GL11.GL_BLEND);
+        		
+        		GL11.glDepthMask(true);
+        		GL11.glPopMatrix();
+        		
+        		// prevents hotbar / hand from being messed up by color changes 
+        		RenderUtil.resetColor();
+        		
         	}
 			
 		}
