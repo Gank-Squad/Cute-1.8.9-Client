@@ -148,9 +148,13 @@ public class Hud extends Module
 				item instanceof ItemFishingRod
 				)
 		{
-			if (ProjectileTracer.onTarget)
+			if (ProjectileTracer.onTarget == 1)
 			{
 				hitSquare.setColor(0xFF0000CF);
+			}
+			else if (ProjectileTracer.onTarget == 2)
+			{
+				hitSquare.setColor(0x00FF00CF);
 			}
 			else
 			{

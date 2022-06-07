@@ -95,6 +95,12 @@ public class Util
 		Vec3 ret[] = new Vec3[2];
 		ret[0] = new Vec3(x,entity.posY, z);
 		
+		if (magnitude == 0)
+		{
+			ret[1] = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY,mc.thePlayer.posZ);
+			return ret;
+		}
+		
 		double velocity = 1.0F;
 		
 		final double x2 = entity.posX + xMulti - mc.thePlayer.posX;

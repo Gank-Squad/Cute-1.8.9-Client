@@ -18,6 +18,7 @@ import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
 import cute.settings.Slider;
 import cute.util.RenderUtil;
+import cute.util.Util;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -58,7 +59,7 @@ public class ProjectileTracer extends Module
 	
 //	public static Slider projectileSpeed = new Slider("arrow speed", 0.0001D, 3D, 5D, 1);
 	
-	public static boolean onTarget = false;
+	public static short onTarget = 0;
 	
 	@Override
     public void setup() 
@@ -115,7 +116,7 @@ public class ProjectileTracer extends Module
 		// v = 3 * 0.99^t
 		// t = ln(v/3) / ln(0.99)
 		
-		ProjectileTracer.onTarget = false;
+		ProjectileTracer.onTarget = 0;
 		
 		if(nullCheck())
 			return;
@@ -204,7 +205,7 @@ public class ProjectileTracer extends Module
 		// Landing
 		MovingObjectPosition landingPosition = null;
 		boolean hasLanded = false;
-		boolean hitEntity = false;
+		short hitEntity = 0;
 		Color tracerColor = tracerColorPicker.getColor();
 		
 		// Drawing
@@ -304,15 +305,39 @@ public class ProjectileTracer extends Module
 				{
 
 					AxisAlignedBB possibleEntityBoundingBox = possibleEntity.getEntityBoundingBox().expand(size, size, size);
+//					System.out.println(possibleEntityBoundingBox.maxX - possibleEntityBoundingBox.minX);
 					if (possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter) != null) 
 					{
 						MovingObjectPosition possibleEntityLanding = possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
-						hitEntity = true;
+						hitEntity = 1;
+						hasLanded = true;
+						landingPosition = possibleEntityLanding;
+						continue;
+					}
+					AxisAlignedBB possibleEntityFutureBoundingBox = possibleEntity.getEntityBoundingBox().expand(size,size,size);
+					Vec3 t = Util.bowPredictionTarget(possibleEntity, 0)[0];
+					
+					possibleEntityFutureBoundingBox = new AxisAlignedBB(
+							t.xCoord - possibleEntity.width,
+							possibleEntityBoundingBox.minY,
+							t.zCoord - possibleEntity.width,
+							t.xCoord + possibleEntity.width,
+							possibleEntityBoundingBox.maxY,
+							t.zCoord + possibleEntity.width
+							).expand(size, size, size);
+//					possibleEntityFutureBoundingBox.expand(size, size, size);
+					
+//					System.out.println(possibleEntityFutureBoundingBox.maxX - possibleEntityFutureBoundingBox.minX);
+					if (possibleEntityFutureBoundingBox.calculateIntercept(posBefore, posAfter) != null)
+					{
+						MovingObjectPosition possibleEntityLanding = possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
+						hitEntity = 2;
 						hasLanded = true;
 						landingPosition = possibleEntityLanding;
 						continue;
 					}
 					possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
+					possibleEntityFutureBoundingBox.calculateIntercept(posBefore,posAfter);
 				}
 			}
 			
@@ -350,11 +375,16 @@ public class ProjectileTracer extends Module
 		GL11.glPushMatrix();
 		
 		ProjectileTracer.onTarget = hitEntity;
-		if(hitEntity)
+		if(hitEntity == 1)
 		{
 			// entity has been hit so swap to red color 
 			RenderUtil.setColor(new Color(255, 0, 0, 150));
 			
+		}
+		else if (hitEntity == 2)
+		{
+			RenderUtil.setColor(0x00FF0096);
+			// can't draw cylinder for this one cause landingPosition is null
 		}
 		else if (renderTargetBlock.getValue() && landingPosition != null)
 		{
