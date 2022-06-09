@@ -261,45 +261,46 @@ public class ProjectileTracer extends Module
 			int chunkMaxZ = (int) Math.floor((arrowBox.maxZ + 2.0D) / 16.0D);
 			
 			// Check which entities colliding with the arrow
-			List<Entity> collidedEntities = new ArrayList<Entity>();
-			
-			// This block of code is equivalent to the in-Range function in Kotlin
-			int i = chunkMinX;
-			int j = chunkMaxX;
-			
-			if (i <= j)
-				while (true) 
-				{
-					int k = chunkMinZ; 
-					int m = chunkMaxZ;
-					
-					if (k <= m)
-						while (true) 
-						{
-							theWorld.getChunkFromChunkCoords(i, k).getEntitiesWithinAABBForEntity(
-									thePlayer,
-									arrowBox, 
-									collidedEntities, 
-									null);
-							
-							if (k != m) 
-							{
-								k++;
-								continue;
-							}
-							break;
-						}
-					
-					if (i != j) 
-					{
-						i++;
-						continue;
-					}
-					break;
-				}
+//			List<Entity> collidedEntities = new ArrayList<Entity>();
+//			
+//			// This block of code is equivalent to the in-Range function in Kotlin
+//			int i = chunkMinX;
+//			int j = chunkMaxX;
+//			
+//			if (i <= j)
+//				while (true) 
+//				{
+//					int k = chunkMinZ; 
+//					int m = chunkMaxZ;
+//					
+//					if (k <= m)
+//						while (true) 
+//						{
+//							theWorld.getChunkFromChunkCoords(i, k).getEntitiesWithinAABBForEntity(
+//									thePlayer,
+//									arrowBox, 
+//									collidedEntities, 
+//									null);
+//							
+//							if (k != m) 
+//							{
+//								k++;
+//								continue;
+//							}
+//							break;
+//						}
+//					
+//					if (i != j) 
+//					{
+//						i++;
+//						continue;
+//					}
+//					break;
+//				}
 			
 			// Check all possible entities
-			for (Entity possibleEntity : collidedEntities) 
+//			for (Entity possibleEntity : collidedEntities) 
+			for (Entity possibleEntity : mc.theWorld.loadedEntityList)
 			{
 				if (possibleEntity.canBeCollidedWith() && (possibleEntity != thePlayer)) 
 				{
@@ -325,13 +326,10 @@ public class ProjectileTracer extends Module
 							possibleEntityBoundingBox.maxY,
 							t.zCoord + possibleEntity.width
 							).expand(size, size, size);
-//					possibleEntityFutureBoundingBox.expand(size, size, size);
-					
-//					System.out.println(possibleEntityFutureBoundingBox.maxX - possibleEntityFutureBoundingBox.minX);
+
 					if (possibleEntityFutureBoundingBox.calculateIntercept(posBefore, posAfter) != null)
 					{
-						System.out.println("uwu");
-						MovingObjectPosition possibleEntityLanding = possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
+						MovingObjectPosition possibleEntityLanding = possibleEntityFutureBoundingBox.calculateIntercept(posBefore, posAfter);
 						hitEntity = 2;
 						hasLanded = true;
 						landingPosition = possibleEntityLanding;
@@ -380,13 +378,12 @@ public class ProjectileTracer extends Module
 		if(hitEntity == 1)
 		{
 			// entity has been hit so swap to red color 
-			RenderUtil.setColor(new Color(255, 0, 0, 150));
-			
+//			RenderUtil.setColor(new Color(255, 0, 0, 150));
+			RenderUtil.setColor(0xFF000096);
 		}
 		else if (hitEntity == 2)
 		{
 			RenderUtil.setColor(0x00FF0096);
-			// can't draw cylinder for this one cause landingPosition is null
 		}
 		else if (renderTargetBlock.getValue() && landingPosition != null)
 		{
