@@ -312,15 +312,15 @@ public class ProjectileTracer extends Module
 						hitEntity = 1;
 						hasLanded = true;
 						landingPosition = possibleEntityLanding;
-						continue;
+						break;
 					}
 					AxisAlignedBB possibleEntityFutureBoundingBox = possibleEntity.getEntityBoundingBox().expand(size,size,size);
 					Vec3 t = Util.bowPredictionTarget(possibleEntity, 0)[0];
 					
 					possibleEntityFutureBoundingBox = new AxisAlignedBB(
-							t.xCoord - possibleEntity.width,
+							t.xCoord,
 							possibleEntityBoundingBox.minY,
-							t.zCoord - possibleEntity.width,
+							t.zCoord,
 							t.xCoord + possibleEntity.width,
 							possibleEntityBoundingBox.maxY,
 							t.zCoord + possibleEntity.width
@@ -330,14 +330,16 @@ public class ProjectileTracer extends Module
 //					System.out.println(possibleEntityFutureBoundingBox.maxX - possibleEntityFutureBoundingBox.minX);
 					if (possibleEntityFutureBoundingBox.calculateIntercept(posBefore, posAfter) != null)
 					{
+						System.out.println("uwu");
 						MovingObjectPosition possibleEntityLanding = possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
 						hitEntity = 2;
 						hasLanded = true;
 						landingPosition = possibleEntityLanding;
-						continue;
+						
+						break;
 					}
-					possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
-					possibleEntityFutureBoundingBox.calculateIntercept(posBefore,posAfter);
+//					possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
+//					possibleEntityFutureBoundingBox.calculateIntercept(posBefore,posAfter);
 				}
 			}
 			
