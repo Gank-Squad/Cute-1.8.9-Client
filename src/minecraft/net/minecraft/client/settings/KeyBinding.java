@@ -20,6 +20,11 @@ public class KeyBinding implements Comparable<KeyBinding>
     /** Is the key held down? */
     private boolean pressed;
     private int pressTime;
+    
+    public void setPressed(boolean isPressed)
+    {
+    	this.pressed = isPressed;
+    }
 
     public static void onTick(int keyCode)
     {

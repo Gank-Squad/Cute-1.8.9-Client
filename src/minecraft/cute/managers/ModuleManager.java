@@ -29,6 +29,7 @@ import cute.modules.render.PredictTargets;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
 import cute.modules.render.XRay;
+import cute.modules.test.BedProtect;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ModuleManager extends BaseManager
@@ -83,6 +84,7 @@ public class ModuleManager extends BaseManager
 		modules.add(new Sounds());
 		modules.add(new Sprint());
 		modules.add(new DetectionBox());
+		modules.add(new BedProtect());
 	}
 	
 	public static List<Module> getModules()
