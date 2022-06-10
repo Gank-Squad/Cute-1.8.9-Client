@@ -53,9 +53,9 @@ public class Hud extends Module
 	
 	public static Checkbox armorStatusCheck = new Checkbox("Armor", true);
 	public static Checkbox positionCheck    = new Checkbox("Position", true);
-	public static Checkbox arrowCheck       = new Checkbox("Arrow", true);
+	public static Checkbox arrowCheck       = new Checkbox("Hit Marker", true);
 	
-	public static Checkbox arrowCountCheck = new Checkbox("Arrow Count", true);
+	public static Checkbox arrowCountCheck  = new Checkbox("Arrow Count", true);
 	
 	@Override
 	public void delayedSetup()
@@ -98,6 +98,7 @@ public class Hud extends Module
 		this.addSetting(armorStatusCheck);
 		this.addSetting(positionCheck);
 		this.addSetting(arrowCheck);
+		this.addSetting(arrowCountCheck);
     }
 
 
@@ -225,6 +226,19 @@ public class Hud extends Module
 			else 
 			{
 				HudManager.INSTANCE.unregister(hitMarker);
+			}
+			return;
+		}
+		
+		if(e.settingID == arrowCountCheck.getId())
+		{
+			if(arrowCountCheck.getValue())
+			{
+				HudManager.INSTANCE.register(arrowCount);
+			}
+			else
+			{
+				HudManager.INSTANCE.unregister(arrowCount);
 			}
 			return;
 		}
