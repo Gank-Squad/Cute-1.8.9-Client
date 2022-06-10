@@ -26,6 +26,11 @@ public class ItemComponent extends DraggableComponent
 		this.item = item;
 	}
 	
+	public ItemStack getItem()
+	{
+		return this.item;
+	}
+	
 	public void setItem(ItemStack item)
 	{
 		this.item = item;

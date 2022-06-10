@@ -15,6 +15,7 @@ import cute.ui.hud.display.components.TextComponent;
 import cute.util.types.VirtualBlock;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemEgg;
@@ -47,9 +48,14 @@ public class Hud extends Module
 	public static DraggableObj hitMarker = new DraggableObj(52000,48500);
 	public static RectComponent hitSquare;
 	
+	public static DraggableObj arrowCount= new DraggableObj();
+	public static ItemComponent arrowCountItem;
+	
 	public static Checkbox armorStatusCheck = new Checkbox("Armor", true);
 	public static Checkbox positionCheck    = new Checkbox("Position", true);
 	public static Checkbox arrowCheck       = new Checkbox("Arrow", true);
+	
+	public static Checkbox arrowCountCheck = new Checkbox("Arrow Count", true);
 	
 	@Override
 	public void delayedSetup()
@@ -69,6 +75,9 @@ public class Hud extends Module
 		hitSquare = new RectComponent(0,0,5,10,0x00000000);
 		hitMarker.addComponent(hitSquare);
 		
+		arrowCountItem = new ItemComponent(0, 0, 16, 16, new ItemStack(Items.arrow));
+		arrowCount.addComponent(arrowCountItem);
+		
 		if(armorStatusCheck.getValue())
 			HudManager.INSTANCE.register(armorStatus);
 		
@@ -77,6 +86,9 @@ public class Hud extends Module
 		
 		if(arrowCheck.getValue())
 			HudManager.INSTANCE.register(hitMarker);
+		
+		if(arrowCountCheck.getValue())
+			HudManager.INSTANCE.register(arrowCount);
 	}
 	
 	@Override
@@ -102,6 +114,9 @@ public class Hud extends Module
 		
 		if(arrowCheck.getValue())
 			HudManager.INSTANCE.register(hitMarker);
+		
+		if(arrowCountCheck.getValue())
+			HudManager.INSTANCE.register(arrowCount);
 	}
 	
 	@Override 
@@ -112,6 +127,7 @@ public class Hud extends Module
 		HudManager.INSTANCE.unregister(armorStatus);
 		HudManager.INSTANCE.unregister(positionHud);
 		HudManager.INSTANCE.unregister(hitMarker);
+		HudManager.INSTANCE.unregister(arrowCount);
 	}
 	
 	
@@ -128,18 +144,21 @@ public class Hud extends Module
 		legs.setItem(this.mc.thePlayer.getEquipmentInSlot(2));
 		boots.setItem(this.mc.thePlayer.getEquipmentInSlot(1));
 		
+		ItemStack m = arrowCountItem.getItem();
+	
+		m.stackSize = 0;
+		
+		for(ItemStack i : mc.thePlayer.inventory.mainInventory)
+		{
+			if(i != null && i.getItem() == Items.arrow)
+			{
+				m.stackSize += i.stackSize;
+			}
+		}
+	
+		
 		Item item = this.mc.thePlayer.getHeldItem().getItem();
-		
 
-//		if (ProjectileTracer.onTarget)
-//		{
-//			hitSquare.setColor(0xFF00008F);
-//		}
-//		else
-//		{
-//			hitSquare.setColor(0x0000008D);
-//		}
-		
 		// need this so the marker disappears when not holding a bow so screen isn't covered unnecessarily
 		if (item instanceof ItemBow ||
 				item instanceof ItemSnowball ||

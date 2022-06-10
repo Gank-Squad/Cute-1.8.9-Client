@@ -6,6 +6,7 @@ import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.HudManager;
 import cute.managers.ModuleManager;
+import cute.util.Cache;
 
 public class Client 
 {
@@ -57,6 +58,8 @@ public class Client
 	{
 		EventManager.register(ModuleManager.INSTANCE);		
 		EventManager.register(HudManager.INSTANCE);
+		
+		Cache.loadCache();
 		
 		HudManager.INSTANCE.registerDefault();
 		

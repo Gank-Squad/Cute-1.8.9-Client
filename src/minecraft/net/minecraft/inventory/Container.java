@@ -558,7 +558,7 @@ public abstract class Container
     /**
      * Gets a unique transaction ID. Parameter is unused.
      */
-    public short getNextTransactionID(InventoryPlayer p_75136_1_)
+    public short getNextTransactionID(InventoryPlayer unused_param)
     {
         ++this.transactionID;
         return this.transactionID;
