@@ -317,8 +317,8 @@ public class ProjectileTracer extends Module
 					}
 					AxisAlignedBB possibleEntityFutureBoundingBox = possibleEntity.getEntityBoundingBox().expand(size,size,size);
 					Vec3 t = Util.bowPredictionTarget(possibleEntity, 0)[0];
-					double difX = possibleEntity.posX - t.xCoord;
-					double difZ = possibleEntity.posZ - t.zCoord;
+					double difX = t.xCoord - possibleEntity.posX;
+					double difZ = t.zCoord - possibleEntity.posZ;
 					possibleEntityFutureBoundingBox = new AxisAlignedBB(
 							possibleEntityBoundingBox.minX + difX,
 							possibleEntityBoundingBox.minY,
