@@ -306,7 +306,7 @@ public class ProjectileTracer extends Module
 				{
 
 					AxisAlignedBB possibleEntityBoundingBox = possibleEntity.getEntityBoundingBox().expand(size, size, size);
-//					System.out.println(possibleEntityBoundingBox.maxX - possibleEntityBoundingBox.minX);
+
 					if (possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter) != null) 
 					{
 						MovingObjectPosition possibleEntityLanding = possibleEntityBoundingBox.calculateIntercept(posBefore, posAfter);
@@ -317,16 +317,17 @@ public class ProjectileTracer extends Module
 					}
 					AxisAlignedBB possibleEntityFutureBoundingBox = possibleEntity.getEntityBoundingBox().expand(size,size,size);
 					Vec3 t = Util.bowPredictionTarget(possibleEntity, 0)[0];
-					
+					double difX = possibleEntity.posX - t.xCoord;
+					double difZ = possibleEntity.posZ - t.zCoord;
 					possibleEntityFutureBoundingBox = new AxisAlignedBB(
-							t.xCoord,
+							possibleEntityBoundingBox.minX + difX,
 							possibleEntityBoundingBox.minY,
-							t.zCoord,
-							t.xCoord + possibleEntity.width,
+							possibleEntityBoundingBox.minZ + difZ,
+							possibleEntityBoundingBox.maxX + difX,
 							possibleEntityBoundingBox.maxY,
-							t.zCoord + possibleEntity.width
-							).expand(size, size, size);
-
+							possibleEntityBoundingBox.maxZ + difZ
+							);
+							
 					if (possibleEntityFutureBoundingBox.calculateIntercept(posBefore, posAfter) != null)
 					{
 						MovingObjectPosition possibleEntityLanding = possibleEntityFutureBoundingBox.calculateIntercept(posBefore, posAfter);
