@@ -21,6 +21,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -107,7 +108,7 @@ public class NameTags extends Module
     {
     	// untested but i think when in pvp on hypixel the anti ka bots copy the player gear
     	// so it renders twice the armor above their head, this is supposed to avoid bots now idk if it works
-    	if(!(event.entity instanceof EntityPlayer) || 
+    	if(!(event.entity instanceof EntityPlayer) && !(event.entity instanceof EntityItem) || 
     	     event.entity.isDead || 
     	    !event.entity.isEntityAlive())
     		return;

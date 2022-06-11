@@ -378,7 +378,6 @@ public class ProjectileTracer extends Module
 		if(hitEntity == 1)
 		{
 			// entity has been hit so swap to red color 
-//			RenderUtil.setColor(new Color(255, 0, 0, 150));
 			RenderUtil.setColor(0xFF000096);
 		}
 		else if (hitEntity == 2)

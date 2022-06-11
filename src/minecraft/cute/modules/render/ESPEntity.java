@@ -7,9 +7,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 
+import cute.eventapi.EventManager;
 import cute.eventapi.EventTarget;
-import cute.events.RenderLivingEvent;
 import cute.events.RenderLivingModelEvent;
+import cute.events.RenderNameTagEvent;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
 import cute.modules.client.Players;
@@ -21,14 +22,20 @@ import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 
 
-public class ESPEntity extends Module
+public class ESPEntity<T extends Entity> extends Module
 {
 	public ESPEntity() 
 	{
@@ -54,6 +61,7 @@ public class ESPEntity extends Module
     
     public static Checkbox items = new Checkbox("Items", true);
     public static ColorPicker itemsPicker = new ColorPicker(items, "Item Picker", new Color(199, 196, 19));
+    public static Checkbox itemCount = new Checkbox("Item Counter", true);
 
     public static Slider invisAlpha = new Slider("Invis Opacity", 0D, 0.5D, 1.0D, 1);
     
@@ -79,6 +87,7 @@ public class ESPEntity extends Module
         addSetting(neutral);
         addSetting(vehicles);
         addSetting(items);
+        addSetting(itemCount);
         addSetting(invisAlpha);
         addSetting(lineWidth);
         addSetting(forceRender);
@@ -149,7 +158,7 @@ public class ESPEntity extends Module
     		if(!neutral.getValue()) 
     			return;
     		RenderUtil.setColor(neutralPicker.getColor());
-    	}        	
+    	}  
     	
     	GL11.glLineWidth((float)lineWidth.getValue());
     	
@@ -317,7 +326,62 @@ public class ESPEntity extends Module
         	{
         		if(items.getValue()) 
         		{
-        			RenderUtil.setColor(itemsPicker.getColor());	
+        			if (itemCount.getValue())
+        			{
+            			EntityItem e = (EntityItem)entity;
+            			ItemStack stack = e.getEntityItem();
+            			String str = Integer.toString(stack.stackSize);
+            			RenderManager renderManager = mc.getRenderManager();
+            			FontRenderer fontrenderer = renderManager.getFontRenderer();//;mc.fontRendererObj;
+                        float f = 1.6F;
+                        float f1 = 0.016666668F * f;
+                        GlStateManager.pushMatrix();
+                        
+                        double x,y,z;
+                        
+                        
+                        double doubleX = this.mc.thePlayer.lastTickPosX
+            	                + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
+            	                * event.partialTicks;
+
+            	        double doubleY = this.mc.thePlayer.lastTickPosY
+            	                + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY)
+            	                * event.partialTicks;
+
+            	        double doubleZ = this.mc.thePlayer.lastTickPosZ
+            	                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
+            	                * event.partialTicks;
+
+            	        x = entity.posX - doubleX;
+                        y = entity.posY - doubleY;
+                        z = entity.posZ - doubleZ;
+            	        
+                        GlStateManager.translate(x, y, z);
+                        GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+                        GlStateManager.rotate(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+                        GlStateManager.rotate(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+                        GlStateManager.scale(-f1, -f1, f1);
+                        
+                        GlStateManager.disableLighting();
+                        GlStateManager.depthMask(false);
+                        // the blend stuff breaks the colors for esp, making it black
+                        // but removing the blend stuff makes the lines not render
+                        GlStateManager.enableBlend();
+                        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+                        
+                        Tessellator tessellator = Tessellator.getInstance();
+                        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+                        
+                        RenderNameTagEvent EVENT_ = new RenderNameTagEvent<T>(tessellator, worldrenderer, fontrenderer, (T)entity, str, x, y, z);
+                        EventManager.call(EVENT_);
+                        
+                        GlStateManager.enableLighting();
+                        GlStateManager.disableBlend();
+                        GlStateManager.color(1f,1f,1f,1f);
+                        GlStateManager.popMatrix();
+        			}
+                    
+        			RenderUtil.setColor(itemsPicker.getColor());
         			RenderUtil.renderEntityHitbox(entity);
         		}
         		continue;

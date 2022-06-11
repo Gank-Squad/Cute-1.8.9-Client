@@ -148,18 +148,20 @@ public class PredictTargets extends Module
         	
         	if (target.getValue())
         	{
+        		GL11.glLineWidth((float)5);
         		GL11.glTranslated(-mc.thePlayer.posX, -mc.thePlayer.posY, -mc.thePlayer.posZ);
         		GL11.glBegin(GL11.GL_LINES);
         		
-        		
+        		float size = 0.05f;
 //        		RenderUtil.setColor(0x00FF00FF);
         		RenderUtil.renderBlock(
-        				(float)a[1].xCoord - 0.1f, (float)a[1].yCoord - 0.1f, (float)a[1].zCoord - 0.1f,
-        				(float)a[1].xCoord + 0.1f, (float)a[1].yCoord + 0.1f, (float)a[1].zCoord + 0.1f);
+        				(float)a[1].xCoord - size, (float)a[1].yCoord - size, (float)a[1].zCoord - size,
+        				(float)a[1].xCoord + size, (float)a[1].yCoord + size, (float)a[1].zCoord + size);
         		
         		
         		GL11.glEnd();
         		GL11.glTranslated(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
+        		GL11.glLineWidth((float)lineWidth.getValue());
         	}
 			
 		}
