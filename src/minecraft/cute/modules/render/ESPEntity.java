@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -326,6 +327,8 @@ public class ESPEntity<T extends Entity> extends Module
         	{
         		if(items.getValue()) 
         		{
+        			RenderUtil.setColor(itemsPicker.getColor());
+        			RenderUtil.renderEntityHitbox(entity);
         			if (itemCount.getValue())
         			{
             			EntityItem e = (EntityItem)entity;
@@ -335,7 +338,7 @@ public class ESPEntity<T extends Entity> extends Module
             			FontRenderer fontrenderer = renderManager.getFontRenderer();//;mc.fontRendererObj;
                         float f = 1.6F;
                         float f1 = 0.016666668F * f;
-                        GlStateManager.pushMatrix();
+                        
                         
                         double x,y,z;
                         
@@ -356,33 +359,47 @@ public class ESPEntity<T extends Entity> extends Module
                         y = entity.posY - doubleY;
                         z = entity.posZ - doubleZ;
             	        
+                        GlStateManager.pushMatrix();
                         GlStateManager.translate(x, y, z);
                         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
                         GlStateManager.rotate(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
                         GlStateManager.rotate(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
                         GlStateManager.scale(-f1, -f1, f1);
                         
-                        GlStateManager.disableLighting();
-                        GlStateManager.depthMask(false);
-                        // the blend stuff breaks the colors for esp, making it black
-                        // but removing the blend stuff makes the lines not render
-                        GlStateManager.enableBlend();
-                        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-                        
                         Tessellator tessellator = Tessellator.getInstance();
                         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
                         
-                        RenderNameTagEvent EVENT_ = new RenderNameTagEvent<T>(tessellator, worldrenderer, fontrenderer, (T)entity, str, x, y, z);
-                        EventManager.call(EVENT_);
+                        int i = 0;
+                        int j = fontrenderer.getStringWidth(str) / 2;
                         
-                        GlStateManager.enableLighting();
-                        GlStateManager.disableBlend();
-                        GlStateManager.color(1f,1f,1f,1f);
+            	        
+            	        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+            	        worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            	        worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            	        worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            	        worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            	        tessellator.draw();
+            	
+            	        GL11.glEnable(GL11.GL_TEXTURE_2D);
+            	
+            	        // this is here so that it goes through walls
+            	        fontrenderer.drawString(str, -j, i, -1);
+            	        
+            	        GL11.glEnable(GL11.GL_DEPTH_TEST);
+            	        GL11.glDepthMask(true);
+            	        
+            	        // this is here so entities behind the name don't override it 
+            	        fontrenderer.drawString(str, -j, i, -1);
+            	        
+            	        GL11.glDepthMask(false);
+            	        GL11.glDisable(GL11.GL_TEXTURE_2D);
+            	        GL11.glDisable(GL11.GL_DEPTH_TEST);
+            	        
                         GlStateManager.popMatrix();
+                        
         			}
                     
-        			RenderUtil.setColor(itemsPicker.getColor());
-        			RenderUtil.renderEntityHitbox(entity);
+        			
         		}
         		continue;
         	}
