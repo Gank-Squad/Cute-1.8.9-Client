@@ -23,6 +23,7 @@ public class ColorPickerButton extends Component
 	private int redWidth;
 	private int greenWidth;
 	private int blueWidth;
+	private int alphaWidth;
 	
 	private int previewColorHeight = (int)(this.height / 2);
 //	distnace between colors 
@@ -45,16 +46,17 @@ public class ColorPickerButton extends Component
 		this.x = button.parent.getX() + button.parent.getWidth();
 		this.y = button.parent.getY() + button.offset;
 		this.offset = offset;
-		
+
 		this.redWidth   = this.width * this.setting.getRed()   / this.max;
 		this.greenWidth = this.width * this.setting.getGreen() / this.max;
 		this.blueWidth  = this.width * this.setting.getBlue()  / this.max;
+		this.alphaWidth = this.width * this.setting.getAlpha() / this.max;
 	}
 
 	@Override
 	public int getHeight() 
 	{
-		return this.height * 3 + this.previewColorHeight;
+		return this.height * 4 + this.previewColorHeight;
 	}
 
 	
@@ -93,6 +95,11 @@ public class ColorPickerButton extends Component
 		// blue slider 
 		RenderUtil.setColor(Client.GlobalColors.blue);
 		RenderUtil.renderRect(x + 2, y + previewOffset + this.height * 2, x + (int)this.blueWidth, y + this.height * 3 + this.previewColorHeight);
+		
+		// alpha slider
+		RenderUtil.setColor(0x8D8D8DFF);
+		RenderUtil.renderRect(x + 2,  y + previewOffset + this.height * 3, x + (int)this.alphaWidth, y + this.height * 4 + this.previewColorHeight);
+		
 		RenderUtil.endRenderRect();
 		
 		
@@ -125,6 +132,15 @@ public class ColorPickerButton extends Component
 				displaValue + " ", 
 				(this.x                                  ) * Component.tScale + 4, 
 				(this.y + previewOffset + this.height * 2) * Component.tScale + 3, 
+				Client.GlobalColors.textColorInt);
+		
+		// alpha value
+		displaValue =  String.valueOf(this.setting.getAlpha());
+		
+		FontUtil.drawStringWithShadow(
+				displaValue + " ", 
+				(this.x                                  ) * Component.tScale + 4, 
+				(this.y + previewOffset + this.height * 3) * Component.tScale + 3, 
 				Client.GlobalColors.textColorInt);
 		
 		GL11.glPopMatrix();
@@ -172,6 +188,12 @@ public class ColorPickerButton extends Component
 				this.blueWidth = this.width * this.setting.getBlue() / this.max;
 				this.setting.setBlue(newVal);
 				return;
+				
+			case 4:
+				
+				this.alphaWidth = this.width * this.setting.getAlpha() / this.max;
+				this.setting.setAlpha(newVal);
+				return;
 		}
 	}
 	
@@ -197,6 +219,12 @@ public class ColorPickerButton extends Component
 		if(this.isMouseOnButtonBlue(mouseX, mouseY))
 		{
 			this.dragging = 3;
+			return;
+		}
+		
+		if(this.isMouseOnButtonAlpha(mouseX, mouseY))
+		{
+			this.dragging = 4;
 			return;
 		}
 		
@@ -233,6 +261,14 @@ public class ColorPickerButton extends Component
 				   x < this.x + this.width  && 
 				   y > this.y + this.height + this.previewColorHeight&& 
 				   y < this.y + this.height * 3 + this.previewColorHeight;
+	}
+	
+	public boolean isMouseOnButtonAlpha(int x, int y)
+	{
+		return 
+				x > this.x && x < this.x + this.width &&
+				y > this.y + this.height + this.previewColorHeight &&
+				y < this.y + this.height * 4 + this.previewColorHeight;
 	}
 }
 
