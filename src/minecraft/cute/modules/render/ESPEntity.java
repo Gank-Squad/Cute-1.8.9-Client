@@ -339,55 +339,52 @@ public class ESPEntity<T extends Entity> extends Module
         		{
         			RenderUtil.setColor(itemsPicker.getColor());
         			RenderUtil.renderEntityHitbox(entity);
-        			if (itemCount.getValue())
-        			{
-        				// loop through groupItem & group location
-        				// if its within the specified radius of another item in the lists
-        				// add it to the count
-        				// then loop through everything in the list at the end and render it
-        				boolean exit = false;
-        				int i;
-        				for (i = 0; i < groupItem.size(); i++)
-        				{
+        		}
+        		
+    			if (itemCount.getValue())
+    			{
+    				// loop through groupItem & group location
+    				// if its within the specified radius of another item in the lists
+    				// add it to the count
+    				// then loop through everything in the list at the end and render it
+    				boolean exit = false;
+    				int i;
+    				for (i = 0; i < groupItem.size(); i++)
+    				{
 //        					if (groupItem.get(i).getName() == entity.getName())
-        					if (groupItem.get(i).getName().compareTo(entity.getName()) == 0)
-        					{
-        						// check if its within range
-        						if (
-        								Math.abs(entity.posX - groupItem.get(i).posX) < itemCountRadius.getValue() &&
-        								Math.abs(entity.posY - groupItem.get(i).posY) < itemCountRadius.getValue() &&
-        								Math.abs(entity.posZ - groupItem.get(i).posZ) < itemCountRadius.getValue()
+    					if (groupItem.get(i).getName().compareTo(entity.getName()) == 0)
+    					{
+    						// check if its within range
+    						if (
+    								Math.abs(entity.posX - groupItem.get(i).posX) < itemCountRadius.getValue() &&
+    								Math.abs(entity.posY - groupItem.get(i).posY) < itemCountRadius.getValue() &&
+    								Math.abs(entity.posZ - groupItem.get(i).posZ) < itemCountRadius.getValue()
 //        								entity.posX < groupItem.get(i).posX + radius && entity.posX > groupItem.get(i).posX - radius &&
 //        								entity.posY < groupItem.get(i).posY + radius && entity.posY > groupItem.get(i).posY - radius &&	
 //        								entity.posZ < groupItem.get(i).posZ + radius && entity.posZ > groupItem.get(i).posZ - radius
-    								)
-        						{
-        							ItemStack stack = ((EntityItem)entity).getEntityItem();
-        							groupCount.set(i, groupCount.get(i) + stack.stackSize);
-        							exit = true;
-            						break;
-        						}
-        						
-        					}
-        				}
-        				
-        				// this is kinda bad but couldn't be bothered to do it better
-        				if (exit)
-        				{
-        					continue;
-        				}
-        				
-        				// couldn't find another group, so make a new one centered around the item
-        				
-        				groupItem.add((EntityItem)entity);
-        				groupCount.add(groupItem.get(i).getEntityItem().stackSize);
-        				
+								)
+    						{
+    							ItemStack stack = ((EntityItem)entity).getEntityItem();
+    							groupCount.set(i, groupCount.get(i) + stack.stackSize);
+    							exit = true;
+        						break;
+    						}
+    						
+    					}
+    				}
+    				
+    				// this is kinda bad but couldn't be bothered to do it better
+    				if (exit)
+    				{
     					continue;
-                        
-        			}
-                    
-        			
-        		}
+    				}
+    				
+    				// couldn't find another group, so make a new one centered around the item
+    				
+    				groupItem.add((EntityItem)entity);
+    				groupCount.add(groupItem.get(i).getEntityItem().stackSize);
+    			}
+      
         		continue;
         	}
         	

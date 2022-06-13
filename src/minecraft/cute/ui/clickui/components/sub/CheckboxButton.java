@@ -145,19 +145,34 @@ public class CheckboxButton extends Component
 				this.open = !this.open;
 				this.parent.parent.refresh();
 			}
-		}
-		else 
-		{
-			this.open = false;
+			return;
 		}
 		
 		if(!this.isOpen() || this.subcomponents.isEmpty())
 			return;
 		
+		boolean close = true;
+		
 		for(Component comp : this.subcomponents) 
 		{
-			comp.mouseClicked(mouseX, mouseY, button);
+			if(comp instanceof ColorPickerButton)
+			{
+				ColorPickerButton btn = (ColorPickerButton)comp;
+				
+				if(btn.isMouseOnButton(mouseX, mouseY))
+				{
+					comp.mouseClicked(mouseX, mouseY, button);
+					close = close && false;
+				}
+				else 
+				{
+					close = close && true;
+				}
+			}
 		}
+		
+		this.open = !close;
+		this.parent.parent.refresh();
 	}
 	
 	public boolean isMouseOnButton(int x, int y) 

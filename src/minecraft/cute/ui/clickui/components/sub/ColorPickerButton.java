@@ -248,7 +248,7 @@ public class ColorPickerButton extends Component
 			this.dragging = 4;
 			return;
 		}
-		System.out.println("uwu");
+		
 		this.dragging = 0;
 	}	
 	
