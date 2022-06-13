@@ -1,6 +1,8 @@
 package cute.ui.clickui.components.sub;
 
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 import cute.Client;
@@ -33,6 +35,7 @@ public class ColorPickerButton extends Component
 //	1 for red
 //	2 for green
 //	3 for blue 
+//  4 for alpha 
 	private int dragging = 0;
 	
 	private int offset;
@@ -53,6 +56,15 @@ public class ColorPickerButton extends Component
 		this.alphaWidth = this.width * this.setting.getAlpha() / this.max;
 	}
 
+	public void setColor(Color c)
+	{
+		this.setting.setColor(c);
+		this.redWidth   = this.width * this.setting.getRed()   / this.max;
+		this.greenWidth = this.width * this.setting.getGreen() / this.max;
+		this.blueWidth  = this.width * this.setting.getBlue()  / this.max;
+		this.alphaWidth = this.width * this.setting.getAlpha() / this.max;
+	}
+	
 	@Override
 	public int getHeight() 
 	{
@@ -66,84 +78,93 @@ public class ColorPickerButton extends Component
 		this.offset = newOff;
 	}
 
+	public int getDragging()
+	{
+		return this.dragging;
+	}
 
-	
+	public void renderComponent(int x, int y)
+	{
+		// the offset off the top where the preview color is rendered 
+			int previewOffset = this.previewColorHeight + dist;
+			
+			// background
+			RenderUtil.beginRenderRect();
+			RenderUtil.setColor(Client.GlobalColors.backColor);
+			RenderUtil.renderRect(x + 2, y, x + width, y + this.getHeight());
+			
+			// preview color 
+			RenderUtil.setColor(this.setting.getColor());
+			RenderUtil.renderRect(x + 2, y, x + this.width, y + this.previewColorHeight);
+			
+			// red slider 
+			RenderUtil.setColor(Client.GlobalColors.red);
+			RenderUtil.renderRect(x + 2, y + previewOffset, x + (int)this.redWidth, y + this.height + this.previewColorHeight );
+			
+			// green slider 
+			RenderUtil.setColor(Client.GlobalColors.green);
+			RenderUtil.renderRect(x + 2, y + previewOffset + this.height, x + (int)this.greenWidth, y + this.height * 2 + this.previewColorHeight);
+			
+			// blue slider 
+			RenderUtil.setColor(Client.GlobalColors.blue);
+			RenderUtil.renderRect(x + 2, y + previewOffset + this.height * 2, x + (int)this.blueWidth, y + this.height * 3 + this.previewColorHeight);
+			
+			// alpha slider
+			RenderUtil.setColor(0xFFFFFFFF);
+			RenderUtil.renderRect(x + 2,  y + previewOffset + this.height * 3, x + (int)this.alphaWidth, y + this.height * 4 + this.previewColorHeight);
+			
+			RenderUtil.endRenderRect();
+			
+			
+			// scale the text
+			GL11.glPushMatrix();
+			GL11.glScalef(0.75f,0.75f, 0.75f);
+			
+			// red value
+			String displaValue = String.valueOf(this.setting.getRed());
+			
+			FontUtil.drawStringWithShadow(
+					displaValue + " ", 
+					(x                ) * Component.tScale + 4, 
+					(y + previewOffset) * Component.tScale + 3, 
+					Client.GlobalColors.textColorInt);
+			
+			// green value
+			displaValue =  String.valueOf(this.setting.getGreen());
+			
+			FontUtil.drawStringWithShadow(
+					displaValue + " ", 
+					(x                              ) * Component.tScale + 4, 
+					(y + previewOffset + this.height) * Component.tScale + 3, 
+					Client.GlobalColors.textColorInt);
+			
+			// blue value 
+			displaValue =  String.valueOf(this.setting.getBlue());
+			
+			FontUtil.drawStringWithShadow(
+					displaValue + " ", 
+					(x                                  ) * Component.tScale + 4, 
+					(y + previewOffset + this.height * 2) * Component.tScale + 3, 
+					Client.GlobalColors.textColorInt);
+			
+			// alpha value
+			displaValue =  String.valueOf(this.setting.getAlpha());
+			
+			FontUtil.drawStringWithShadow(
+					displaValue + " ", 
+					(x                                  ) * Component.tScale + 4, 
+					(y + previewOffset + this.height * 3) * Component.tScale + 3, 
+					Client.GlobalColors.textColorInt);
+			
+			GL11.glPopMatrix();
+	}
 
 	@Override
 	public void renderComponent() 
 	{
-		// the offset off the top where the preview color is rendered 
-		int previewOffset = this.previewColorHeight + dist;
-		
-		// background
-		RenderUtil.beginRenderRect();
-		RenderUtil.setColor(Client.GlobalColors.backColor);
-		RenderUtil.renderRect(x + 2, y, x + width, y + this.getHeight());
-		
-		// preview color 
-		RenderUtil.setColor(this.setting.getColor());
-		RenderUtil.renderRect(x + 2, y, x + this.width, y + this.previewColorHeight);
-		
-		// red slider 
-		RenderUtil.setColor(Client.GlobalColors.red);
-		RenderUtil.renderRect(x + 2, y + previewOffset, x + (int)this.redWidth, y + this.height + this.previewColorHeight );
-		
-		// green slider 
-		RenderUtil.setColor(Client.GlobalColors.green);
-		RenderUtil.renderRect(x + 2, y + previewOffset + this.height, x + (int)this.greenWidth, y + this.height * 2 + this.previewColorHeight);
-		
-		// blue slider 
-		RenderUtil.setColor(Client.GlobalColors.blue);
-		RenderUtil.renderRect(x + 2, y + previewOffset + this.height * 2, x + (int)this.blueWidth, y + this.height * 3 + this.previewColorHeight);
-		
-		// alpha slider
-		RenderUtil.setColor(0x8D8D8DFF);
-		RenderUtil.renderRect(x + 2,  y + previewOffset + this.height * 3, x + (int)this.alphaWidth, y + this.height * 4 + this.previewColorHeight);
-		
-		RenderUtil.endRenderRect();
-		
-		
-		// scale the text
-		GL11.glPushMatrix();
-		GL11.glScalef(0.75f,0.75f, 0.75f);
-		
-		// red value
-		String displaValue = String.valueOf(this.setting.getRed());
-		
-		FontUtil.drawStringWithShadow(
-				displaValue + " ", 
-				(this.x                ) * Component.tScale + 4, 
-				(this.y + previewOffset) * Component.tScale + 3, 
-				Client.GlobalColors.textColorInt);
-		
-		// green value
-		displaValue =  String.valueOf(this.setting.getGreen());
-		
-		FontUtil.drawStringWithShadow(
-				displaValue + " ", 
-				(this.x                              ) * Component.tScale + 4, 
-				(this.y + previewOffset + this.height) * Component.tScale + 3, 
-				Client.GlobalColors.textColorInt);
-		
-		// blue value 
-		displaValue =  String.valueOf(this.setting.getBlue());
-		
-		FontUtil.drawStringWithShadow(
-				displaValue + " ", 
-				(this.x                                  ) * Component.tScale + 4, 
-				(this.y + previewOffset + this.height * 2) * Component.tScale + 3, 
-				Client.GlobalColors.textColorInt);
-		
-		// alpha value
-		displaValue =  String.valueOf(this.setting.getAlpha());
-		
-		FontUtil.drawStringWithShadow(
-				displaValue + " ", 
-				(this.x                                  ) * Component.tScale + 4, 
-				(this.y + previewOffset + this.height * 3) * Component.tScale + 3, 
-				Client.GlobalColors.textColorInt);
-		
-		GL11.glPopMatrix();
+		this.y = parent.parent.getY() + offset - this.height;
+		this.x = parent.parent.getX() + this.width;
+		this.renderComponent(this.x, this.y);
 	}
 	
 
@@ -227,7 +248,7 @@ public class ColorPickerButton extends Component
 			this.dragging = 4;
 			return;
 		}
-		
+		System.out.println("uwu");
 		this.dragging = 0;
 	}	
 	
@@ -236,7 +257,6 @@ public class ColorPickerButton extends Component
 	{
 		this.dragging = 0;
 	}
-	
 	
 	
 	public boolean isMouseOnButtonRed(int x, int y)
@@ -269,6 +289,14 @@ public class ColorPickerButton extends Component
 				x > this.x && x < this.x + this.width &&
 				y > this.y + this.height + this.previewColorHeight &&
 				y < this.y + this.height * 4 + this.previewColorHeight;
+	}
+	
+	public boolean isMouseOnButton(int x, int y)
+	{
+		return x > this.x  && 
+				   x < this.x + this.width && 
+				   y > this.y && 
+				   y < this.y + this.height *4 + this.previewColorHeight;
 	}
 }
 

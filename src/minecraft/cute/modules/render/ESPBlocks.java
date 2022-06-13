@@ -43,6 +43,8 @@ public class ESPBlocks extends Module
 	// the internal counter for the ticks
 	private static int _cooldownTicks = 0; 
 
+	private static boolean flush = false;
+	
 	@Override
     public void setup() 
 	{
@@ -111,10 +113,8 @@ public class ESPBlocks extends Module
 	@EventTarget
     public void renderWorldLastEvent(RenderWorldLastEvent evt) 
     {
-        if (nullCheck())
-        {
+        if (nullCheck() || flush)
             return;
-        }
         
         double doubleX = this.mc.thePlayer.lastTickPosX
                 + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
@@ -135,19 +135,28 @@ public class ESPBlocks extends Module
         
         GL11.glPopMatrix();
         
-        
-        
         // prevents hotbar / hand from being messed up by color changes 
         RenderUtil.resetColor();
     }
+	
+	
 	
 	private void compileDL() 
 	{
 		if(nullCheck())
 			return;
 		
-		if(ESPBlocks.blocks.getSize() == 0)
-			return;
+		if(ESPBlocks.blocks.getSize() == 0) 
+		{
+			if(flush)
+				return;
+			
+			flush = true;
+		}
+		else 
+		{
+			flush = false;
+		}	
 		
 		WorldClient world = this.mc.theWorld;
 
@@ -211,7 +220,7 @@ public class ESPBlocks extends Module
 //                        	GL11.glBegin(GL11.GL_LINES);
 
 
-                        	GL11.glColor4ub(vb.r, vb.g, vb.b, vb.a);
+                        	GL11.glColor4ub((byte)vb.getRed(), (byte)vb.getGreen(), (byte)vb.getBlue(), (byte)vb.getAlpha());
                 	
                         	switch(vb.blockID)
                         	{

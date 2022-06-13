@@ -306,7 +306,7 @@ public class RenderUtil
 	
 	    public static void renderBlock(int x, int y, int z, VirtualBlock block) 
 	    {
-	    	renderBlock(x, y, z, new Color(block.r, block.g, block.b, block.a));
+	    	renderBlock(x, y, z, new Color(block.getRed(), block.getGreen(), block.getBlue(), block.getAlpha()));
 	    }
 	    
 	    public static void renderBlock(int x, int y, int z, Color color) 

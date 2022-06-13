@@ -175,10 +175,10 @@ public class ConfigManager extends BaseManager
 	                        	
 	                        	JsonObject jo = new JsonObject();
 	                        	jo.add("Id",  new JsonPrimitive(b.blockID));
-	                        	jo.add("Red",  new JsonPrimitive(b.r));
-	                        	jo.add("Green",  new JsonPrimitive(b.g));
-	                        	jo.add("Blue",  new JsonPrimitive(b.b));
-	                        	jo.add("Alpha",  new JsonPrimitive(b.a));
+	                        	jo.add("Red",  new JsonPrimitive(b.getRed()));
+	                        	jo.add("Green",  new JsonPrimitive(b.getGreen()));
+	                        	jo.add("Blue",  new JsonPrimitive(b.getBlue()));
+	                        	jo.add("Alpha",  new JsonPrimitive(b.getAlpha()));
 	                        	jo.add("Meta",  new JsonPrimitive(b.meta));
 	                        	jo.add("Enabled",  new JsonPrimitive(b.enabled));
 	                        	jo.add("DisplayName",  new JsonPrimitive(b.displayName));
@@ -361,10 +361,10 @@ public class ConfigManager extends BaseManager
     	                			{
     	                				try 
     	                				{
-    	                					x.r =  (byte) r;
-    	                					x.g =  (byte) g;
-    	                					x.b =  (byte) b;
-    	                					x.a =  (byte) a;
+    	                					x.setRed(r);
+    	                					x.setGreen(g);
+    	                					x.setBlue(b);
+    	                					x.setAlpha(a);
     	                					x.meta    =   meta;
     	                					x.displayName = displayName;
     	                					x.enabled = enabled;
@@ -437,10 +437,10 @@ public class ConfigManager extends BaseManager
         	
         	JsonObject jo = new JsonObject();
         	jo.add("Id",  new JsonPrimitive(b.blockID));
-        	jo.add("Red",  new JsonPrimitive(b.r));
-        	jo.add("Green",  new JsonPrimitive(b.g));
-        	jo.add("Blue",  new JsonPrimitive(b.b));
-        	jo.add("Alpha",  new JsonPrimitive(b.a));
+        	jo.add("Red",  new JsonPrimitive(b.getRed()));
+        	jo.add("Green",  new JsonPrimitive(b.getGreen()));
+        	jo.add("Blue",  new JsonPrimitive(b.getBlue()));
+        	jo.add("Alpha",  new JsonPrimitive(b.getAlpha()));
         	jo.add("Meta",  new JsonPrimitive(b.meta));
         	jo.add("Enabled",  new JsonPrimitive(b.enabled));
         	jo.add("DisplayName",  new JsonPrimitive(b.displayName));
@@ -483,10 +483,10 @@ public class ConfigManager extends BaseManager
 			{
 				try 
 				{
-					x.r =  (byte) r;
-					x.g =  (byte) g;
-					x.b =  (byte) b;
-					x.a =  (byte) a;
+					x.setRed(r);
+					x.setGreen(g);
+					x.setBlue(b);
+					x.setAlpha(a);
 					x.meta    =   meta;
 					x.displayName = displayName;
 					x.enabled = enabled;

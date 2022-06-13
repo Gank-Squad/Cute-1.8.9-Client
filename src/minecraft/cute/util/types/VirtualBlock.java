@@ -11,10 +11,10 @@ public class VirtualBlock extends BlockInfo
 {
 	public static ArrayList<VirtualBlock> vBlocks = new ArrayList<VirtualBlock>();
 	
-	public byte r;
-	public byte g;
-	public byte b;
-	public byte a;
+	private int r;
+	private int g;
+	private int b;
+	private int a;
 	
 	// offsets when drawing the block,
 	// x1 should be added to the starting x pos and so on... 
@@ -41,7 +41,7 @@ public class VirtualBlock extends BlockInfo
 		this.r = 0;
 		this.g = 0;
 		this.b = 0;
-		this.a = (byte)255;
+		this.a = 255;
 		
 		this.x1 = x1;
 		this.x2 = x2;
@@ -66,6 +66,46 @@ public class VirtualBlock extends BlockInfo
 		VirtualBlock.vBlocks.add(vb);
 	}
 	
+	public int getRed()
+	{
+		return this.r;
+	}
+	
+	public void setRed(int r)
+	{
+		this.r = Math.max(0, r & 0xff);
+	}
+	
+	public int getGreen()
+	{
+		return this.g;
+	}
+	
+	public void setGreen(int g)
+	{
+		this.g = Math.max(0, g & 0xff);
+	}
+	
+	public int getBlue()
+	{
+		return this.b;
+	}
+	
+	public void setBlue(int b)
+	{
+		this.b = Math.max(0, b & 0xff);
+	}
+	
+	public int getAlpha()
+	{
+		return this.a;
+	}
+	
+	public void setAlpha(int a)
+	{
+		this.a = Math.max(0, a & 0xff);
+	}
+	
 	// updates the cache colors / enable and adds the block to the xray list
 	public static void updateCacheFromString(String str) 
 	{
@@ -84,10 +124,11 @@ public class VirtualBlock extends BlockInfo
 			{
 				try 
 				{
-					x.r =  (byte) Integer.parseInt(info[0]);
-					x.g =  (byte) Integer.parseInt(info[1]);
-					x.b =  (byte) Integer.parseInt(info[2]);
-					x.a =  (byte) Integer.parseInt(info[3]);
+					x.setRed(Integer.parseInt(info[0]));
+					x.setGreen(Integer.parseInt(info[1]));
+					x.setBlue(Integer.parseInt(info[2]));
+					x.setAlpha(Integer.parseInt(info[3]));
+
 					x.meta    =   Integer.parseInt(info[4]);
 					x.displayName = info[6];
 					x.enabled = Boolean.parseBoolean(info[7]);

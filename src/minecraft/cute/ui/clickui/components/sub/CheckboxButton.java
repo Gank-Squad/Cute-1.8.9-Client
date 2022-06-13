@@ -146,6 +146,10 @@ public class CheckboxButton extends Component
 				this.parent.parent.refresh();
 			}
 		}
+		else 
+		{
+			this.open = false;
+		}
 		
 		if(!this.isOpen() || this.subcomponents.isEmpty())
 			return;
