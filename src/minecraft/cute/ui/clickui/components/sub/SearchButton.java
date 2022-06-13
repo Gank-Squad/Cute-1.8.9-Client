@@ -236,6 +236,8 @@ public class SearchButton extends TextButtonBase
 	@Override 
 	public void onEnter(String search)
 	{
+		String lowerSearch = search.toLowerCase();
+		
 		switch(this.type)
 		{
 		case PLAYERNAME:
@@ -245,14 +247,14 @@ public class SearchButton extends TextButtonBase
 			List<String> names = EntityUtil.getTabMenuPlayerNames();
 			
 			Stream<String> s = names.stream().
-					filter(x -> x.toLowerCase().contains(search));
+					filter(x -> x.toLowerCase().contains(lowerSearch));
 
 			this.foundSearchTerms = s.toArray();
 			break;
 			
 		case BLOCK:
 			this.scrollIndex = 0;
-			this.foundSearchTerms = Cache.searchForBlock(search);
+			this.foundSearchTerms = Cache.searchForBlock(lowerSearch);
 			break;
 		}
 		

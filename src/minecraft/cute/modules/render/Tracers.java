@@ -129,7 +129,7 @@ public class Tracers extends Module
 			
 			if(entity instanceof EntityPlayer) 
         	{
-        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName())) 
+        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
         		{
         			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), playerPicker.getColor());
         		}

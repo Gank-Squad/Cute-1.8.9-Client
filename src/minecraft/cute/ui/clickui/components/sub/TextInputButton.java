@@ -1,15 +1,8 @@
 package cute.ui.clickui.components.sub;
 
-import org.lwjgl.opengl.GL11;
-
-import cute.Client;
 import cute.settings.ListSelection;
 import cute.settings.enums.ListType;
 import cute.ui.clickui.components.Button;
-import cute.ui.clickui.components.Component;
-import cute.util.FontUtil;
-import cute.util.RenderUtil;
-import cute.util.types.BlockInfo;
 
 public class TextInputButton extends TextButtonBase
 {
@@ -50,7 +43,7 @@ public class TextInputButton extends TextButtonBase
 		if(input == null || input.length() == 0 || this.type != ListType.PLAYERNAME)
 			return;
 		
-		this.setting.enableItem(input.trim());
+		this.setting.enableItem(input.trim().toLowerCase());
 		
 		this.searchTerm = "";
 	}

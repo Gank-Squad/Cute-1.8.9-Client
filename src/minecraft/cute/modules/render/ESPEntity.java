@@ -324,7 +324,7 @@ public class ESPEntity<T extends Entity> extends Module
         	
         	if(entity instanceof EntityPlayer) 
         	{
-        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName())) 
+        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
         		{
         			RenderUtil.setColor(playerPicker.getColor());
         			RenderUtil.renderEntityHitbox(entity);
