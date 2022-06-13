@@ -134,6 +134,8 @@ public class NameTags extends Module
         	GlStateManager.scale(scale, scale, scale);
         }
         
+        GlStateManager.disableDepth();
+        
         if(NameTags.names.getValue())
     	{    	
 	        GlStateManager.disableTexture2D();

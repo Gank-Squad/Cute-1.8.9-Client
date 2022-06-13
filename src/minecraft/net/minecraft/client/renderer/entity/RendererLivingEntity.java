@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import cute.eventapi.EventManager;
 import cute.events.RenderLivingEvent;
 import cute.events.RenderLivingModelEvent;
+import cute.events.RenderNameTagEvent;
 import cute.modules.render.ESPEntity;
 import cute.modules.render.NameTags;
 import cute.util.RenderUtil;
@@ -706,15 +707,23 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                         int i = fontrenderer.getStringWidth(s) / 2;
                         Tessellator tessellator = Tessellator.getInstance();
                         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-                        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-                        worldrenderer.pos((double)(-i - 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                        worldrenderer.pos((double)(-i - 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                        worldrenderer.pos((double)(i + 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                        worldrenderer.pos((double)(i + 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-                        tessellator.draw();
-                        GlStateManager.enableTexture2D();
-                        GlStateManager.depthMask(true);
-                        fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, 553648127);
+                        
+                        RenderNameTagEvent EVENT_ = new RenderNameTagEvent<T>(tessellator, worldrenderer, fontrenderer, entity, s, x, y, z);
+                        EventManager.call(EVENT_);
+                        
+                        if(!EVENT_.isCancelled())
+                        {
+	                        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+	                        worldrenderer.pos((double)(-i - 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+	                        worldrenderer.pos((double)(-i - 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+	                        worldrenderer.pos((double)(i + 1), 8.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+	                        worldrenderer.pos((double)(i + 1), -1.0D, 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+	                        tessellator.draw();
+	                        GlStateManager.enableTexture2D();
+	                        GlStateManager.depthMask(true);
+	                        fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, 553648127);
+                        }
+                        
                         GlStateManager.enableLighting();
                         GlStateManager.disableBlend();
                         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -745,6 +754,9 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
             if (team != null)
             {
+            	if(NameTags.isOn())
+            		return true;
+            	
                 Team.EnumVisible team$enumvisible = team.getNameTagVisibility();
 
                 switch (team$enumvisible)
