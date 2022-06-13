@@ -346,7 +346,8 @@ public class ESPEntity<T extends Entity> extends Module
         				// add it to the count
         				// then loop through everything in the list at the end and render it
         				boolean exit = false;
-        				for (int i = 0; i < groupItem.size(); i++)
+        				int i;
+        				for (i = 0; i < groupItem.size(); i++)
         				{
 //        					if (groupItem.get(i).getName() == entity.getName())
         					if (groupItem.get(i).getName().compareTo(entity.getName()) == 0)
@@ -361,7 +362,8 @@ public class ESPEntity<T extends Entity> extends Module
 //        								entity.posZ < groupItem.get(i).posZ + radius && entity.posZ > groupItem.get(i).posZ - radius
     								)
         						{
-        							groupCount.set(i, groupCount.get(i)+ 1);
+        							ItemStack stack = ((EntityItem)entity).getEntityItem();
+        							groupCount.set(i, groupCount.get(i) + stack.stackSize);
         							exit = true;
             						break;
         						}
@@ -378,11 +380,9 @@ public class ESPEntity<T extends Entity> extends Module
         				// couldn't find another group, so make a new one centered around the item
         				
         				groupItem.add((EntityItem)entity);
-        				groupCount.add(1);
-        				if (true)
-        					continue;
+        				groupCount.add(groupItem.get(i).getEntityItem().stackSize);
         				
-            			
+    					continue;
                         
         			}
                     
@@ -431,10 +431,11 @@ public class ESPEntity<T extends Entity> extends Module
         	}
 		}
 
-        for (EntityItem e : groupItem)
+//        for (EntityItem e : groupItem)
+        for (int i2 = 0; i2 < groupItem.size(); i2++)
         {
-			ItemStack stack = e.getEntityItem();
-			String str = Integer.toString(stack.stackSize);
+			ItemStack stack = groupItem.get(i2).getEntityItem();
+			String str = Integer.toString(groupCount.get(i2));
 			RenderManager renderManager = mc.getRenderManager();
 			FontRenderer fontrenderer = renderManager.getFontRenderer();//;mc.fontRendererObj;
             float f = 1.6F;
@@ -456,9 +457,9 @@ public class ESPEntity<T extends Entity> extends Module
 	                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
 	                * event.partialTicks;
 
-	        x = e.posX - doubleX;
-            y = e.posY - doubleY;
-            z = e.posZ - doubleZ;
+	        x = groupItem.get(i2).posX - doubleX;
+            y = groupItem.get(i2).posY - doubleY;
+            z = groupItem.get(i2).posZ - doubleZ;
 	        
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
