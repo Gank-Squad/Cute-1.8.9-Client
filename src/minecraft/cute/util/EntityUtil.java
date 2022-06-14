@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.IProjectile;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.item.EntityFallingBlock;
@@ -46,6 +47,15 @@ import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntityArrow;
+import net.minecraft.entity.projectile.EntityEgg;
+import net.minecraft.entity.projectile.EntityFireball;
+import net.minecraft.entity.projectile.EntityFishHook;
+import net.minecraft.entity.projectile.EntityLargeFireball;
+import net.minecraft.entity.projectile.EntityPotion;
+import net.minecraft.entity.projectile.EntitySnowball;
+import net.minecraft.entity.projectile.EntityThrowable;
+import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 
 public class EntityUtil
@@ -114,6 +124,21 @@ public class EntityUtil
     			entity instanceof EntityEnderman ||
     			entity instanceof EntityWolf || 
     			entity instanceof EntityIronGolem;
+    }
+    
+    public static boolean isProjectile(Entity entity)
+    {
+    	return entity instanceof IProjectile;
+    	
+//    	return 	entity instanceof EntityArrow 	||
+//    			entity instanceof EntityEgg		||
+//    			entity instanceof EntityFireball ||
+//    			entity instanceof EntityFishHook ||
+//    			entity instanceof EntityLargeFireball ||
+//    			entity instanceof EntityPotion ||
+//    			entity instanceof EntitySnowball ||
+//    			entity instanceof EntityThrowable ||
+//    			entity instanceof EntityWitherSkull;
     }
 
     public static boolean isCurrentPlayer(Entity entity) 
