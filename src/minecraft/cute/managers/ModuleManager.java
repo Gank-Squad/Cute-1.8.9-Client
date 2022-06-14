@@ -16,6 +16,7 @@ import cute.modules.combat.BowAimbot;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
 import cute.modules.gui.Hud;
+import cute.modules.misc.DetectionBox;
 import cute.modules.render.DataViewer;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
@@ -79,6 +80,8 @@ public class ModuleManager extends BaseManager
 		modules.add(new XRay());
 		
 		modules.add(new Sounds());
+		
+		modules.add(new DetectionBox());
 	}
 	
 	public static List<Module> getModules()

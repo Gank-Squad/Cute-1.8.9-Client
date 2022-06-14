@@ -5,6 +5,7 @@ import cute.events.SettingChangedEvent;
 import cute.managers.HudManager;
 import cute.modules.Module;
 import cute.modules.enums.Category;
+import cute.modules.misc.DetectionBox;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.XRay;
 import cute.settings.Checkbox;
@@ -39,7 +40,7 @@ public class Hud extends Module
 	public static DraggableObj positionHud = new DraggableObj();
 	public static TextComponent positionHudText;
 		
-	public static DraggableObj armorStatus = new DraggableObj();
+	public static DraggableObj armorStatus = new DraggableObj(54500,84000);
 	public static ItemComponent helmet;
 	public static ItemComponent chest;
 	public static ItemComponent legs;
@@ -48,7 +49,7 @@ public class Hud extends Module
 	public static DraggableObj hitMarker = new DraggableObj(52000,48500);
 	public static RectComponent hitSquare;
 	
-	public static DraggableObj arrowCount= new DraggableObj();
+	public static DraggableObj arrowCount= new DraggableObj(64500,94500);
 	public static ItemComponent arrowCountItem;
 	
 	public static Checkbox armorStatusCheck = new Checkbox("Armor", true);
@@ -56,6 +57,9 @@ public class Hud extends Module
 	public static Checkbox arrowCheck       = new Checkbox("Hit Marker", true);
 	
 	public static Checkbox arrowCountCheck  = new Checkbox("Arrow Count", true);
+	
+	public static DraggableObj alert = new DraggableObj();
+	public static TextComponent alertText;
 	
 	@Override
 	public void delayedSetup()
@@ -77,6 +81,9 @@ public class Hud extends Module
 		
 		arrowCountItem = new ItemComponent(0, 0, 16, 16, new ItemStack(Items.arrow));
 		arrowCount.addComponent(arrowCountItem);
+		
+		alertText = new TextComponent(0,0,1f,1f,"text",0xFFFFFFFF);
+		alert.addComponent(alertText);
 		
 		if(armorStatusCheck.getValue())
 			HudManager.INSTANCE.register(armorStatus);
@@ -118,6 +125,8 @@ public class Hud extends Module
 		
 		if(arrowCountCheck.getValue())
 			HudManager.INSTANCE.register(arrowCount);
+		
+		HudManager.INSTANCE.register(alert);
 	}
 	
 	@Override 
@@ -139,6 +148,18 @@ public class Hud extends Module
 			return;
 		
 		positionHudText.setText(String.format("%.02f %.02f %.02f", mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
+		
+		if(DetectionBox.inBox)
+		{
+			alertText.setText("nyah");
+		}
+		else
+		{
+			alertText.setText("");
+			alertText.setWidth(21);
+			alertText.setHeight(7);
+		}
+		
 		
 		helmet.setItem(this.mc.thePlayer.getEquipmentInSlot(4));
 		chest.setItem(this.mc.thePlayer.getEquipmentInSlot(3));

@@ -40,6 +40,8 @@ public class ESPItem extends Module
     
     public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
     
+    public static Slider scaleDistance = new Slider("Scale Distance", 1d, 20d, 100d, 1);
+    public static Slider scale         = new Slider("Size Scale", 0.01d, 0.25d, 1d, 1);
     
     @Override
     public void setup() 
@@ -51,6 +53,9 @@ public class ESPItem extends Module
         addSetting(itemCountRadius);
         
         addSetting(lineWidth);
+        
+        addSetting(scaleDistance);
+        addSetting(scale);
     }
     
     public static class Grouped 
@@ -178,12 +183,21 @@ public class ESPItem extends Module
             double y = group.item.posY - doubleY;
             double z = group.item.posZ - doubleZ;
 	        
+            float distance = mc.thePlayer.getDistanceToEntity(group.item);
+            float scalef = 1f;
+            if(distance > scaleDistance.getValue() * (1 - scale.getValue()))
+            {
+            	scalef = (float)(NameTags.scale.getValue() + (distance / scaleDistance.getValue()));
+            }
+            
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
             GL11.glNormal3f(0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
             GlStateManager.scale(-f1, -f1, f1);
+            
+            GlStateManager.scale(scalef, scalef, scalef);
             
             int i = 0;
             int j = fontrenderer.getStringWidth(str) / 2;
