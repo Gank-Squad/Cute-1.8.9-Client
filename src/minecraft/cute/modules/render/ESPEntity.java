@@ -1,19 +1,17 @@
 package cute.modules.render;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 import org.lwjgl.opengl.EXTFramebufferObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL32;
 
-import cute.eventapi.EventManager;
 import cute.eventapi.EventTarget;
 import cute.events.RenderLivingModelEvent;
-import cute.events.RenderNameTagEvent;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
+import cute.modules.bot.AntiBot;
 import cute.modules.client.Players;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
@@ -23,19 +21,10 @@ import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Vec3;
 
 
 public class ESPEntity<T extends Entity> extends Module
@@ -61,13 +50,7 @@ public class ESPEntity<T extends Entity> extends Module
     
     public static Checkbox vehicles = new Checkbox("Vehicles", true);
     public static ColorPicker vehiclesPicker = new ColorPicker(vehicles, "Vehicle Picker", new Color(0, 255, 255));
-    
-    public static Checkbox items = new Checkbox("Items", true);
-    public static ColorPicker itemsPicker = new ColorPicker(items, "Item Picker", new Color(199, 196, 19));
-    public static Checkbox itemCount = new Checkbox("Item Counter", true);
-
-    public static Slider itemCountRadius = new Slider("Item Count Radius", 0D, 1D, 20D, 1);
-    
+        
     public static Slider invisAlpha = new Slider("Invis Opacity", 0D, 0.5D, 1.0D, 1);
     
     public static Slider lineWidth = new Slider("Line Width", 0.1D, 2.5D, 5.0D, 1);
@@ -91,9 +74,6 @@ public class ESPEntity<T extends Entity> extends Module
         addSetting(mobs);
         addSetting(neutral);
         addSetting(vehicles);
-        addSetting(items);
-        addSetting(itemCount);
-        addSetting(itemCountRadius);
         addSetting(invisAlpha);
         addSetting(lineWidth);
         addSetting(forceRender);
@@ -309,17 +289,14 @@ public class ESPEntity<T extends Entity> extends Module
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
-		GL11.glEnable(GL32.GL_DEPTH_CLAMP);
 
 		GL11.glLineWidth((float)lineWidth.getValue());
 
-		
-		ArrayList<EntityItem> groupItem = new ArrayList<EntityItem>();
-		ArrayList<Integer> groupCount = new ArrayList<Integer>();
-		
         for(Entity entity : this.mc.theWorld.loadedEntityList) 
 		{
-        	if(entity instanceof EntityPlayerSP )//|| !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
+        	if(entity instanceof EntityPlayerSP || 
+             	   (entity instanceof EntityLivingBase) && 
+            	   AntiBot.isBot((EntityLivingBase)entity))
         		continue;
         	
         	if(entity instanceof EntityPlayer) 
@@ -329,62 +306,6 @@ public class ESPEntity<T extends Entity> extends Module
         			RenderUtil.setColor(playerPicker.getColor());
         			RenderUtil.renderEntityHitbox(entity);
         		}
-        		continue;
-        	}
-        	
-        	if(entity instanceof EntityItem) 
-        	{
-        		
-        		if(items.getValue()) 
-        		{
-        			RenderUtil.setColor(itemsPicker.getColor());
-        			RenderUtil.renderEntityHitbox(entity);
-        		}
-        		
-    			if (itemCount.getValue())
-    			{
-    				// loop through groupItem & group location
-    				// if its within the specified radius of another item in the lists
-    				// add it to the count
-    				// then loop through everything in the list at the end and render it
-    				boolean exit = false;
-    				int i;
-    				for (i = 0; i < groupItem.size(); i++)
-    				{
-//        					if (groupItem.get(i).getName() == entity.getName())
-    					if (groupItem.get(i).getName().compareTo(entity.getName()) == 0)
-    					{
-    						// check if its within range
-    						if (
-    								Math.abs(entity.posX - groupItem.get(i).posX) < itemCountRadius.getValue() &&
-    								Math.abs(entity.posY - groupItem.get(i).posY) < itemCountRadius.getValue() &&
-    								Math.abs(entity.posZ - groupItem.get(i).posZ) < itemCountRadius.getValue()
-//        								entity.posX < groupItem.get(i).posX + radius && entity.posX > groupItem.get(i).posX - radius &&
-//        								entity.posY < groupItem.get(i).posY + radius && entity.posY > groupItem.get(i).posY - radius &&	
-//        								entity.posZ < groupItem.get(i).posZ + radius && entity.posZ > groupItem.get(i).posZ - radius
-								)
-    						{
-    							ItemStack stack = ((EntityItem)entity).getEntityItem();
-    							groupCount.set(i, groupCount.get(i) + stack.stackSize);
-    							exit = true;
-        						break;
-    						}
-    						
-    					}
-    				}
-    				
-    				// this is kinda bad but couldn't be bothered to do it better
-    				if (exit)
-    				{
-    					continue;
-    				}
-    				
-    				// couldn't find another group, so make a new one centered around the item
-    				
-    				groupItem.add((EntityItem)entity);
-    				groupCount.add(groupItem.get(i).getEntityItem().stackSize);
-    			}
-      
         		continue;
         	}
         	
@@ -426,79 +347,9 @@ public class ESPEntity<T extends Entity> extends Module
         			RenderUtil.renderEntityHitbox(entity);
         		}
         	}
-		}
-
-//        for (EntityItem e : groupItem)
-        for (int i2 = 0; i2 < groupItem.size(); i2++)
-        {
-			ItemStack stack = groupItem.get(i2).getEntityItem();
-			String str = Integer.toString(groupCount.get(i2));
-			RenderManager renderManager = mc.getRenderManager();
-			FontRenderer fontrenderer = renderManager.getFontRenderer();//;mc.fontRendererObj;
-            float f = 1.6F;
-            float f1 = 0.016666668F * f;
-            
-            
-            double x,y,z;
-            
-            
-            double doubleX = this.mc.thePlayer.lastTickPosX
-	                + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
-	                * event.partialTicks;
-
-	        double doubleY = this.mc.thePlayer.lastTickPosY
-	                + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY)
-	                * event.partialTicks;
-
-	        double doubleZ = this.mc.thePlayer.lastTickPosZ
-	                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
-	                * event.partialTicks;
-
-	        x = groupItem.get(i2).posX - doubleX;
-            y = groupItem.get(i2).posY - doubleY;
-            z = groupItem.get(i2).posZ - doubleZ;
-	        
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(x, y, z);
-            GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-            GlStateManager.scale(-f1, -f1, f1);
-            
-            Tessellator tessellator = Tessellator.getInstance();
-            WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-            
-            int i = 0;
-            int j = fontrenderer.getStringWidth(str) / 2;
-            
-	        
-	        worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-	        worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-	        worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-	        worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-	        worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-	        tessellator.draw();
-	
-	        GL11.glEnable(GL11.GL_TEXTURE_2D);
-	
-	        // this is here so that it goes through walls
-	        fontrenderer.drawString(str, -j, i, -1);
-	        
-	        GL11.glEnable(GL11.GL_DEPTH_TEST);
-	        GL11.glDepthMask(true);
-	        
-	        // this is here so entities behind the name don't override it 
-	        fontrenderer.drawString(str, -j, i, -1);
-	        
-	        GL11.glDepthMask(false);
-	        GL11.glDisable(GL11.GL_TEXTURE_2D);
-	        GL11.glDisable(GL11.GL_DEPTH_TEST);
-	        
-            GlStateManager.popMatrix();
         }
         
         
-		GL11.glDisable(GL32.GL_DEPTH_CLAMP);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
 		
 		GL11.glEnable(GL11.GL_ALPHA_TEST);

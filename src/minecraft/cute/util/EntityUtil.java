@@ -5,15 +5,21 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.boss.EntityWither;
 import net.minecraft.entity.item.EntityBoat;
+import net.minecraft.entity.item.EntityFallingBlock;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityCaveSpider;
@@ -37,7 +43,9 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntityRabbit;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
+import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 
 public class EntityUtil
@@ -120,31 +128,73 @@ public class EntityUtil
         return entity instanceof EntityLivingBase;
     }
 //    
-//       public boolean isValidType(Entity entity) 
-//       { 
-//    	   if (entity instanceof EntityPlayerSP ) 
-//    		   return false;  
-//    	   
-//    	   if (entity instanceof EntityPlayer) 
-//    		   return ((Boolean)this.player.getValue()).booleanValue();  
-//    	   
-//    	   if (entity instanceof EntityAmbientCreature || 
-//    		   entity instanceof EntityAgeable         || 
-//    		   entity instanceof EntityWaterMob) 
-//    		   return ((Boolean)this.animals.getValue()).booleanValue();  
-//    	   
-//    	   if (entity instanceof EntityLiving && 
-//			 !(entity instanceof net.minecraft.entity.item.EntityArmorStand)) 
-//    		   return ((Boolean)this.mobs.getValue()).booleanValue();  
-//    	   
-//    	   if (entity instanceof EntityItem) 
-//    		   return ((Boolean)this.items.getValue()).booleanValue();  
-//    	   
-//    	   if (entity instanceof EntityFallingBlock) 
-//    		   return true;  
-//    	   
-//    	   return ((Boolean)this.other.getValue()).booleanValue(); 
-//	   } 
+       public boolean isValidType(Entity entity) 
+       { 
+    	   if (entity instanceof EntityPlayerSP ) 
+    		   return false;  
+    	   
+    	   if (entity instanceof EntityPlayer) 
+    		   return true;
+    		   // return ((Boolean)this.player.getValue()).booleanValue();  
+    	   
+    	   if (entity instanceof EntityAmbientCreature || 
+    		   entity instanceof EntityAgeable         || 
+    		   entity instanceof EntityWaterMob)
+    		   return true;
+    		   // return ((Boolean)this.animals.getValue()).booleanValue();  
+    	   
+    	   if (entity instanceof EntityLiving && 
+			 !(entity instanceof net.minecraft.entity.item.EntityArmorStand))
+    		   return true;
+    		   // return ((Boolean)this.mobs.getValue()).booleanValue();  
+    	   
+    	   if (entity instanceof EntityItem)
+    		   return true;
+    		   // return ((Boolean)this.items.getValue()).booleanValue();  
+    	   
+    	   if (entity instanceof EntityFallingBlock) 
+    		   return true;  
+    	   
+    	   return false;
+    	   // return ((Boolean)this.other.getValue()).booleanValue(); 
+	   } 
+    
+    
+   public int getPlayerTeamColor(EntityLivingBase entity)
+   {
+	   int i = 16777215;
+
+       if (entity instanceof EntityPlayer)
+       {
+           ScorePlayerTeam scoreplayerteam = (ScorePlayerTeam)entity.getTeam();
+
+           if (scoreplayerteam != null)
+           {
+               String s = FontRenderer.getFormatFromString(scoreplayerteam.getColorPrefix());
+
+               if (s.length() >= 2)
+               {
+                   i = mc.getRenderManager().getFontRenderer().getColorCode(s.charAt(1));
+               }
+           }
+       }
+
+//       float f1 = (float)(i >> 16 & 255) / 255.0F;
+//       float f2 = (float)(i >> 8 & 255) / 255.0F;
+//       float f = (float)(i & 255) / 255.0F;
+       
+       return i;
+   }
+   
+   public static boolean isInTab(AbstractClientPlayer entity) 
+	{
+		for (NetworkPlayerInfo p : mc.getNetHandler().getPlayerInfoMap()) 
+		{
+			if (p.equals(entity.getPlayerInfo()))
+				return true; 
+		}  
+		return false;
+	}
 }
 
 

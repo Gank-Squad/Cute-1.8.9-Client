@@ -9,6 +9,7 @@ import cute.events.KeyDownEvent;
 import cute.events.KeyUpEvent;
 import cute.modules.Module;
 import cute.modules.audio.Sounds;
+import cute.modules.bot.AntiBot;
 import cute.modules.bot.FakePlayer;
 import cute.modules.client.Players;
 import cute.modules.combat.BowAimbot;
@@ -18,6 +19,7 @@ import cute.modules.gui.Hud;
 import cute.modules.render.DataViewer;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
+import cute.modules.render.ESPItem;
 import cute.modules.render.Fullbright;
 import cute.modules.render.NameTags;
 import cute.modules.render.NoRender;
@@ -58,6 +60,7 @@ public class ModuleManager extends BaseManager
 	{
 		modules.add(new FakePlayer());
 		modules.add(new BowAimbot());
+		modules.add(new AntiBot());
 		
 		modules.add(new ClickGUI());
 		modules.add(new Hud());
@@ -65,6 +68,7 @@ public class ModuleManager extends BaseManager
 		modules.add(new Players());
 		modules.add(new ESPBlocks());
 		modules.add(new ESPEntity());
+		modules.add(new ESPItem());
 		modules.add(new DataViewer());
 		modules.add(new Fullbright());
 		modules.add(new Tracers());

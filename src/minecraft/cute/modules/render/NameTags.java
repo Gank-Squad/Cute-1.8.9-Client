@@ -37,6 +37,8 @@ public class NameTags extends Module
 
     public static Checkbox armor = new Checkbox("Armor/Hand", true);
     
+    public static Checkbox enchants = new Checkbox("Enchants", true);
+    
     public static Checkbox everything = new Checkbox("Everything", false);
     
     public static Slider scaleDistance = new Slider("Scale Distance", 1d, 20d, 100d, 1);
@@ -53,10 +55,12 @@ public class NameTags extends Module
     @Override
     public void setup()
     {
-    	this.addSetting(NameTags.names);
-    	this.addSetting(NameTags.armor);
-    	this.addSetting(NameTags.scaleDistance);
-    	this.addSetting(NameTags.scale);
+    	this.addSetting(names);
+    	this.addSetting(armor);
+    	this.addSetting(enchants);
+    	this.addSetting(everything);
+    	this.addSetting(scaleDistance);
+    	this.addSetting(scale);
     }
     
 	@Override
@@ -108,7 +112,7 @@ public class NameTags extends Module
     {
     	// untested but i think when in pvp on hypixel the anti ka bots copy the player gear
     	// so it renders twice the armor above their head, this is supposed to avoid bots now idk if it works
-    	if(!(event.entity instanceof EntityPlayer) && !(event.entity instanceof EntityItem) || 
+    	if(!(event.entity instanceof EntityPlayer) || 
     	     event.entity.isDead || 
     	    !event.entity.isEntityAlive())
     		return;
@@ -188,7 +192,13 @@ public class NameTags extends Module
             renderitem.renderitemForNameTag(stack, x, -20, 0);
             renderitem.renderItemOverlayIntoGUIForNameTags(fontrenderer, stack, x, -20, null);
             GlStateManager.enableDepth();
-
+            
+            if(!enchants.getValue())
+            {
+            	x += 16;
+            	continue;
+            }
+            
             int y = 0;
             for(String enchant : getEnchantList(stack))
             {                
