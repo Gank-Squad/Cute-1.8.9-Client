@@ -3,9 +3,8 @@ package cute.modules.render;
 import java.awt.Color;
 
 import org.lwjgl.opengl.EXTFramebufferObject;
+import org.lwjgl.opengl.EXTPackedDepthStencil;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL32;
 
 import cute.eventapi.EventTarget;
 import cute.events.RenderLivingModelEvent;
@@ -20,11 +19,15 @@ import cute.settings.Mode;
 import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
+import cute.util.Util;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.Vec3;
 
 
 public class ESPEntity<T extends Entity> extends Module
@@ -34,7 +37,7 @@ public class ESPEntity<T extends Entity> extends Module
 		super("Entity ESP", Category.RENDER, "Highlights entities");
 	}
 	
-	public static Mode mode = new Mode("Mode", "Hitbox", "Outline", "Wire Frame");
+	public static Mode mode = new Mode("Mode", "Hitbox", "2D", "Outline", "Wire Frame");
 
     public static Checkbox players = new Checkbox("Players", true);
     public static ColorPicker playerPicker = new ColorPicker(players, "Player Picker", new Color(215, 46, 46));
@@ -110,7 +113,7 @@ public class ESPEntity<T extends Entity> extends Module
     @EventTarget
     public void entityModelRender(RenderLivingModelEvent e)
     {
-    	if(mode.getValue() < 1)
+    	if(mode.getValue() < 2)
     		return;
     	
     	Entity entity = e.entityLivingBaseIn;
@@ -150,7 +153,7 @@ public class ESPEntity<T extends Entity> extends Module
     	
     	switch(mode.getValue())
     	{
-	    	case 1:
+	    	case 2:
 	    		
 	    		final int STENCIL_MASK = 15;
                 
@@ -160,17 +163,35 @@ public class ESPEntity<T extends Entity> extends Module
                 // tf does this do, i have no idea
                 Framebuffer fbo = mc.getFramebuffer();
                 
+                // Check if FBO isn't null
+                // Checks if screen has been resized or new FBO has been created
                 if (fbo != null && fbo.depthBuffer > -1) 
                 {
-                	// disable the depthBuffer?????
-                	EXTFramebufferObject.glDeleteRenderbuffersEXT(fbo.depthBuffer);  
-                	int stencil_depth_buffer_ID = EXTFramebufferObject.glGenRenderbuffersEXT();
-  
-                	EXTFramebufferObject.glBindRenderbufferEXT(GL30.GL_RENDERBUFFER, stencil_depth_buffer_ID);
-                	EXTFramebufferObject.glRenderbufferStorageEXT(GL30.GL_RENDERBUFFER, GL30.GL_DEPTH_STENCIL, mc.displayWidth, mc.displayHeight);                        	    
-                	EXTFramebufferObject.glFramebufferRenderbufferEXT(GL30.GL_FRAMEBUFFER, GL30.GL_STENCIL_ATTACHMENT, GL30.GL_RENDERBUFFER, stencil_depth_buffer_ID);
-                	EXTFramebufferObject.glFramebufferRenderbufferEXT(GL30.GL_FRAMEBUFFER, EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT, GL30.GL_RENDERBUFFER, stencil_depth_buffer_ID);
-                	fbo.depthBuffer = -1;
+                	// Sets up the FBO with depth and stencil extensions (24/8 bit)
+                	
+                	// Deletes old render buffer extensions such as depth
+                    // Args: Render Buffer ID
+                    EXTFramebufferObject.glDeleteRenderbuffersEXT(fbo.depthBuffer);
+                    // Generates a new render buffer ID for the depth and stencil extension
+                    int stencil_depth_buffer_ID = EXTFramebufferObject.glGenRenderbuffersEXT();
+                    // Binds new render buffer by ID
+                    // Args: Target (GL_RENDERBUFFER_EXT), ID
+                    EXTFramebufferObject.glBindRenderbufferEXT(EXTFramebufferObject.GL_RENDERBUFFER_EXT, stencil_depth_buffer_ID);
+                    // Adds the depth and stencil extension
+                    // Args: Target (GL_RENDERBUFFER_EXT), Extension (GL_DEPTH_STENCIL_EXT),
+                    // Width, Height
+                    EXTFramebufferObject.glRenderbufferStorageEXT(EXTFramebufferObject.GL_RENDERBUFFER_EXT, EXTPackedDepthStencil.GL_DEPTH_STENCIL_EXT, mc.displayWidth, mc.displayHeight);
+                    // Adds the stencil attachment
+                    // Args: Target (GL_FRAMEBUFFER_EXT), Attachment
+                    // (GL_STENCIL_ATTACHMENT_EXT), Target (GL_RENDERBUFFER_EXT), ID
+                    EXTFramebufferObject.glFramebufferRenderbufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, EXTFramebufferObject.GL_STENCIL_ATTACHMENT_EXT, EXTFramebufferObject.GL_RENDERBUFFER_EXT, stencil_depth_buffer_ID);
+                    // Adds the depth attachment
+                    // Args: Target (GL_FRAMEBUFFER_EXT), Attachment
+                    // (GL_DEPTH_ATTACHMENT_EXT), Target (GL_RENDERBUFFER_EXT), ID
+                    EXTFramebufferObject.glFramebufferRenderbufferEXT(EXTFramebufferObject.GL_FRAMEBUFFER_EXT, EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT, EXTFramebufferObject.GL_RENDERBUFFER_EXT, stencil_depth_buffer_ID);
+                    
+                    // Reset the ID to prevent multiple FBO's
+                    fbo.depthBuffer = -1;
                 }
                 
                 GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -229,7 +250,7 @@ public class ESPEntity<T extends Entity> extends Module
                 RenderUtil.resetColor();
 	    		break;
 	    		
-	    	case 2:
+	    	case 3:
 		    	
 	    		GL11.glDisable(GL11.GL_ALPHA_TEST);
                 GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -267,6 +288,45 @@ public class ESPEntity<T extends Entity> extends Module
     	}
     }
     
+    public void draw2dEsp(Entity e, float viewerYaw, float lineWidth, float partialTicks) 
+    {
+    	double doubleX = this.mc.thePlayer.lastTickPosX
+                + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
+                * partialTicks;
+
+        double doubleY = this.mc.thePlayer.lastTickPosY
+                + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY)
+                * partialTicks;
+
+        double doubleZ = this.mc.thePlayer.lastTickPosZ
+                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
+                * partialTicks;
+    	
+        double x = e.posX - doubleX;
+        double y = e.posY - doubleY;
+        double z = e.posZ - doubleZ;
+
+        Vec3 v = new Vec3(
+        		e.posX - mc.thePlayer.posX,
+        		e.posY - mc.thePlayer.posY ,
+        		e.posZ - mc.thePlayer.posZ
+        		);
+        
+        GlStateManager.pushMatrix();
+		
+        GlStateManager.translate(x, y, z);
+        
+        final float yaw = (float) Math.toDegrees(Math.atan2(v.zCoord, v.xCoord)) - 90.0F;
+        final float pitch = (float) Math.toDegrees(Math.atan2(y, Math.sqrt(v.xCoord * v.xCoord + v.zCoord * v.zCoord)));
+        
+        GlStateManager.rotate(-yaw, 0.0F, 1F, 0.0F);
+        GlStateManager.rotate(-pitch, 1F, 0.0F, 0.0F);
+
+//        RenderUtil.renderRectTarget(-e.width/1.5f, 0, e.width/1.5f, e.height);
+		RenderUtil.renderRectTarget(-e.width/1.5f, 0, e.width/1.5f, e.height - 0.6*Math.abs((e.height * (pitch/90))));
+
+		GlStateManager.popMatrix();
+	}
     
     @EventTarget
 	public void onRenderWorld(RenderWorldLastEvent event) 
@@ -274,7 +334,7 @@ public class ESPEntity<T extends Entity> extends Module
 		if(nullCheck())
 			return;
 		
-		if(mode.getValue() != 0)
+		if(mode.getValue() >= 2)
 			return;
 		
 		GL11.glPushMatrix();
@@ -304,7 +364,11 @@ public class ESPEntity<T extends Entity> extends Module
         		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
         		{
         			RenderUtil.setColor(playerPicker.getColor());
-        			RenderUtil.renderEntityHitbox(entity);
+        			
+        			if(mode.getValue() == 0)
+        				RenderUtil.renderEntityHitbox(entity);
+        			else 
+        				RenderUtil.draw2dEsp(entity, event.partialTicks);
         		}
         		continue;
         	}
@@ -314,7 +378,10 @@ public class ESPEntity<T extends Entity> extends Module
         		if(mobs.getValue()) 
         		{
         			RenderUtil.setColor(mobsPicker.getColor());
-        			RenderUtil.renderEntityHitbox(entity);
+        			if(mode.getValue() == 0)
+        				RenderUtil.renderEntityHitbox(entity);
+        			else 
+        				RenderUtil.draw2dEsp(entity, event.partialTicks);
         		}
         		continue;
         	}
@@ -324,7 +391,10 @@ public class ESPEntity<T extends Entity> extends Module
         		if(animals.getValue()) 
         		{
         			RenderUtil.setColor(animalPicker.getColor());
-        			RenderUtil.renderEntityHitbox(entity);
+        			if(mode.getValue() == 0)
+        				RenderUtil.renderEntityHitbox(entity);
+        			else 
+        				RenderUtil.draw2dEsp(entity, event.partialTicks);
         		}
         		continue;
         	}
@@ -334,7 +404,10 @@ public class ESPEntity<T extends Entity> extends Module
         		if(neutral.getValue()) 
         		{
         			RenderUtil.setColor(neutralPicker.getColor());
-        			RenderUtil.renderEntityHitbox(entity);
+        			if(mode.getValue() == 0)
+        				RenderUtil.renderEntityHitbox(entity);
+        			else 
+        				RenderUtil.draw2dEsp(entity, event.partialTicks);
         		}
         		continue;
         	}        	
@@ -344,7 +417,11 @@ public class ESPEntity<T extends Entity> extends Module
         		if(vehicles.getValue()) 
         		{
         			RenderUtil.setColor(vehiclesPicker.getColor());
-        			RenderUtil.renderEntityHitbox(entity);
+
+        			if(mode.getValue() == 0)
+        				RenderUtil.renderEntityHitbox(entity);
+        			else 
+        				RenderUtil.draw2dEsp(entity, event.partialTicks);
         		}
         	}
         }

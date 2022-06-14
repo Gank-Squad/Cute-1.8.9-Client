@@ -121,4 +121,13 @@ public class Util
 				);
 		return ret;
 	}
+	
+	public static <T extends Comparable<T>> T clamp(T val, T min, T max) 
+	{
+		if(min.compareTo(val) > 0)
+			return min;
+		if(max.compareTo(val) < 0)
+			return max;
+		return val;
+	}
 }

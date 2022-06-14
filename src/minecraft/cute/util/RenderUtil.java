@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 
 import cute.util.types.VirtualBlock;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -89,9 +90,140 @@ public class RenderUtil
 	    }
 	    
 	    
+	    public static void renderRectOutline(double x1, double y1, double x2, double y2)
+	    {
+	    	GL11.glBegin(2);
+	        GL11.glVertex2d(x1, y1);
+	        GL11.glVertex2d(x2, y1);
+	        
+	        GL11.glVertex2d(x2, y2);
+	        GL11.glVertex2d(x1, y2);
+	        GL11.glEnd();
+	    }
 	    
+	    public static void renderRectOutline(float x1, float y1, float x2, float y2)
+	    {
+	        GL11.glBegin(2);
+	        GL11.glVertex2d(x1, y1);
+	        GL11.glVertex2d(x2, y1);
+	        
+	        GL11.glVertex2d(x2, y2);
+	        GL11.glVertex2d(x1, y2);
+	        GL11.glEnd();
+
+	        // this does the same thing as above 
+//	        GL11.glBegin(GL11.GL_LINES);
+//	        GL11.glVertex2d(x1, y1);
+//	        GL11.glVertex2d(x2, y1);
+//	        
+//	        GL11.glVertex2d(x1, y2);
+//	        GL11.glVertex2d(x2, y2);
+//	        
+//	        GL11.glVertex2d(x1, y1);
+//	        GL11.glVertex2d(x1, y2);
+//
+//	        GL11.glVertex2d(x2, y1);
+//	        GL11.glVertex2d(x2, y2);
+//	        GL11.glEnd();   
+	    }
 	    
+	    public static void renderRectTarget(double x1, double y1, double x2, double y2)
+	    {
+	    	double qHeight = Math.abs(y2 - y1) / 4d;
+	    	double qWidth  = Math.abs(x2 - x1) / 4d;
+	    	
+	    	GL11.glBegin(GL11.GL_LINES);
+	    	
+	    	// top right 
+	    	//         ___
+	    	//            |
+	    	//            |
+			GL11.glVertex2d(x1, y2);
+			GL11.glVertex2d(x1, y2 - qHeight);
+			
+			GL11.glVertex2d(x1, y2);
+			GL11.glVertex2d(-qWidth, y2);
+			
+	    	// bottom right 
+	    	//
+	    	//            |
+	    	//         ___|
+			GL11.glVertex2d(x1, y1);
+			GL11.glVertex2d(x1, y1 + qHeight);
+			
+			GL11.glVertex2d(x1, y1);
+			GL11.glVertex2d(-qWidth, y1);
+			
+			// top left 
+	    	//  ___
+	    	// |
+	    	// |
+			GL11.glVertex2d(x2, y2);
+			GL11.glVertex2d(x2, y2 - qHeight);
+			
+			GL11.glVertex2d(x2, y2);
+			GL11.glVertex2d(qWidth, y2);
+			// bottom left 
+			//
+	    	// |
+	    	// |___  
+			GL11.glVertex2d(x2, y1);
+			GL11.glVertex2d(x2, y1 + qHeight);
+			
+			GL11.glVertex2d(x2, y1);
+			GL11.glVertex2d(qWidth, y1);
+
+			GL11.glEnd();
+	    }
 	    
+	    public static void renderRectTarget(float x1, float y1, float x2, float y2)
+	    {
+	    	float qHeight = Math.abs(y2 - y1) / 4f;
+	    	float qWidth  = Math.abs(x2 - x1) / 4f;
+	    	
+	    	GL11.glBegin(GL11.GL_LINES);
+	    	
+	    	// top right 
+	    	//         ___
+	    	//            |
+	    	//            |
+			GL11.glVertex2d(x1, y2);
+			GL11.glVertex2d(x1, y2 - qHeight);
+			
+			GL11.glVertex2d(x1, y2);
+			GL11.glVertex2d(-qWidth, y2);
+			
+	    	// bottom right 
+	    	//
+	    	//            |
+	    	//         ___|
+			GL11.glVertex2d(x1, y1);
+			GL11.glVertex2d(x1, qHeight);
+			
+			GL11.glVertex2d(x1, y1);
+			GL11.glVertex2d(-qWidth, y1);
+			
+			// top left 
+	    	//  ___
+	    	// |
+	    	// |
+			GL11.glVertex2d(x2, y2);
+			GL11.glVertex2d(x2, y2 - qHeight);
+			
+			GL11.glVertex2d(x2, y2);
+			GL11.glVertex2d(qWidth, y2);
+			// bottom left 
+			//
+	    	// |
+	    	// |___  
+			GL11.glVertex2d(x2, y1);
+			GL11.glVertex2d(x2, qHeight);
+			
+			GL11.glVertex2d(x2, y1);
+			GL11.glVertex2d(qWidth, y1);
+
+			GL11.glEnd();
+	    }
 	    
 	    // sets the glColor4d to this color 
 	    public static void setColor(Color c) 
@@ -112,6 +244,53 @@ public class RenderUtil
 	    {
 	    	glColor4d(1, 1, 1, 1);
 	    }
+	    
+	    
+
+	    public static void draw2dEsp(Entity e, float partialTicks) 
+	    {
+	    	double doubleX = mc.thePlayer.lastTickPosX
+	                + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX)
+	                * partialTicks;
+
+	        double doubleY = mc.thePlayer.lastTickPosY
+	                + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY)
+	                * partialTicks;
+
+	        double doubleZ = mc.thePlayer.lastTickPosZ
+	                + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ)
+	                * partialTicks;
+	    	
+	        double x = e.posX - doubleX;
+	        double y = e.posY - doubleY;
+	        double z = e.posZ - doubleZ;
+
+	        Vec3 v = new Vec3(
+	        		e.posX - mc.thePlayer.posX,
+	        		e.posY - mc.thePlayer.posY, // - mc.thePlayer.height / 2
+	        		e.posZ - mc.thePlayer.posZ
+	        		);
+	        
+	        GlStateManager.pushMatrix();
+	        
+	        GlStateManager.translate(x, y, z);
+	        
+	        final float yaw = (float) Math.toDegrees(Math.atan2(v.zCoord, v.xCoord)) - 90.0F;
+	        final float pitch = (float) Math.toDegrees(Math.atan2(v.yCoord, Math.sqrt(v.xCoord * v.xCoord + v.zCoord * v.zCoord)));
+	        
+	        GlStateManager.rotate(-yaw, 0.0F, 1F, 0.0F);
+	        
+	        GlStateManager.translate(0, e.height/2, 0);
+
+	        GlStateManager.rotate(-pitch, 1F, 0.0F, 0.0F);
+
+	        double pPercent = Math.abs(pitch) / 90d ;
+	        double h = (1d - pPercent) * e.height + pPercent * e.width;
+	        
+			RenderUtil.renderRectTarget(-e.width/2f, -h/2, e.width/2f, h/2);
+//			RenderUtil.renderRectOutline(-e.width/2f, -h/2, e.width/2f, h/2);
+			GlStateManager.popMatrix();
+		}
 	    
 
 		public static void beginRenderHitbox(float lineWidth, Color c) 
@@ -153,6 +332,64 @@ public class RenderUtil
 	        GL11.glPopMatrix();	
 		}
 		
+		public static void renderEntityHitbox(Entity e, float partialTicks) 
+	    {
+			double doubleX = mc.thePlayer.lastTickPosX
+	                + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX)
+	                * partialTicks;
+
+	        double doubleY = mc.thePlayer.lastTickPosY
+	                + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY)
+	                * partialTicks;
+
+	        double doubleZ = mc.thePlayer.lastTickPosZ
+	                + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ)
+	                * partialTicks;
+	    	
+			double hw = e.width / 2;
+			
+	    	double x1 = e.posX + hw - doubleX;
+			double x2 = e.posX - hw - doubleX;
+			
+			double y1 = e.posY            - doubleY;
+			double y2 = e.posY + e.height - doubleY;
+			
+			double z1 = e.posZ + hw - doubleZ;
+			double z2 = e.posZ - hw - doubleZ;
+			
+			GL11.glBegin(2);
+			
+			GL11.glVertex3d(x1, y1, z1);
+			GL11.glVertex3d(x2, y1, z1);
+			GL11.glVertex3d(x2, y1, z2);
+			GL11.glVertex3d(x1, y1, z2);
+			
+			GL11.glEnd();
+			
+			GL11.glBegin(1);
+			
+			GL11.glVertex3d(x1, y1, z1);
+			GL11.glVertex3d(x1, y2, z1);
+			
+			GL11.glVertex3d(x1, y1, z2);
+			GL11.glVertex3d(x1, y2, z2);
+			
+			GL11.glVertex3d(x2, y1, z1);
+			GL11.glVertex3d(x2, y2, z1);
+			
+			GL11.glVertex3d(x2, y1, z2);
+			GL11.glVertex3d(x2, y2, z2);
+			
+			GL11.glEnd();
+			
+			GL11.glBegin(2);
+			GL11.glVertex3d(x1, y2, z1);
+			GL11.glVertex3d(x2, y2, z1);
+			GL11.glVertex3d(x2, y2, z2);
+			GL11.glVertex3d(x1, y2, z2);
+			
+			GL11.glEnd();
+	    }
 	    public static void renderEntityHitbox(Entity e) 
 	    {
 	    	double renderPosX = mc.getRenderManager().viewerPosX;

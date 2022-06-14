@@ -29,7 +29,7 @@ public class ESPItem extends Module
 		super("Item ESP", Category.RENDER, "Highlights items");
 	}
 	
-	public static Mode mode = new Mode("Mode", "Hitbox");
+	public static Mode mode = new Mode("Mode", "Hitbox", "2D");
 
 
     public static Checkbox items = new Checkbox("Items", true);
@@ -77,7 +77,7 @@ public class ESPItem extends Module
 		if(nullCheck())
 			return;
 		
-		if(mode.getValue() != 0)
+		if(mode.getValue() > 1)
 			return;
 		
 		GL11.glPushMatrix();
@@ -105,7 +105,11 @@ public class ESPItem extends Module
         	if(items.getValue()) 
     		{
     			RenderUtil.setColor(itemsPicker.getColor());
-    			RenderUtil.renderEntityHitbox(entity);
+    			
+    			if(mode.getValue() == 0)
+    				RenderUtil.renderEntityHitbox(entity);
+    			else
+    				RenderUtil.draw2dEsp(entity, event.partialTicks);
     		}
         		
 			if (itemCount.getValue())

@@ -108,8 +108,7 @@ public class ESPBlocks extends Module
 	}
 	
 	
-//	@SideOnly(Side.CLIENT)
-//	@SubscribeEvent(priority=EventPriority.NORMAL, receiveCanceled=true)
+
 	@EventTarget
     public void renderWorldLastEvent(RenderWorldLastEvent evt) 
     {
