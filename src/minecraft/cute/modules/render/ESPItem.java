@@ -77,7 +77,7 @@ public class ESPItem extends Module
 		if(nullCheck())
 			return;
 		
-		if(ESPEntity.mode.getValue() != 0)
+		if(mode.getValue() != 0)
 			return;
 		
 		GL11.glPushMatrix();
