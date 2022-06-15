@@ -53,6 +53,7 @@ public class Hud extends Module
 	public static Checkbox arrowCheck       = new Checkbox("Hit Marker", true);
 	
 	public static Checkbox arrowCountCheck  = new Checkbox("Arrow Count", true);
+	public static Checkbox alertCheck		= new Checkbox("Detection Alerts", true);
 	
 	public static DraggableObj alert = new DraggableObj();
 	public static TextComponent alertText;
@@ -78,7 +79,7 @@ public class Hud extends Module
 		arrowCountItem = new ItemComponent(0, 0, 16, 16, new ItemStack(Items.arrow));
 		arrowCount.addComponent(arrowCountItem);
 		
-		alertText = new TextComponent(0,0,1f,1f,"text",0xFFFFFFFF);
+		alertText = new TextComponent(0,0,1f,1f,"",0xFFFFFFFF);
 		alert.addComponent(alertText);
 		
 		if(armorStatusCheck.getValue())
@@ -92,6 +93,9 @@ public class Hud extends Module
 		
 		if(arrowCountCheck.getValue())
 			HudManager.INSTANCE.register(arrowCount);
+		
+		if(alertCheck.getValue())
+			HudManager.INSTANCE.register(alert);
 	}
 	
 	@Override
@@ -102,6 +106,7 @@ public class Hud extends Module
 		this.addSetting(positionCheck);
 		this.addSetting(arrowCheck);
 		this.addSetting(arrowCountCheck);
+		this.addSetting(alertCheck);
     }
 
 
@@ -122,7 +127,8 @@ public class Hud extends Module
 		if(arrowCountCheck.getValue())
 			HudManager.INSTANCE.register(arrowCount);
 		
-		HudManager.INSTANCE.register(alert);
+		if(alertCheck.getValue())
+			HudManager.INSTANCE.register(alert);
 	}
 	
 	@Override 
@@ -134,6 +140,7 @@ public class Hud extends Module
 		HudManager.INSTANCE.unregister(positionHud);
 		HudManager.INSTANCE.unregister(hitMarker);
 		HudManager.INSTANCE.unregister(arrowCount);
+		HudManager.INSTANCE.unregister(alert);
 	}
 	
 	
@@ -145,13 +152,10 @@ public class Hud extends Module
 		
 		positionHudText.setText(String.format("%.02f %.02f %.02f", mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
 		
-		if(DetectionBox.inBox)
+		
+		alertText.setText(DetectionBox.label);
+		if (DetectionBox.label.equals(""))
 		{
-			alertText.setText("nyah");
-		}
-		else
-		{
-			alertText.setText("");
 			alertText.setWidth(21);
 			alertText.setHeight(7);
 		}
@@ -256,6 +260,19 @@ public class Hud extends Module
 			else
 			{
 				HudManager.INSTANCE.unregister(arrowCount);
+			}
+			return;
+		}
+		
+		if(e.settingID == alertCheck.getId())
+		{
+			if(alertCheck.getValue())
+			{
+				HudManager.INSTANCE.register(alert);
+			}
+			else
+			{
+				HudManager.INSTANCE.unregister(alert);
 			}
 			return;
 		}

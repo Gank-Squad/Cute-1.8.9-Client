@@ -12,7 +12,6 @@ import cute.eventapi.EventTarget;
 import cute.events.RenderEvent;
 import cute.ui.hud.HudConfigScreen;
 import cute.ui.hud.IRender;
-import cute.ui.hud.display.DraggableObj;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
