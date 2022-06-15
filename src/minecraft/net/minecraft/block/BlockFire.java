@@ -2,7 +2,7 @@ package net.minecraft.block;
 
 import com.google.common.collect.Maps;
 
-import cute.modules.audio.Sounds;
+import cute.modules.misc.Sounds;
 
 import java.util.Map;
 import java.util.Random;

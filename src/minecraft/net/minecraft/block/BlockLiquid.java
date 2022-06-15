@@ -2,7 +2,7 @@ package net.minecraft.block;
 
 import java.util.Random;
 
-import cute.modules.audio.Sounds;
+import cute.modules.misc.Sounds;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;

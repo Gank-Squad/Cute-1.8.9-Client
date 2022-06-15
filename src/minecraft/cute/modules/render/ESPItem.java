@@ -114,7 +114,7 @@ public class ESPItem extends Module
     			if(mode.getValue() == 0)
     				RenderUtil.renderEntityHitbox(entity);
     			else
-    				RenderUtil.draw2dEsp(entity, event.partialTicks);
+    				RenderUtil.draw2dEsp(entity, event.partialTicks, true);
     		}
         		
 			if (itemCount.getValue())

@@ -4,7 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
-import cute.modules.audio.Sounds;
+import cute.modules.misc.Sounds;
 
 import java.util.List;
 import java.util.Map;

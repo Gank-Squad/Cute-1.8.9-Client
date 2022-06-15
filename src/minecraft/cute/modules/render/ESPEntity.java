@@ -368,7 +368,7 @@ public class ESPEntity<T extends Entity> extends Module
         			if(mode.getValue() == 0)
         				RenderUtil.renderEntityHitbox(entity);
         			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks);
+        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
         		}
         		continue;
         	}
@@ -381,7 +381,7 @@ public class ESPEntity<T extends Entity> extends Module
         			if(mode.getValue() == 0)
         				RenderUtil.renderEntityHitbox(entity);
         			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks);
+        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
         		}
         		continue;
         	}
@@ -394,7 +394,7 @@ public class ESPEntity<T extends Entity> extends Module
         			if(mode.getValue() == 0)
         				RenderUtil.renderEntityHitbox(entity);
         			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks);
+        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
         		}
         		continue;
         	}
@@ -407,7 +407,7 @@ public class ESPEntity<T extends Entity> extends Module
         			if(mode.getValue() == 0)
         				RenderUtil.renderEntityHitbox(entity);
         			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks);
+        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
         		}
         		continue;
         	}        	
@@ -421,7 +421,7 @@ public class ESPEntity<T extends Entity> extends Module
         			if(mode.getValue() == 0)
         				RenderUtil.renderEntityHitbox(entity);
         			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks);
+        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
         		}
         	}
         }

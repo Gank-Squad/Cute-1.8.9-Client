@@ -1,4 +1,4 @@
-package cute.modules.audio;
+package cute.modules.misc;
 
 import cute.modules.Module;
 import cute.modules.enums.Category;
@@ -8,7 +8,7 @@ public class Sounds extends Module
 {
 	public Sounds()
 	{
-		super("Volume", Category.SOUNDS, "lets you adjust volume");
+		super("Volume", Category.MISC, "lets you adjust volume");
 	}
 	
 	private static boolean globalEnabled = false;

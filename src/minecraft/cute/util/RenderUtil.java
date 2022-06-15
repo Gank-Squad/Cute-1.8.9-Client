@@ -247,7 +247,7 @@ public class RenderUtil
 	    
 	    
 
-	    public static void draw2dEsp(Entity e, float partialTicks) 
+	    public static void draw2dEsp(Entity e, float partialTicks, boolean usePlayerMid) 
 	    {
 	    	double doubleX = mc.thePlayer.lastTickPosX
 	                + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX)
@@ -267,7 +267,7 @@ public class RenderUtil
 
 	        Vec3 v = new Vec3(
 	        		e.posX - mc.thePlayer.posX,
-	        		e.posY - mc.thePlayer.posY, // - mc.thePlayer.height / 2
+	        		e.posY - mc.thePlayer.posY - (usePlayerMid ? mc.thePlayer.height / 2 : 0),
 	        		e.posZ - mc.thePlayer.posZ
 	        		);
 	        
