@@ -14,7 +14,7 @@ import net.minecraft.util.Vec3;
 public class DetectionBox extends Module
 {
 	public static String label;
-	public static boolean inBox;
+	public static boolean inBox = false;
 	int color;
 	
 	private Vec3 corner1;
@@ -30,7 +30,11 @@ public class DetectionBox extends Module
 	public DetectionBox() 
 	{
 		super("Detection Box", Category.MISC, "a box that sends an alert when an entity enters it");
-		
+	}
+	
+	@Override
+	public void setup()
+	{
 		addSetting(players);
 		addSetting(hostile);
 		addSetting(passive);
@@ -38,12 +42,6 @@ public class DetectionBox extends Module
 		addSetting(vehicle);
 		addSetting(projectile);
 		addSetting(item);
-		
-		this.inBox = false;
-		this.label = "nyah";
-		
-//		corner1 = new Vec3(mc.thePlayer.posX - 5, mc.thePlayer.posY - 5, mc.thePlayer.posZ - 5);
-//		corner2 = new Vec3(mc.thePlayer.posX + 5, mc.thePlayer.posY + 5, mc.thePlayer.posZ + 5);
 	}
 	
 	// couldn't think of a better event, but there probably is one
@@ -52,7 +50,8 @@ public class DetectionBox extends Module
 	{
     	corner1 = new Vec3(mc.thePlayer.posX - 5, mc.thePlayer.posY - 5, mc.thePlayer.posZ - 5);
 		corner2 = new Vec3(mc.thePlayer.posX + 5, mc.thePlayer.posY + 5, mc.thePlayer.posZ + 5);
-		this.inBox = false;
+		
+		inBox = false;
 		for(Entity e : this.mc.theWorld.loadedEntityList) 
 		{
 			if (e == mc.thePlayer)
@@ -79,7 +78,7 @@ public class DetectionBox extends Module
 			if(e instanceof EntityItem		&& !item.getValue())
 				continue;
 			
-			this.inBox = true;
+			inBox = true;
 		}
 	}
 }

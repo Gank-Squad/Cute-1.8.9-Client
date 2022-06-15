@@ -116,9 +116,9 @@ public class ESPEntity<T extends Entity> extends Module
     	if(mode.getValue() < 2)
     		return;
     	
-    	Entity entity = e.entityLivingBaseIn;
+    	EntityLivingBase entity = e.entityLivingBaseIn;
     	
-    	if(entity instanceof EntityPlayerSP || !(entity instanceof EntityLivingBase) || entity.isDead || !entity.isEntityAlive())
+    	if(entity instanceof EntityPlayerSP || AntiBot.isBot((EntityLivingBase)entity) || entity.isDead || !entity.isEntityAlive())
     		return;
 
     	if(entity instanceof EntityPlayer) 

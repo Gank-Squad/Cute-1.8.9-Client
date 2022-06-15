@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL32;
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
+import cute.modules.bot.AntiBot;
 import cute.modules.client.Players;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
@@ -18,6 +19,7 @@ import cute.util.EntityUtil;
 import cute.util.RenderUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
@@ -124,7 +126,8 @@ public class Tracers extends Module
 		// main draw loop
 		for (Entity entity : mc.theWorld.loadedEntityList) 
 		{
-			if(entity instanceof EntityPlayerSP)
+			if(entity instanceof EntityPlayerSP || (entity instanceof EntityLivingBase) && 
+	            	   AntiBot.isBot((EntityLivingBase)entity))
 				continue;
 			
 			if(entity instanceof EntityPlayer) 

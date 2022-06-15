@@ -69,7 +69,7 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
 
     protected void renderName(T entity, double x, double y, double z)
     {
-        if (NameTags.everything.getValue() || this.canRenderName(entity))
+        if ((NameTags.isOn() && NameTags.everything.getValue()) || this.canRenderName(entity))
         {
             this.renderLivingLabel(entity, entity.getDisplayName().getFormattedText(), x, y, z, 64);
         }

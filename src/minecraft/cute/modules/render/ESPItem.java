@@ -193,11 +193,13 @@ public class ESPItem extends Module
             GlStateManager.pushMatrix();
             GlStateManager.translate(x, y, z);
             GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+            
+            GlStateManager.scale(scalef, scalef, scalef);
             GlStateManager.rotate(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
             GlStateManager.rotate(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
             GlStateManager.scale(-f1, -f1, f1);
             
-            GlStateManager.scale(scalef, scalef, scalef);
+            
             
             int i = 0;
             int j = fontrenderer.getStringWidth(str) / 2;

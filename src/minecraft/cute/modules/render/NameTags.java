@@ -9,19 +9,18 @@ import org.apache.logging.log4j.Logger;
 import cute.eventapi.EventTarget;
 import cute.events.RenderNameTagEvent;
 import cute.modules.Module;
+import cute.modules.bot.AntiBot;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.Slider;
-import cute.util.types.VirtualBlock;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
@@ -114,7 +113,8 @@ public class NameTags extends Module
     	// so it renders twice the armor above their head, this is supposed to avoid bots now idk if it works
     	if(!(event.entity instanceof EntityPlayer) || 
     	     event.entity.isDead || 
-    	    !event.entity.isEntityAlive())
+    	    !event.entity.isEntityAlive() || 
+    	    event.entity instanceof EntityLivingBase && AntiBot.isBot((EntityLivingBase)event.entity))
     		return;
     	
     	event.setCancelled(true);
