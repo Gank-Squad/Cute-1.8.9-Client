@@ -2240,6 +2240,11 @@ public abstract class EntityPlayer extends EntityLivingBase
     {
         return this.theInventoryEnderChest;
     }
+    
+    public InventoryPlayer getInventoryOfPlayer()
+    {
+    	return this.inventory;
+    }
 
     /**
      * 0: Tool in Hand; 1-4: Armor
