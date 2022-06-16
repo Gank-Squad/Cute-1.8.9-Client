@@ -125,7 +125,7 @@ public class BedProtect extends Module {
 						if( sortCheck == false) {
 								
 							//Shift click all hotbar items to the top
-							for(int j = 30; j < 40; j++) {
+							for(int j = 36; j < 45; j++) {
 								mc.getMinecraft().playerController.windowClick(
 										mc.getMinecraft().thePlayer.inventoryContainer.windowId,
 										j, 0, 1, mc.getMinecraft().thePlayer);
