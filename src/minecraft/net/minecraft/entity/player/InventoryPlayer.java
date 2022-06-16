@@ -171,6 +171,17 @@ public class InventoryPlayer implements IInventory
         }
     }
 
+    
+    // Custom Func to set the player's hotbar selection based on an int (Minecraft API overcomplicates it so much)
+    
+    public void setHeldItem(int hotspot)
+    {
+        if (hotspot >= 0 && hotspot < 9)
+        {
+            this.currentItem = hotspot;
+        }
+    }
+    
     /**
      * Switch the current item to the next one or the previous one
      *  

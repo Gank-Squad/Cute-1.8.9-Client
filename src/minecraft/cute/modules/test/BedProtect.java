@@ -110,23 +110,33 @@ public class BedProtect extends Module {
 				(float) (bedPosition[2]-mc.thePlayer.posZ)
 		};
 
-		System.out.println(buildSwitch);
+//		System.out.println(buildSwitch);
 			
 		int midWidth = (int) Math.floor( (width) / 2 );
 		int midLength = (int) Math.ceil( (length+1) / 2 );
 		
 		
-		if(!buildSwitch) {
+		if(!buildSwitch) 
+		{
+			//Hits the sweet spot:
 			if(relPos[0] >= midLength && relPos[0] < midLength+1 
-					&&
-					relPos[2] >= midWidth && relPos[2] < midWidth+1) 
+			&& relPos[2] >= midWidth && relPos[2] < midWidth+1) 
 					{
 						if( sortCheck == false) {
+								
+							//Shift click all hotbar items to the top
+							for(int j = 30; j < 40; j++) {
+								mc.getMinecraft().playerController.windowClick(
+										mc.getMinecraft().thePlayer.inventoryContainer.windowId,
+										j, 0, 1, mc.getMinecraft().thePlayer);
+							}
+							
+							
 							for(int i = 0; i < ItemMaterials.length; i++)
 							{
 								int itemLocation = inv.getInventorySlotContainItem(ItemMaterials[i]);
-								
-								//Basically sending packets to the server:
+								System.out.println("Item @ "+ itemLocation);
+								//Shift clicks all the items
 								mc.getMinecraft().playerController.windowClick(
 										mc.getMinecraft().thePlayer.inventoryContainer.windowId,
 										itemLocation, 0, 1, mc.getMinecraft().thePlayer);
@@ -137,6 +147,12 @@ public class BedProtect extends Module {
 						}
 						buildSwitch = true;
 					}
+		} else {
+//			System.out.println("Sequencing");
+			inv.setHeldItem(2);
+			mc.thePlayer.rotationYaw = 0F;
+			mc.thePlayer.rotationPitch = 0F;
+			
 		}
 		
 		//Finding sweet spot
@@ -167,12 +183,12 @@ public class BedProtect extends Module {
 		
 		//System.out.println("Get Item stack:");
 		//System.out.println(inv.getCurrentItem());
-		System.out.println("X rel pos");
-		System.out.println(relPos[0]);
-		System.out.println(midWidth);
-		System.out.println("Z rel pos");
-		System.out.println(relPos[2]);
-		System.out.println(midLength);
+//		System.out.println("X rel pos");
+//		System.out.println(relPos[0]);
+//		System.out.println(midWidth);
+//		System.out.println("Z rel pos");
+//		System.out.println(relPos[2]);
+//		System.out.println(midLength);
 	}
 	
 }
