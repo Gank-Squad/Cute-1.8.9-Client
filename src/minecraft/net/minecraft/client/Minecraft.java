@@ -532,7 +532,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 try
                 {
-                    return String.format(str, new Object[] {GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindUseItem.getKeyCode())});
+                    return String.format(str, new Object[] {GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindInventory.getKeyCode())});
                 }
                 catch (Exception exception)
                 {
@@ -1917,177 +1917,135 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 int k = Keyboard.getEventKey() == 0 ? Keyboard.getEventCharacter() + 256 : Keyboard.getEventKey();
                 KeyBinding.setKeyBindState(k, Keyboard.getEventKeyState());
 
-                if (Keyboard.getEventKeyState())
+                if (!Keyboard.getEventKeyState())
                 {
-                    KeyBinding.onTick(k);
-                }
-
-                if (this.debugCrashKeyPressTime > 0L)
-                {
-                    if (getSystemTime() - this.debugCrashKeyPressTime >= 6000L)
-                    {
-                        throw new ReportedException(new CrashReport("Manually triggered debug crash", new Throwable()));
-                    }
-
-                    if (!Keyboard.isKeyDown(46) || !Keyboard.isKeyDown(61))
-                    {
-                        this.debugCrashKeyPressTime = -1L;
-                    }
-                }
-                else if (Keyboard.isKeyDown(46) && Keyboard.isKeyDown(61))
-                {
-                    this.debugCrashKeyPressTime = getSystemTime();
-                }
-
-                this.dispatchKeypresses();
-
-                if (Keyboard.getEventKeyState())
-                {
-                    if (k == 62 && this.entityRenderer != null)
-                    {
-                        this.entityRenderer.switchUseShader();
-                    }
-
-                    if (this.currentScreen != null)
-                    {
-                        this.currentScreen.handleKeyboardInput();
-                    }
-                    else
-                    {
-                        if (k == 1)
-                        {
-                            this.displayInGameMenu();
-                        }
-                        else
-                        if (k == 32 && Keyboard.isKeyDown(61) && this.ingameGUI != null)
-                        {
-                            this.ingameGUI.getChatGUI().clearChatMessages();
-                        }
-                        else
-                        if (k == 31 && Keyboard.isKeyDown(61))
-                        {
-                            this.refreshResources();
-                        }
-//
-//                        if (k == 17 && Keyboard.isKeyDown(61))
-//                        {
-//                            ;
-//                        }
-//
-//                        if (k == 18 && Keyboard.isKeyDown(61))
-//                        {
-//                            ;
-//                        }
-//
-//                        if (k == 47 && Keyboard.isKeyDown(61))
-//                        {
-//                            ;
-//                        }
-//
-//                        if (k == 38 && Keyboard.isKeyDown(61))
-//                        {
-//                            ;
-//                        }
-//
-//                        if (k == 22 && Keyboard.isKeyDown(61))
-//                        {
-//                            ;
-//                        }
-                        else
-                        if (k == 20 && Keyboard.isKeyDown(61))
-                        {
-                            this.refreshResources();
-                        }
-                        else
-                        if (k == 33 && Keyboard.isKeyDown(61))
-                        {
-                            this.gameSettings.setOptionValue(GameSettings.Options.RENDER_DISTANCE, GuiScreen.isShiftKeyDown() ? -1 : 1);
-                        }
-                        else
-                        if (k == 30 && Keyboard.isKeyDown(61))
-                        {
-                            this.renderGlobal.loadRenderers();
-                        }
-                        else
-                        if (k == 35 && Keyboard.isKeyDown(61))
-                        {
-                            this.gameSettings.advancedItemTooltips = !this.gameSettings.advancedItemTooltips;
-                            this.gameSettings.saveOptions();
-                        }
-                        else
-                        if (k == 48 && Keyboard.isKeyDown(61))
-                        {
-                            this.renderManager.setDebugBoundingBox(!this.renderManager.isDebugBoundingBox());
-                        }
-                        else
-                        if (k == 25 && Keyboard.isKeyDown(61))
-                        {
-                            this.gameSettings.pauseOnLostFocus = !this.gameSettings.pauseOnLostFocus;
-                            this.gameSettings.saveOptions();
-                        }
-                        else
-                        if (k == 59)
-                        {
-                            this.gameSettings.thirdPersonView = !this.gameSettings.thirdPersonView;
-                        }
-                        else
-                        if (k == 61)
-                        {
-                            this.gameSettings.showDebugProfilerChart = !this.gameSettings.showDebugProfilerChart;
-                            this.gameSettings.showLagometer = GuiScreen.isShiftKeyDown();
-                            this.gameSettings.lastServer = GuiScreen.isAltKeyDown();
-                        }
-
-                        if (this.gameSettings.keyBindSmoothCamera.isPressed())
-                        {
-                            ++this.gameSettings.showDebugInfo;
-
-                            if (this.gameSettings.showDebugInfo > 2)
-                            {
-                                this.gameSettings.showDebugInfo = 0;
-                            }
-
-                            if (this.gameSettings.showDebugInfo == 0)
-                            {
-                                this.entityRenderer.loadEntityShader(this.getRenderViewEntity());
-                            }
-                            else if (this.gameSettings.showDebugInfo == 1)
-                            {
-                                this.entityRenderer.loadEntityShader((Entity)null);
-                            }
-
-                            this.renderGlobal.setDisplayListEntitiesDirty();
-                        }
-
-                        if (this.gameSettings.keyBindFullscreen.isPressed())
-                        {
-                            this.gameSettings.debugCamEnable = !this.gameSettings.debugCamEnable;
-                        }
-                    }
-
-                    if (this.gameSettings.showDebugProfilerChart && this.gameSettings.showLagometer)
-                    {
-                        if (k == 11)
-                        {
-                            this.updateDebugProfilerName(0);
-                        }
-
-                        for (int j1 = 0; j1 < 9; ++j1)
-                        {
-                            if (k == 2 + j1)
-                            {
-                                this.updateDebugProfilerName(j1 + 1);
-                            }
-                        }
-                    }
-                    
-                	EventManager.call(new KeyDownEvent(k));
+                	this.dispatchKeypresses();
+                    EventManager.call(new KeyUpEvent(k));
+                    EventManager.call(new KeyboardEvent(k));
+                    continue;
                 }
                 else 
                 {
-                	EventManager.call(new KeyUpEvent(k));
+                    KeyBinding.onTick(k);                	
                 }
+         
+                this.dispatchKeypresses();
                 
+                if (k == 62 && this.entityRenderer != null)
+                {
+                    this.entityRenderer.switchUseShader();
+                }
+
+                if (this.currentScreen != null)
+                {
+                    this.currentScreen.handleKeyboardInput();
+                }
+                else
+                {
+                	switch(k)
+                	{
+                	case 1:
+                		this.displayInGameMenu();
+                		break;
+                		
+                	case 32:
+                		if(Keyboard.isKeyDown(61) && this.ingameGUI != null)
+                			this.ingameGUI.getChatGUI().clearChatMessages();
+                		break;
+                		
+                	case 31:
+                		if(Keyboard.isKeyDown(61))
+                			this.refreshResources();
+                		break;
+                		
+                	case 20:
+                		if(Keyboard.isKeyDown(61))
+                			this.refreshResources();
+                		break;
+                		
+                	case 33:
+                		if(Keyboard.isKeyDown(61))
+                			this.gameSettings.setOptionValue(GameSettings.Options.RENDER_DISTANCE, GuiScreen.isShiftKeyDown() ? -1 : 1);
+                		break;
+                		
+                	case 30:
+                		if(Keyboard.isKeyDown(61))
+                			this.renderGlobal.loadRenderers();
+                		break;
+                		
+                	case 35:
+						if(Keyboard.isKeyDown(61)) 
+						{
+							this.gameSettings.advancedItemTooltips = !this.gameSettings.advancedItemTooltips;
+	                        this.gameSettings.saveOptions();	
+						}
+                		break;
+                		
+                	case 48:
+                		System.out.println("b pressed");
+                		if(Keyboard.isKeyDown(61)) 
+                			this.renderManager.setDebugBoundingBox(!this.renderManager.isDebugBoundingBox());
+                		break;
+                		
+                	case 25:
+                		if(Keyboard.isKeyDown(61)) 
+                		{
+                    		this.gameSettings.pauseOnLostFocus = !this.gameSettings.pauseOnLostFocus;
+                            this.gameSettings.saveOptions();                			
+                		}
+                		break;
+                		
+                	case 59:
+                		System.out.println("f5 pressed");
+                		this.gameSettings.thirdPersonView = !this.gameSettings.thirdPersonView;
+                		break;
+                		
+                	case 61:
+                		this.gameSettings.showDebugProfilerChart = !this.gameSettings.showDebugProfilerChart;
+                        this.gameSettings.showLagometer = GuiScreen.isShiftKeyDown();
+                        this.gameSettings.lastServer = GuiScreen.isAltKeyDown();
+                		break;
+                	}
+
+                    if (this.gameSettings.keyBindTogglePerspective.isPressed())
+                    {                    	
+                    	this.gameSettings.showDebugInfo = (this.gameSettings.showDebugInfo + 1) % 3;
+
+                        if (this.gameSettings.showDebugInfo == 0)
+                        {
+                            this.entityRenderer.loadEntityShader(this.getRenderViewEntity());
+                        }
+                        else if (this.gameSettings.showDebugInfo == 1)
+                        {
+                            this.entityRenderer.loadEntityShader((Entity)null);
+                        }
+
+                        this.renderGlobal.setDisplayListEntitiesDirty();
+                    }
+                    else 
+                    if (this.gameSettings.keyBindSmoothCamera.isPressed())
+                    {
+                        this.gameSettings.debugCamEnable = !this.gameSettings.debugCamEnable;
+                    }
+                }
+
+                if (this.gameSettings.showDebugProfilerChart && this.gameSettings.showLagometer)
+                {
+                    if (k == 11)
+                    {
+                        this.updateDebugProfilerName(0);
+                    }
+
+                    for (int j1 = 0; j1 < 9; ++j1)
+                    {
+                        if (k == 2 + j1)
+                        {
+                            this.updateDebugProfilerName(j1 + 1);
+                        }
+                    }
+                }
+                    
+            	EventManager.call(new KeyDownEvent(k));
                 EventManager.call(new KeyboardEvent(k));
             }
 
@@ -2108,7 +2066,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
             boolean flag = this.gameSettings.chatVisibility != EntityPlayer.EnumChatVisibility.HIDDEN;
 
-            while (this.gameSettings.keyBindUseItem.isPressed())
+            while (this.gameSettings.keyBindInventory.isPressed())
             {
                 if (this.playerController.isRidingHorse())
                 {
@@ -2121,7 +2079,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 }
             }
 
-            while (this.gameSettings.keyBindAttack.isPressed())
+            while (this.gameSettings.keyBindDrop.isPressed())
             {
                 if (!this.thePlayer.isSpectator())
                 {
@@ -2129,19 +2087,19 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 }
             }
 
-            while (this.gameSettings.keyBindPlayerList.isPressed() && flag)
+            while (this.gameSettings.keyBindChat.isPressed() && flag)
             {
                 this.displayGuiScreen(new GuiChat());
             }
 
-            if (this.currentScreen == null && this.gameSettings.keyBindScreenshot.isPressed() && flag)
+            if (this.currentScreen == null && this.gameSettings.keyBindCommand.isPressed() && flag)
             {
                 this.displayGuiScreen(new GuiChat("/"));
             } 
 
             if (this.thePlayer.isUsingItem())
             {
-                if (!this.gameSettings.keyBindDrop.isKeyDown())
+                if (!this.gameSettings.keyBindUseItem.isKeyDown())
                 {
                     this.playerController.onStoppedUsingItem(this.thePlayer);
                 }
@@ -2164,28 +2122,28 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             }
             else
             {
-                while (this.gameSettings.keyBindPickBlock.isPressed())
+                while (this.gameSettings.keyBindAttack.isPressed())
                 {
                     this.clickMouse();
                 }
 
-                while (this.gameSettings.keyBindDrop.isPressed())
+                while (this.gameSettings.keyBindUseItem.isPressed())
                 {
                     this.rightClickMouse();
                 }
 
-                while (this.gameSettings.keyBindChat.isPressed())
+                while (this.gameSettings.keyBindPickBlock.isPressed())
                 {
                     this.middleClickMouse();
                 }
             }
 
-            if (this.gameSettings.keyBindDrop.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem())
+            if (this.gameSettings.keyBindUseItem.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem())
             {
                 this.rightClickMouse();
             }
 
-            this.sendClickBlockToController(this.currentScreen == null && this.gameSettings.keyBindPickBlock.isKeyDown() && this.inGameHasFocus);
+            this.sendClickBlockToController(this.currentScreen == null && this.gameSettings.keyBindAttack.isKeyDown() && this.inGameHasFocus);
         }
 
         if (this.theWorld != null)
@@ -3150,7 +3108,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 if (Keyboard.getEventKeyState())
                 {
-                    if (i == this.gameSettings.keyBindStreamPauseUnpause.getKeyCode())
+                    if (i == this.gameSettings.keyBindStreamStartStop.getKeyCode())
                     {
                         if (this.getTwitchStream().isBroadcasting())
                         {
@@ -3183,7 +3141,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                             GuiStreamUnavailable.func_152321_a(this.currentScreen);
                         }
                     }
-                    else if (i == this.gameSettings.keyBindStreamCommercials.getKeyCode())
+                    else if (i == this.gameSettings.keyBindStreamPauseUnpause.getKeyCode())
                     {
                         if (this.getTwitchStream().isBroadcasting())
                         {
@@ -3197,27 +3155,27 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                             }
                         }
                     }
-                    else if (i == this.gameSettings.keyBindStreamToggleMic.getKeyCode())
+                    else if (i == this.gameSettings.keyBindStreamCommercials.getKeyCode())
                     {
                         if (this.getTwitchStream().isBroadcasting())
                         {
                             this.getTwitchStream().requestCommercial();
                         }
                     }
-                    else if (i == this.gameSettings.keyBindsHotbar.getKeyCode())
+                    else if (i == this.gameSettings.keyBindStreamToggleMic.getKeyCode())
                     {
                         this.stream.muteMicrophone(true);
                     }
-                    else if (i == this.gameSettings.keyBindSpectatorOutlines.getKeyCode())
+                    else if (i == this.gameSettings.keyBindFullscreen.getKeyCode())
                     {
                         this.toggleFullscreen();
                     }
-                    else if (i == this.gameSettings.keyBindTogglePerspective.getKeyCode())
+                    else if (i == this.gameSettings.keyBindScreenshot.getKeyCode())
                     {
                         this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(this.mcDataDir, this.displayWidth, this.displayHeight, this.framebufferMc));
                     }
                 }
-                else if (i == this.gameSettings.keyBindsHotbar.getKeyCode())
+                else if (i == this.gameSettings.keyBindStreamToggleMic.getKeyCode())
                 {
                     this.stream.muteMicrophone(false);
                 }

@@ -149,30 +149,30 @@ public class GameSettings
     public boolean useNativeTransport = true;
     public boolean entityShadows = true;
     public boolean keyBindForward = true;
-    public KeyBinding keyBindLeft = new KeyBinding("key.forward", 17, "key.categories.movement");
-    public KeyBinding keyBindBack = new KeyBinding("key.left", 30, "key.categories.movement");
-    public KeyBinding keyBindRight = new KeyBinding("key.back", 31, "key.categories.movement");
-    public KeyBinding keyBindJump = new KeyBinding("key.right", 32, "key.categories.movement");
-    public KeyBinding keyBindSneak = new KeyBinding("key.jump", 57, "key.categories.movement");
-    public KeyBinding keyBindSprint = new KeyBinding("key.sneak", 42, "key.categories.movement");
-    public KeyBinding keyBindInventory = new KeyBinding("key.sprint", 29, "key.categories.movement");
-    public KeyBinding keyBindUseItem = new KeyBinding("key.inventory", 18, "key.categories.inventory");
-    public KeyBinding keyBindDrop = new KeyBinding("key.use", -99, "key.categories.gameplay");
-    public KeyBinding keyBindAttack = new KeyBinding("key.drop", 16, "key.categories.gameplay");
-    public KeyBinding keyBindPickBlock = new KeyBinding("key.attack", -100, "key.categories.gameplay");
-    public KeyBinding keyBindChat = new KeyBinding("key.pickItem", -98, "key.categories.gameplay");
-    public KeyBinding keyBindPlayerList = new KeyBinding("key.chat", 20, "key.categories.multiplayer");
-    public KeyBinding keyBindCommand = new KeyBinding("key.playerlist", 15, "key.categories.multiplayer");
-    public KeyBinding keyBindScreenshot = new KeyBinding("key.command", 53, "key.categories.multiplayer");
-    public KeyBinding keyBindTogglePerspective = new KeyBinding("key.screenshot", 60, "key.categories.misc");
-    public KeyBinding keyBindSmoothCamera = new KeyBinding("key.togglePerspective", 63, "key.categories.misc");
-    public KeyBinding keyBindFullscreen = new KeyBinding("key.smoothCamera", 0, "key.categories.misc");
-    public KeyBinding keyBindSpectatorOutlines = new KeyBinding("key.fullscreen", 87, "key.categories.misc");
-    public KeyBinding keyBindStreamStartStop = new KeyBinding("key.spectatorOutlines", 0, "key.categories.misc");
-    public KeyBinding keyBindStreamPauseUnpause = new KeyBinding("key.streamStartStop", 64, "key.categories.stream");
-    public KeyBinding keyBindStreamCommercials = new KeyBinding("key.streamPauseUnpause", 65, "key.categories.stream");
-    public KeyBinding keyBindStreamToggleMic = new KeyBinding("key.streamCommercial", 0, "key.categories.stream");
-    public KeyBinding keyBindsHotbar = new KeyBinding("key.streamToggleMic", 0, "key.categories.stream");
+    public KeyBinding keyBindForward_           = new KeyBinding("key.forward", 17, "key.categories.movement");
+    public KeyBinding keyBindLeft               = new KeyBinding("key.left", 30, "key.categories.movement");
+    public KeyBinding keyBindBack               = new KeyBinding("key.back", 31, "key.categories.movement");
+    public KeyBinding keyBindRight              = new KeyBinding("key.right", 32, "key.categories.movement");
+    public KeyBinding keyBindJump               = new KeyBinding("key.jump", 57, "key.categories.movement");
+    public KeyBinding keyBindSneak              = new KeyBinding("key.sneak", 42, "key.categories.movement");
+    public KeyBinding keyBindSprint             = new KeyBinding("key.sprint", 29, "key.categories.movement");
+    public KeyBinding keyBindInventory          = new KeyBinding("key.inventory", 18, "key.categories.inventory");
+    public KeyBinding keyBindUseItem            = new KeyBinding("key.use", -99, "key.categories.gameplay");
+    public KeyBinding keyBindDrop               = new KeyBinding("key.drop", 16, "key.categories.gameplay");
+    public KeyBinding keyBindAttack             = new KeyBinding("key.attack", -100, "key.categories.gameplay");
+    public KeyBinding keyBindPickBlock          = new KeyBinding("key.pickItem", -98, "key.categories.gameplay");
+    public KeyBinding keyBindChat               = new KeyBinding("key.chat", 20, "key.categories.multiplayer");
+    public KeyBinding keyBindPlayerList         = new KeyBinding("key.playerlist", 15, "key.categories.multiplayer");
+    public KeyBinding keyBindCommand            = new KeyBinding("key.command", 53, "key.categories.multiplayer");
+    public KeyBinding keyBindScreenshot         = new KeyBinding("key.screenshot", 60, "key.categories.misc");
+    public KeyBinding keyBindTogglePerspective  = new KeyBinding("key.togglePerspective", 63, "key.categories.misc");
+    public KeyBinding keyBindSmoothCamera       = new KeyBinding("key.smoothCamera", 0, "key.categories.misc");
+    public KeyBinding keyBindFullscreen         = new KeyBinding("key.fullscreen", 87, "key.categories.misc");
+    public KeyBinding keyBindSpectatorOutlines  = new KeyBinding("key.spectatorOutlines", 0, "key.categories.misc");
+    public KeyBinding keyBindStreamStartStop    = new KeyBinding("key.streamStartStop", 64, "key.categories.stream");
+    public KeyBinding keyBindStreamPauseUnpause = new KeyBinding("key.streamPauseUnpause", 65, "key.categories.stream");
+    public KeyBinding keyBindStreamCommercials  = new KeyBinding("key.streamCommercial", 0, "key.categories.stream");
+    public KeyBinding keyBindStreamToggleMic    = new KeyBinding("key.streamToggleMic", 0, "key.categories.stream");
     public KeyBinding[] keyBindings = new KeyBinding[] {new KeyBinding("key.hotbar.1", 2, "key.categories.inventory"), new KeyBinding("key.hotbar.2", 3, "key.categories.inventory"), new KeyBinding("key.hotbar.3", 4, "key.categories.inventory"), new KeyBinding("key.hotbar.4", 5, "key.categories.inventory"), new KeyBinding("key.hotbar.5", 6, "key.categories.inventory"), new KeyBinding("key.hotbar.6", 7, "key.categories.inventory"), new KeyBinding("key.hotbar.7", 8, "key.categories.inventory"), new KeyBinding("key.hotbar.8", 9, "key.categories.inventory"), new KeyBinding("key.hotbar.9", 10, "key.categories.inventory")};
     public KeyBinding[] mc;
     protected Minecraft difficulty;
@@ -298,7 +298,7 @@ public class GameSettings
     
     public GameSettings(Minecraft mcIn, File optionsFileIn)
     {
-        this.mc = (KeyBinding[])((KeyBinding[])ArrayUtils.addAll(new KeyBinding[] {this.keyBindPickBlock, this.keyBindDrop, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindSprint, this.keyBindInventory, this.keyBindAttack, this.keyBindUseItem, this.keyBindPlayerList, this.keyBindCommand, this.keyBindChat, this.keyBindScreenshot, this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindFullscreen, this.keyBindStreamPauseUnpause, this.keyBindStreamCommercials, this.keyBindStreamToggleMic, this.keyBindsHotbar, this.keyBindSpectatorOutlines, this.keyBindStreamStartStop}, this.keyBindings));
+        this.mc = (KeyBinding[])((KeyBinding[])ArrayUtils.addAll(new KeyBinding[] {this.keyBindAttack, this.keyBindUseItem, this.keyBindForward_, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindSprint, this.keyBindDrop, this.keyBindInventory, this.keyBindChat, this.keyBindPlayerList, this.keyBindPickBlock, this.keyBindCommand, this.keyBindScreenshot, this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindStreamStartStop, this.keyBindStreamPauseUnpause, this.keyBindStreamCommercials, this.keyBindStreamToggleMic, this.keyBindFullscreen, this.keyBindSpectatorOutlines}, this.keyBindings));
         this.hideGUI = EnumDifficulty.NORMAL;
         this.smoothCamera = "";
         this.gammaSetting = 70.0F;
@@ -348,7 +348,7 @@ public class GameSettings
 
     public GameSettings()
     {
-        this.mc = (KeyBinding[])((KeyBinding[])ArrayUtils.addAll(new KeyBinding[] {this.keyBindPickBlock, this.keyBindDrop, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindSprint, this.keyBindInventory, this.keyBindAttack, this.keyBindUseItem, this.keyBindPlayerList, this.keyBindCommand, this.keyBindChat, this.keyBindScreenshot, this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindFullscreen, this.keyBindStreamPauseUnpause, this.keyBindStreamCommercials, this.keyBindStreamToggleMic, this.keyBindsHotbar, this.keyBindSpectatorOutlines, this.keyBindStreamStartStop}, this.keyBindings));
+        this.mc = (KeyBinding[])((KeyBinding[])ArrayUtils.addAll(new KeyBinding[] {this.keyBindAttack, this.keyBindUseItem, this.keyBindForward_, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindSprint, this.keyBindDrop, this.keyBindInventory, this.keyBindChat, this.keyBindPlayerList, this.keyBindPickBlock, this.keyBindCommand, this.keyBindScreenshot, this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindStreamStartStop, this.keyBindStreamPauseUnpause, this.keyBindStreamCommercials, this.keyBindStreamToggleMic, this.keyBindFullscreen, this.keyBindSpectatorOutlines}, this.keyBindings));
         this.hideGUI = EnumDifficulty.NORMAL;
         this.smoothCamera = "";
         this.gammaSetting = 70.0F;
