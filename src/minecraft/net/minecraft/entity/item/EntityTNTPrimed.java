@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +23,7 @@ public class EntityTNTPrimed extends Entity
     public EntityTNTPrimed(World worldIn, double x, double y, double z, EntityLivingBase igniter)
     {
         this(worldIn);
+        super.entityType = EntityType.OTHER;
         this.setPosition(x, y, z);
         float f = (float)(Math.random() * Math.PI * 2.0D);
         this.motionX = (double)(-((float)Math.sin((double)f)) * 0.02F);

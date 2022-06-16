@@ -1,6 +1,9 @@
 package net.minecraft.entity.item;
 
 import com.google.common.collect.Lists;
+
+import cute.util.types.EntityType;
+
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAnvil;
@@ -36,11 +39,13 @@ public class EntityFallingBlock extends Entity
     public EntityFallingBlock(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
     }
 
     public EntityFallingBlock(World worldIn, double x, double y, double z, IBlockState fallingBlockState)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
         this.fallTile = fallingBlockState;
         this.preventEntitySpawning = true;
         this.setSize(0.98F, 0.98F);

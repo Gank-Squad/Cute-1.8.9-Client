@@ -1,5 +1,6 @@
 package net.minecraft.entity.monster;
 
+import cute.util.types.EntityType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -26,6 +27,7 @@ public class EntitySnowman extends EntityGolem implements IRangedAttackMob
     public EntitySnowman(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PASSIVE;
         this.setSize(0.7F, 1.9F);
         ((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(1, new EntityAIArrowAttack(this, 1.25D, 20, 10.0F));

@@ -1,5 +1,6 @@
 package net.minecraft.entity.projectile;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,16 +15,19 @@ public class EntityLargeFireball extends EntityFireball
     public EntityLargeFireball(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntityLargeFireball(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)
     {
         super(worldIn, x, y, z, accelX, accelY, accelZ);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntityLargeFireball(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)
     {
         super(worldIn, shooter, accelX, accelY, accelZ);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     /**

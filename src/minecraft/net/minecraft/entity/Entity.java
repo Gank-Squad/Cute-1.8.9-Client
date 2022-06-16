@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;
@@ -243,6 +245,8 @@ public abstract class Entity implements ICommandSender
     /** The command result statistics for this Entity. */
     private final CommandResultStats cmdResultStats;
 
+    public EntityType entityType = EntityType.OTHER;
+
     public int getEntityId()
     {
         return this.entityId;
@@ -253,6 +257,16 @@ public abstract class Entity implements ICommandSender
         this.entityId = id;
     }
 
+    public void setEntityType(EntityType t)
+    {
+    	this.entityType = t;
+    }
+    
+    public EntityType getEntityType()
+    {
+    	return this.entityType;
+    }
+    
     /**
      * Called by the /kill command.
      */

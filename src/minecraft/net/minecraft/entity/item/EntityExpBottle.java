@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.BlockPos;
@@ -11,16 +12,19 @@ public class EntityExpBottle extends EntityThrowable
     public EntityExpBottle(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntityExpBottle(World worldIn, EntityLivingBase p_i1786_2_)
     {
         super(worldIn, p_i1786_2_);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntityExpBottle(World worldIn, double x, double y, double z)
     {
         super(worldIn, x, y, z);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     /**

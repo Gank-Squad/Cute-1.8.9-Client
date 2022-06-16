@@ -1,6 +1,8 @@
 package net.minecraft.entity.passive;
 
 import java.util.Random;
+
+import cute.util.types.EntityType;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentData;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -98,6 +100,7 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
     public EntityVillager(World worldIn)
     {
         this(worldIn, 0);
+        super.entityType = EntityType.PASSIVE;
     }
 
     public EntityVillager(World worldIn, int professionId)

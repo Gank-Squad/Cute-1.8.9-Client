@@ -1,6 +1,8 @@
 package net.minecraft.entity.monster;
 
 import java.util.UUID;
+
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,6 +36,7 @@ public class EntityPigZombie extends EntityZombie
     public EntityPigZombie(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.NEUTRAL;
         this.isImmuneToFire = true;
     }
 

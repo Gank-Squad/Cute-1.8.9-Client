@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import cute.util.types.EntityType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +12,7 @@ import net.minecraft.world.World;
 
 public class EntityXPOrb extends Entity
 {
+	
     /**
      * A constantly increasing value that RenderXPOrb uses to control the colour shifting (Green / yellow)
      */
@@ -35,6 +37,7 @@ public class EntityXPOrb extends Entity
     public EntityXPOrb(World worldIn, double x, double y, double z, int expValue)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
         this.setSize(0.5F, 0.5F);
         this.setPosition(x, y, z);
         this.rotationYaw = (float)(Math.random() * 360.0D);

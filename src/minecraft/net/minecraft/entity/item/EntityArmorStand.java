@@ -1,6 +1,8 @@
 package net.minecraft.entity.item;
 
 import java.util.List;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -50,6 +52,7 @@ public class EntityArmorStand extends EntityLivingBase
     public EntityArmorStand(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
         this.contents = new ItemStack[5];
         this.headRotation = DEFAULT_HEAD_ROTATION;
         this.bodyRotation = DEFAULT_BODY_ROTATION;
@@ -65,6 +68,7 @@ public class EntityArmorStand extends EntityLivingBase
     public EntityArmorStand(World worldIn, double posX, double posY, double posZ)
     {
         this(worldIn);
+        super.entityType = EntityType.OTHER;
         this.setPosition(posX, posY, posZ);
     }
 

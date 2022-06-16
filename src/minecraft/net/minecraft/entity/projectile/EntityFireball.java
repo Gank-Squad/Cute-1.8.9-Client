@@ -1,6 +1,8 @@
 package net.minecraft.entity.projectile;
 
 import java.util.List;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -33,6 +35,7 @@ public abstract class EntityFireball extends Entity
     public EntityFireball(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
         this.setSize(1.0F, 1.0F);
     }
 

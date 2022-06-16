@@ -1,5 +1,6 @@
 package net.minecraft.entity.passive;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -9,6 +10,7 @@ public abstract class EntityAmbientCreature extends EntityLiving implements IAni
     public EntityAmbientCreature(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.AMBIENT;
     }
 
     public boolean allowLeashing()

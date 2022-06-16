@@ -130,58 +130,111 @@ public class Tracers extends Module
 	            	   AntiBot.isBot((EntityLivingBase)entity))
 				continue;
 			
-			if(entity instanceof EntityPlayer) 
+			switch(entity.getEntityType())
         	{
-        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
-        		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), playerPicker.getColor());
-        		}
-        		continue;
+        		default:
+        			continue;
+        			
+	        	case PLAYER:
+	        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
+	        		{
+	        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), playerPicker.getColor());
+	        		}
+	        		continue;
+
+	        		
+	        	case HOSTILE:
+	        		if(mobs.getValue()) 
+	        		{
+	        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), mobsPicker.getColor());
+	        		}
+	        		continue;
+	        		
+	        	case NEUTRAL:
+	        		
+	        		if(neutral.getValue()) 
+	        		{
+	        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), neutralPicker.getColor());
+	        		}
+	        		continue;
+	        		
+	        	case PASSIVE:
+	        		
+	        		if(animals.getValue()) 
+	        		{
+	        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), animalPicker.getColor());
+	        		}
+	        		continue;
+	        	
+	        	
+	        	case VEHICLE:
+
+	        		if(vehicles.getValue()) 
+	        		{
+	        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), vehiclesPicker.getColor());
+	        		}
+	        		continue;
+	        	
+	        	case ITEM:
+	        		if(items.getValue()) 
+	        		{
+	        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), itemsPicker.getColor());
+	        		}
+	        		continue;
         	}
+			
+//			if(entity instanceof EntityPlayer) 
+//        	{
+//        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
+//        		{
+//        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), playerPicker.getColor());
+//        		}
+//        		continue;
+//        	}
         	
-        	if(entity instanceof EntityItem) 
-        	{
-        		if(items.getValue()) 
-        		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), itemsPicker.getColor());
-        		}
-        		continue;
-        	}
+//        	if(entity instanceof EntityItem) 
+//        	{
+//        		if(items.getValue()) 
+//        		{
+//        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), itemsPicker.getColor());
+//        		}
+//        		continue;
+//        	}
         	
-        	if(EntityUtil.isHostileMob(entity))
-        	{
-        		if(mobs.getValue()) 
-        		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), mobsPicker.getColor());
-        		}
-        		continue;
-        	}
+//        	if(EntityUtil.isHostileMob(entity))
+//        	{
+//        		if(mobs.getValue()) 
+//        		{
+//        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), mobsPicker.getColor());
+//        		}
+//        		continue;
+//        	}
         	
-        	if(EntityUtil.isPassive(entity)) 
-        	{
-        		if(animals.getValue()) 
-        		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), animalPicker.getColor());
-        		}
-        		continue;
-        	}
+//        	if(EntityUtil.isPassive(entity)) 
+//        	{
+//        		if(animals.getValue()) 
+//        		{
+//        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), animalPicker.getColor());
+//        		}
+//        		continue;
+//        	}
         	
-        	if(EntityUtil.isNeutralMob(entity)) 
-        	{
-        		if(neutral.getValue()) 
-        		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), neutralPicker.getColor());
-        		}
-        		continue;
-        	}        	
+//        	if(EntityUtil.isNeutralMob(entity)) 
+//        	{
+//        		if(neutral.getValue()) 
+//        		{
+//        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), neutralPicker.getColor());
+//        		}
+//        		continue;
+//        	}        	
         	
-        	if(EntityUtil.isVehicle(entity)) 
-        	{
-        		if(vehicles.getValue()) 
-        		{
-        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), vehiclesPicker.getColor());
-        		}
-        	}			
+//        	if(EntityUtil.isVehicle(entity)) 
+//        	{
+//        		if(vehicles.getValue()) 
+//        		{
+//        			RenderUtil.renderTracer(mx, my, mz, entity, radius.getValue(), alphaSensitivity.getValue(), vehiclesPicker.getColor());
+//        		}
+//        	}			
 		}
 
 		GL11.glEnd();

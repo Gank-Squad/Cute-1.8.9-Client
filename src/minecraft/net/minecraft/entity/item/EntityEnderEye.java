@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,7 @@ import net.minecraft.world.World;
 
 public class EntityEnderEye extends Entity
 {
+	
     /** 'x' location the eye should float towards. */
     private double targetX;
 
@@ -25,6 +27,7 @@ public class EntityEnderEye extends Entity
     public EntityEnderEye(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
         this.setSize(0.25F, 0.25F);
     }
 
@@ -52,6 +55,7 @@ public class EntityEnderEye extends Entity
     public EntityEnderEye(World worldIn, double x, double y, double z)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
         this.despawnTimer = 0;
         this.setSize(0.25F, 0.25F);
         this.setPosition(x, y, z);

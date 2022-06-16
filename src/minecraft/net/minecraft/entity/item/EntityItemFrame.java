@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,11 +23,13 @@ public class EntityItemFrame extends EntityHanging
     public EntityItemFrame(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
     }
 
     public EntityItemFrame(World worldIn, BlockPos p_i45852_2_, EnumFacing p_i45852_3_)
     {
         super(worldIn, p_i45852_2_);
+        super.entityType = EntityType.OTHER;
         this.updateFacingWithBoundingBox(p_i45852_3_);
     }
 

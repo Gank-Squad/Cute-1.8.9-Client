@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,6 +21,7 @@ public class EntityFireworkRocket extends Entity
     public EntityFireworkRocket(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
         this.setSize(0.25F, 0.25F);
     }
 
@@ -40,6 +42,7 @@ public class EntityFireworkRocket extends Entity
     public EntityFireworkRocket(World worldIn, double x, double y, double z, ItemStack givenItem)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
         this.fireworkAge = 0;
         this.setSize(0.25F, 0.25F);
         this.setPosition(x, y, z);

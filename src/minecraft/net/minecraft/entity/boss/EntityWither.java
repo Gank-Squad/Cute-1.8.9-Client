@@ -2,6 +2,9 @@ package net.minecraft.entity.boss;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+
+import cute.util.types.EntityType;
+
 import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -38,7 +41,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 public class EntityWither extends EntityMob implements IBossDisplayData, IRangedAttackMob
-{
+{	
     private float[] field_82220_d = new float[2];
     private float[] field_82221_e = new float[2];
     private float[] field_82217_f = new float[2];
@@ -59,6 +62,7 @@ public class EntityWither extends EntityMob implements IBossDisplayData, IRanged
     public EntityWither(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.BOSS;
         this.setHealth(this.getMaxHealth());
         this.setSize(0.9F, 3.5F);
         this.isImmuneToFire = true;

@@ -1,6 +1,8 @@
 package net.minecraft.entity.monster;
 
 import java.util.Random;
+
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityFlying;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,12 +25,14 @@ import net.minecraft.world.World;
 
 public class EntityGhast extends EntityFlying implements IMob
 {
+	
     /** The explosion radius of spawned fireballs. */
     private int explosionStrength = 1;
 
     public EntityGhast(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.HOSTILE;
         this.setSize(4.0F, 4.0F);
         this.isImmuneToFire = true;
         this.experienceValue = 5;

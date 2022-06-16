@@ -2,6 +2,8 @@ package net.minecraft.entity.projectile;
 
 import java.util.Arrays;
 import java.util.List;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -66,6 +68,7 @@ public class EntityFishHook extends Entity
     public EntityFishHook(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
         this.xTile = -1;
         this.yTile = -1;
         this.zTile = -1;
@@ -76,6 +79,7 @@ public class EntityFishHook extends Entity
     public EntityFishHook(World worldIn, double x, double y, double z, EntityPlayer anglerIn)
     {
         this(worldIn);
+        super.entityType = EntityType.PROJECTILE;
         this.setPosition(x, y, z);
         this.ignoreFrustumCheck = true;
         this.angler = anglerIn;
@@ -85,6 +89,7 @@ public class EntityFishHook extends Entity
     public EntityFishHook(World worldIn, EntityPlayer fishingPlayer)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
         this.xTile = -1;
         this.yTile = -1;
         this.zTile = -1;

@@ -1,6 +1,8 @@
 package net.minecraft.entity.projectile;
 
 import java.util.List;
+
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -22,16 +24,19 @@ public class EntityPotion extends EntityThrowable
     public EntityPotion(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntityPotion(World worldIn, EntityLivingBase throwerIn, int meta)
     {
         this(worldIn, throwerIn, new ItemStack(Items.potionitem, 1, meta));
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntityPotion(World worldIn, EntityLivingBase throwerIn, ItemStack potionDamageIn)
     {
         super(worldIn, throwerIn);
+        super.entityType = EntityType.PROJECTILE;
         this.potionDamage = potionDamageIn;
     }
 

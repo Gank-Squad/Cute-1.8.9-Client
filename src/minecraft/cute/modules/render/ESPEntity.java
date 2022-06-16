@@ -19,13 +19,13 @@ import cute.settings.Mode;
 import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
-import cute.util.Util;
+import cute.util.types.EntityType;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
@@ -121,33 +121,71 @@ public class ESPEntity<T extends Entity> extends Module
     	if(entity instanceof EntityPlayerSP || AntiBot.isBot((EntityLivingBase)entity) || entity.isDead || !entity.isEntityAlive())
     		return;
 
-    	if(entity instanceof EntityPlayer) 
+
+    	switch(entity.getEntityType())
     	{
-    		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
-    			return;
-    		RenderUtil.setColor(playerPicker.getColor());
+        	case PLAYER:
+        		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
+        			return;
+        		RenderUtil.setColor(playerPicker.getColor());
+        		break;
+        		
+        	case HOSTILE:
+        		if(!mobs.getValue()) 
+        			return;
+        		RenderUtil.setColor(mobsPicker.getColor());
+        		break;
+        		
+        	case NEUTRAL:
+        		if(!neutral.getValue()) 
+        			return;
+        		RenderUtil.setColor(neutralPicker.getColor());
+        		break;
+        		
+        	case PASSIVE:
+        		if(!animals.getValue()) 
+        			return;
+        		RenderUtil.setColor(animalPicker.getColor());
+        		break;
+        	
+        	
+        	case VEHICLE:        		
+        	case AMBIENT:
+        	case PROJECTILE:
+        	case ITEM:
+        	case BOSS:
+        	case OTHER:
+        			break;
     	}
-    	else
-    	if(EntityUtil.isHostileMob(entity))
-    	{
-    		if(!mobs.getValue()) 
-    			return;
-    		RenderUtil.setColor(mobsPicker.getColor());
-    	}
-    	else
-    	if(EntityUtil.isPassive(entity)) 
-    	{
-    		if(!animals.getValue()) 
-    			return;
-    		RenderUtil.setColor(animalPicker.getColor());
-    	}
-    	else
-    	if(EntityUtil.isNeutralMob(entity)) 
-    	{
-    		if(!neutral.getValue()) 
-    			return;
-    		RenderUtil.setColor(neutralPicker.getColor());
-    	}  
+    	
+    	
+//    	if(entity instanceof EntityPlayer) 
+//    	{
+//    		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
+//    			return;
+//    		RenderUtil.setColor(playerPicker.getColor());
+//    	}
+//    	else
+//    	if(EntityUtil.isHostileMob(entity))
+//    	{
+//    		if(!mobs.getValue()) 
+//    			return;
+//    		RenderUtil.setColor(mobsPicker.getColor());
+//    	}
+//    	else
+//    	if(EntityUtil.isPassive(entity)) 
+//    	{
+//    		if(!animals.getValue()) 
+//    			return;
+//    		RenderUtil.setColor(animalPicker.getColor());
+//    	}
+//    	else
+//    	if(EntityUtil.isNeutralMob(entity)) 
+//    	{
+//    		if(!neutral.getValue()) 
+//    			return;
+//    		RenderUtil.setColor(neutralPicker.getColor());
+//    	}  
     	
     	GL11.glLineWidth((float)lineWidth.getValue());
     	
@@ -358,72 +396,141 @@ public class ESPEntity<T extends Entity> extends Module
              	   (entity instanceof EntityLivingBase) && 
             	   AntiBot.isBot((EntityLivingBase)entity))
         		continue;
-        	
-        	if(entity instanceof EntityPlayer) 
-        	{
-        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
-        		{
-        			RenderUtil.setColor(playerPicker.getColor());
-        			
-        			if(mode.getValue() == 0)
-        				RenderUtil.renderEntityHitbox(entity);
-        			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
-        		}
-        		continue;
-        	}
-        	
-        	if(EntityUtil.isHostileMob(entity))
-        	{
-        		if(mobs.getValue()) 
-        		{
-        			RenderUtil.setColor(mobsPicker.getColor());
-        			if(mode.getValue() == 0)
-        				RenderUtil.renderEntityHitbox(entity);
-        			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
-        		}
-        		continue;
-        	}
-        	
-        	if(EntityUtil.isPassive(entity)) 
-        	{
-        		if(animals.getValue()) 
-        		{
-        			RenderUtil.setColor(animalPicker.getColor());
-        			if(mode.getValue() == 0)
-        				RenderUtil.renderEntityHitbox(entity);
-        			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
-        		}
-        		continue;
-        	}
-        	
-        	if(EntityUtil.isNeutralMob(entity)) 
-        	{
-        		if(neutral.getValue()) 
-        		{
-        			RenderUtil.setColor(neutralPicker.getColor());
-        			if(mode.getValue() == 0)
-        				RenderUtil.renderEntityHitbox(entity);
-        			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
-        		}
-        		continue;
-        	}        	
-        	
-        	if(EntityUtil.isVehicle(entity)) 
-        	{
-        		if(vehicles.getValue()) 
-        		{
-        			RenderUtil.setColor(vehiclesPicker.getColor());
 
-        			if(mode.getValue() == 0)
-        				RenderUtil.renderEntityHitbox(entity);
-        			else 
-        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
-        		}
+        	
+        	switch(entity.getEntityType())
+        	{
+        		default:
+        			continue;
+        			
+	        	case PLAYER:
+	        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
+	        		{
+	        			RenderUtil.setColor(playerPicker.getColor());
+	        			
+	        			if(mode.getValue() == 0)
+	        				RenderUtil.renderEntityHitbox(entity);
+	        			else 
+	        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+	        		}
+	        		continue;
+	        		
+	        	case HOSTILE:
+	        		if(mobs.getValue()) 
+	        		{
+	        			RenderUtil.setColor(mobsPicker.getColor());
+	        			if(mode.getValue() == 0)
+	        				RenderUtil.renderEntityHitbox(entity);
+	        			else 
+	        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+	        		}
+	        		continue;
+	        		
+	        	case NEUTRAL:
+	        		
+            		if(neutral.getValue()) 
+            		{
+            			RenderUtil.setColor(neutralPicker.getColor());
+            			if(mode.getValue() == 0)
+            				RenderUtil.renderEntityHitbox(entity);
+            			else 
+            				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+            		}
+	            	
+	        		continue;
+	        		
+	        	case PASSIVE:
+	        		
+            		if(animals.getValue()) 
+            		{
+            			RenderUtil.setColor(animalPicker.getColor());
+            			if(mode.getValue() == 0)
+            				RenderUtil.renderEntityHitbox(entity);
+            			else 
+            				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+            		}
+	        		continue;
+	        	
+	        	
+	        	case VEHICLE:
+
+            		if(vehicles.getValue()) 
+            		{
+            			RenderUtil.setColor(vehiclesPicker.getColor());
+
+            			if(mode.getValue() == 0)
+            				RenderUtil.renderEntityHitbox(entity);
+            			else 
+            				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+            		}
+	        		continue;
         	}
+        	
+//        	if(entity instanceof EntityPlayer) 
+//        	{
+//        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
+//        		{
+//        			RenderUtil.setColor(playerPicker.getColor());
+//        			
+//        			if(mode.getValue() == 0)
+//        				RenderUtil.renderEntityHitbox(entity);
+//        			else 
+//        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+//        		}
+//        		continue;
+//        	}
+        	
+//        	if(EntityUtil.isHostileMob(entity))
+//        	{
+//        		if(mobs.getValue()) 
+//        		{
+//        			RenderUtil.setColor(mobsPicker.getColor());
+//        			if(mode.getValue() == 0)
+//        				RenderUtil.renderEntityHitbox(entity);
+//        			else 
+//        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+//        		}
+//        		continue;
+//        	}
+        	
+//        	if(EntityUtil.isPassive(entity)) 
+//        	{
+//        		if(animals.getValue()) 
+//        		{
+//        			RenderUtil.setColor(animalPicker.getColor());
+//        			if(mode.getValue() == 0)
+//        				RenderUtil.renderEntityHitbox(entity);
+//        			else 
+//        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+//        		}
+//        		continue;
+//        	}
+        	
+//        	if(EntityUtil.isNeutralMob(entity)) 
+//        	{
+//        		if(neutral.getValue()) 
+//        		{
+//        			RenderUtil.setColor(neutralPicker.getColor());
+//        			if(mode.getValue() == 0)
+//        				RenderUtil.renderEntityHitbox(entity);
+//        			else 
+//        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+//        		}
+//        		continue;
+//        	}        	
+        	
+//        	if(EntityUtil.isVehicle(entity)) 
+//        	{
+//        		if(vehicles.getValue()) 
+//        		{
+//        			RenderUtil.setColor(vehiclesPicker.getColor());
+//
+//        			if(mode.getValue() == 0)
+//        				RenderUtil.renderEntityHitbox(entity);
+//        			else 
+//        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
+//        		}
+//        	}
         }
         
         

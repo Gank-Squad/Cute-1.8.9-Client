@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cute.util.types.EntityType;
+
 public class EntityItem extends Entity
 {
     private static final Logger logger = LogManager.getLogger();
@@ -38,6 +40,7 @@ public class EntityItem extends Entity
     public EntityItem(World worldIn, double x, double y, double z)
     {
         super(worldIn);
+        super.entityType = EntityType.ITEM;
         this.health = 5;
         this.hoverStart = (float)(Math.random() * Math.PI * 2.0D);
         this.setSize(0.25F, 0.25F);
@@ -51,6 +54,7 @@ public class EntityItem extends Entity
     public EntityItem(World worldIn, double x, double y, double z, ItemStack stack)
     {
         this(worldIn, x, y, z);
+        super.entityType = EntityType.ITEM;
         this.setEntityItemStack(stack);
     }
 
@@ -66,6 +70,7 @@ public class EntityItem extends Entity
     public EntityItem(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.ITEM;
         this.health = 5;
         this.hoverStart = (float)(Math.random() * Math.PI * 2.0D);
         this.setSize(0.25F, 0.25F);

@@ -1,5 +1,6 @@
 package net.minecraft.entity.monster;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,6 +36,7 @@ public class EntitySlime extends EntityLiving implements IMob
     public EntitySlime(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.HOSTILE;
         this.moveHelper = new EntitySlime.SlimeMoveHelper(this);
         this.tasks.addTask(1, new EntitySlime.AISlimeFloat(this));
         this.tasks.addTask(2, new EntitySlime.AISlimeAttack(this));

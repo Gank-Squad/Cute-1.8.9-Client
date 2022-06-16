@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,6 +19,7 @@ public class EntityEnderCrystal extends Entity
     public EntityEnderCrystal(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.OTHER;
         this.preventEntitySpawning = true;
         this.setSize(2.0F, 2.0F);
         this.health = 5;
@@ -27,6 +29,7 @@ public class EntityEnderCrystal extends Entity
     public EntityEnderCrystal(World worldIn, double x, double y, double z)
     {
         this(worldIn);
+        super.entityType = EntityType.OTHER;
         this.setPosition(x, y, z);
     }
 

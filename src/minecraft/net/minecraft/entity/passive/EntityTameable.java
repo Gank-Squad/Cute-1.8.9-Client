@@ -1,6 +1,8 @@
 package net.minecraft.entity.passive;
 
 import java.util.UUID;
+
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityOwnable;
 import net.minecraft.entity.ai.EntityAISit;
@@ -14,6 +16,7 @@ import net.minecraft.world.World;
 
 public abstract class EntityTameable extends EntityAnimal implements IEntityOwnable
 {
+	
     protected EntityAISit aiSit = new EntityAISit(this);
 
     public EntityTameable(World worldIn)

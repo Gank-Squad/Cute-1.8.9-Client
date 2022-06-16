@@ -1,6 +1,9 @@
 package net.minecraft.entity.item;
 
 import com.google.common.collect.Lists;
+
+import cute.util.types.EntityType;
+
 import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityHanging;
@@ -24,6 +27,7 @@ public class EntityPainting extends EntityHanging
     public EntityPainting(World worldIn, BlockPos pos, EnumFacing facing)
     {
         super(worldIn, pos);
+        super.entityType = EntityType.OTHER;
         List<EntityPainting.EnumArt> list = Lists.<EntityPainting.EnumArt>newArrayList();
 
         for (EntityPainting.EnumArt entitypainting$enumart : EntityPainting.EnumArt.values())
@@ -48,7 +52,8 @@ public class EntityPainting extends EntityHanging
     public EntityPainting(World worldIn, BlockPos pos, EnumFacing facing, String title)
     {
         this(worldIn, pos, facing);
-
+        super.entityType = EntityType.OTHER;
+        
         for (EntityPainting.EnumArt entitypainting$enumart : EntityPainting.EnumArt.values())
         {
             if (entitypainting$enumart.title.equals(title))

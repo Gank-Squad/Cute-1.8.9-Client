@@ -1,5 +1,6 @@
 package net.minecraft.entity.passive;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
@@ -10,6 +11,7 @@ public abstract class EntityWaterMob extends EntityLiving implements IAnimals
     public EntityWaterMob(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PASSIVE;
     }
 
     public boolean canBreatheUnderwater()

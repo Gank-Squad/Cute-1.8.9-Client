@@ -1,6 +1,9 @@
 package net.minecraft.entity.boss;
 
 import com.google.common.collect.Lists;
+
+import cute.util.types.EntityType;
+
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.block.Block;
@@ -81,6 +84,7 @@ public class EntityDragon extends EntityLiving implements IBossDisplayData, IEnt
     public EntityDragon(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.BOSS;
         this.dragonPartArray = new EntityDragonPart[] {this.dragonPartHead = new EntityDragonPart(this, "head", 6.0F, 6.0F), this.dragonPartBody = new EntityDragonPart(this, "body", 8.0F, 8.0F), this.dragonPartTail1 = new EntityDragonPart(this, "tail", 4.0F, 4.0F), this.dragonPartTail2 = new EntityDragonPart(this, "tail", 4.0F, 4.0F), this.dragonPartTail3 = new EntityDragonPart(this, "tail", 4.0F, 4.0F), this.dragonPartWing1 = new EntityDragonPart(this, "wing", 4.0F, 4.0F), this.dragonPartWing2 = new EntityDragonPart(this, "wing", 4.0F, 4.0F)};
         this.setHealth(this.getMaxHealth());
         this.setSize(16.0F, 8.0F);

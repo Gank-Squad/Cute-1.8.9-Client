@@ -1,6 +1,8 @@
 package net.minecraft.entity.projectile;
 
 import java.util.List;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -59,6 +61,7 @@ public class EntityArrow extends Entity implements IProjectile
     public EntityArrow(World worldIn, double x, double y, double z)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
         this.renderDistanceWeight = 10.0D;
         this.setSize(0.5F, 0.5F);
         this.setPosition(x, y, z);

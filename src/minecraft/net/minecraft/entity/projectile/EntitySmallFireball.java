@@ -1,5 +1,6 @@
 package net.minecraft.entity.projectile;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -13,18 +14,21 @@ public class EntitySmallFireball extends EntityFireball
     public EntitySmallFireball(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
         this.setSize(0.3125F, 0.3125F);
     }
 
     public EntitySmallFireball(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)
     {
         super(worldIn, shooter, accelX, accelY, accelZ);
+        super.entityType = EntityType.PROJECTILE;
         this.setSize(0.3125F, 0.3125F);
     }
 
     public EntitySmallFireball(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ)
     {
         super(worldIn, x, y, z, accelX, accelY, accelZ);
+        super.entityType = EntityType.PROJECTILE;
         this.setSize(0.3125F, 0.3125F);
     }
 

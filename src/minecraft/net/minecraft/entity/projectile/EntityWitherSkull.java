@@ -1,5 +1,6 @@
 package net.minecraft.entity.projectile;
 
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,12 +19,14 @@ public class EntityWitherSkull extends EntityFireball
     public EntityWitherSkull(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
         this.setSize(0.3125F, 0.3125F);
     }
 
     public EntityWitherSkull(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ)
     {
         super(worldIn, shooter, accelX, accelY, accelZ);
+        super.entityType = EntityType.PROJECTILE;
         this.setSize(0.3125F, 0.3125F);
     }
 

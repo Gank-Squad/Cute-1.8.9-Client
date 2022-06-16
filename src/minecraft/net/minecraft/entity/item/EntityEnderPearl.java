@@ -1,5 +1,6 @@
 package net.minecraft.entity.item;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityEndermite;
@@ -18,17 +19,20 @@ public class EntityEnderPearl extends EntityThrowable
     public EntityEnderPearl(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntityEnderPearl(World worldIn, EntityLivingBase p_i1783_2_)
     {
         super(worldIn, p_i1783_2_);
+        super.entityType = EntityType.PROJECTILE;
         this.field_181555_c = p_i1783_2_;
     }
 
     public EntityEnderPearl(World worldIn, double x, double y, double z)
     {
         super(worldIn, x, y, z);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     /**

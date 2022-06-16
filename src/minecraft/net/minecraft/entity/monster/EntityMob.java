@@ -1,5 +1,6 @@
 package net.minecraft.entity.monster;
 
+import cute.util.types.EntityType;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -17,6 +18,7 @@ public abstract class EntityMob extends EntityCreature implements IMob
     public EntityMob(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.HOSTILE;
         this.experienceValue = 5;
     }
 

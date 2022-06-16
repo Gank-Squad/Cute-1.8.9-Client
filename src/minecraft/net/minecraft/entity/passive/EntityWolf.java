@@ -1,7 +1,11 @@
 package net.minecraft.entity.passive;
 
 import com.google.common.base.Predicate;
+
+import cute.util.Util;
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
@@ -59,6 +63,7 @@ public class EntityWolf extends EntityTameable
     public EntityWolf(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.NEUTRAL;
         this.setSize(0.6F, 0.8F);
         ((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(1, new EntityAISwimming(this));
@@ -215,9 +220,23 @@ public class EntityWolf extends EntityTameable
             this.worldObj.setEntityState(this, (byte)8);
         }
 
-        if (!this.worldObj.isRemote && this.getAttackTarget() == null && this.isAngry())
+        // changing entityType literally only works in this function for some reason
+        // i really havve no idea wtffff 
+        if(this.isAngry())
         {
-            this.setAngry(false);
+            if (!this.worldObj.isRemote && this.getAttackTarget() == null)
+            {
+                this.setAngry(false);
+                super.entityType = this.getOwner() == Minecraft.getMinecraft().thePlayer ? EntityType.PASSIVE : EntityType.NEUTRAL;
+            }
+            else
+            {
+            	super.entityType = EntityType.HOSTILE;
+            }
+        }
+        else 
+        {
+        	super.entityType = this.getOwner() == Minecraft.getMinecraft().thePlayer ? EntityType.PASSIVE : EntityType.NEUTRAL;
         }
     }
 
@@ -367,7 +386,7 @@ public class EntityWolf extends EntityTameable
     public void setTamed(boolean tamed)
     {
         super.setTamed(tamed);
-
+        
         if (tamed)
         {
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);

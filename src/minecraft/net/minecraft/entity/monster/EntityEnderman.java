@@ -2,6 +2,9 @@ package net.minecraft.entity.monster;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
+
+import cute.util.types.EntityType;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -10,6 +13,7 @@ import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -49,6 +53,7 @@ public class EntityEnderman extends EntityMob
     public EntityEnderman(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.NEUTRAL;
         this.setSize(0.6F, 2.9F);
         this.stepHeight = 1.0F;
         this.tasks.addTask(0, new EntityAISwimming(this));
@@ -157,6 +162,13 @@ public class EntityEnderman extends EntityMob
                 this.worldObj.spawnParticle(EnumParticleTypes.PORTAL, this.posX + (this.rand.nextDouble() - 0.5D) * (double)this.width, this.posY + this.rand.nextDouble() * (double)this.height - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double)this.width, (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
             }
         }
+
+        
+        // this doesn't work, it should work, but the value of entityType doesn't change regardless of what gets set here
+//        if(this.getAttackTarget() != null) 
+//        {
+//        	this.entityType = this.getAttackTarget().getName() == Minecraft.getMinecraft().thePlayer.getName() ? EntityType.HOSTILE : EntityType.NEUTRAL;	
+//        }
 
         this.isJumping = false;
         super.onLivingUpdate();

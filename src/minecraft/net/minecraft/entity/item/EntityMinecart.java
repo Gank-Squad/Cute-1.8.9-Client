@@ -1,6 +1,9 @@
 package net.minecraft.entity.item;
 
 import com.google.common.collect.Maps;
+
+import cute.util.types.EntityType;
+
 import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRailBase;
@@ -31,7 +34,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 
 public abstract class EntityMinecart extends Entity implements IWorldNameable
-{
+{	
     private boolean isInReverse;
     private String entityName;
 
@@ -52,6 +55,7 @@ public abstract class EntityMinecart extends Entity implements IWorldNameable
     public EntityMinecart(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.VEHICLE;
         this.preventEntitySpawning = true;
         this.setSize(0.98F, 0.7F);
     }

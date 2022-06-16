@@ -1,5 +1,6 @@
 package net.minecraft.entity.projectile;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.init.Items;
@@ -14,6 +15,7 @@ public class EntityEgg extends EntityThrowable
     public EntityEgg(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntityEgg(World worldIn, EntityLivingBase throwerIn)

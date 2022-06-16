@@ -1,10 +1,13 @@
 package net.minecraft.entity.monster;
 
 import com.google.common.base.Predicate;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -45,6 +48,7 @@ public class EntityIronGolem extends EntityGolem
     public EntityIronGolem(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.NEUTRAL;
         this.setSize(1.4F, 2.9F);
         ((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(1, new EntityAIAttackOnCollide(this, 1.0D, true));
@@ -129,20 +133,25 @@ public class EntityIronGolem extends EntityGolem
         {
             --this.holdRoseTick;
         }
-
-        if (this.motionX * this.motionX + this.motionZ * this.motionZ > 2.500000277905201E-7D && this.rand.nextInt(5) == 0)
-        {
-            int i = MathHelper.floor_double(this.posX);
-            int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
-            int k = MathHelper.floor_double(this.posZ);
-            IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(i, j, k));
-            Block block = iblockstate.getBlock();
-
-            if (block.getMaterial() != Material.air)
-            {
-                this.worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, this.posX + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, this.getEntityBoundingBox().minY + 0.1D, this.posZ + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, 4.0D * ((double)this.rand.nextFloat() - 0.5D), 0.5D, ((double)this.rand.nextFloat() - 0.5D) * 4.0D, new int[] {Block.getStateId(iblockstate)});
-            }
-        }
+        
+        super.entityType = this.isPlayerCreated() ? EntityType.PASSIVE : super.entityType;
+        
+        // nobody is gonna miss this ghost change 
+        // spawns sprint particles when it's chasing a target
+        
+//        if (this.motionX * this.motionX + this.motionZ * this.motionZ > 2.500000277905201E-7D && this.rand.nextInt(5) == 0)
+//        {
+//            int i = MathHelper.floor_double(this.posX);
+//            int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
+//            int k = MathHelper.floor_double(this.posZ);
+//            IBlockState iblockstate = this.worldObj.getBlockState(new BlockPos(i, j, k));
+//            Block block = iblockstate.getBlock();
+//
+//            if (block.getMaterial() != Material.air)
+//            {
+//                this.worldObj.spawnParticle(EnumParticleTypes.BLOCK_CRACK, this.posX + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, this.getEntityBoundingBox().minY + 0.1D, this.posZ + ((double)this.rand.nextFloat() - 0.5D) * (double)this.width, 4.0D * ((double)this.rand.nextFloat() - 0.5D), 0.5D, ((double)this.rand.nextFloat() - 0.5D) * 4.0D, new int[] {Block.getStateId(iblockstate)});
+//            }
+//        }
     }
 
     /**

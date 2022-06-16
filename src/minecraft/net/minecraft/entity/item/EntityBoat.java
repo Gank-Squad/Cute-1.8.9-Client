@@ -1,6 +1,8 @@
 package net.minecraft.entity.item;
 
 import java.util.List;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -36,6 +38,7 @@ public class EntityBoat extends Entity
     public EntityBoat(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.VEHICLE;
         this.isBoatEmpty = true;
         this.speedMultiplier = 0.07D;
         this.preventEntitySpawning = true;
@@ -86,6 +89,7 @@ public class EntityBoat extends Entity
     public EntityBoat(World worldIn, double p_i1705_2_, double p_i1705_4_, double p_i1705_6_)
     {
         this(worldIn);
+        super.entityType = EntityType.VEHICLE;
         this.setPosition(p_i1705_2_, p_i1705_4_, p_i1705_6_);
         this.motionX = 0.0D;
         this.motionY = 0.0D;

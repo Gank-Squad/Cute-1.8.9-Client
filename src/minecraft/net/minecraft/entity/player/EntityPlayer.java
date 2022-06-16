@@ -1,11 +1,14 @@
 package net.minecraft.entity.player;
 
-import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
-import com.mojang.authlib.GameProfile;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
+import com.mojang.authlib.GameProfile;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
@@ -176,6 +179,7 @@ public abstract class EntityPlayer extends EntityLivingBase
     public EntityPlayer(World worldIn, GameProfile gameProfileIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PLAYER;
         this.entityUniqueID = getUUID(gameProfileIn);
         this.gameProfile = gameProfileIn;
         this.inventoryContainer = new ContainerPlayer(this.inventory, !worldIn.isRemote, this);

@@ -1,6 +1,8 @@
 package net.minecraft.entity.passive;
 
 import com.google.common.base.Predicate;
+
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -33,6 +35,7 @@ import net.minecraft.world.World;
 
 public class EntityOcelot extends EntityTameable
 {
+	
     private EntityAIAvoidEntity<EntityPlayer> avoidEntity;
 
     /**
@@ -43,6 +46,7 @@ public class EntityOcelot extends EntityTameable
     public EntityOcelot(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PASSIVE;
         this.setSize(0.6F, 0.7F);
         ((PathNavigateGround)this.getNavigator()).setAvoidsWater(true);
         this.tasks.addTask(1, new EntityAISwimming(this));

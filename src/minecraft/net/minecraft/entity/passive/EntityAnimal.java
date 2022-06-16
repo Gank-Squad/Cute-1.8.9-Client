@@ -1,5 +1,6 @@
 package net.minecraft.entity.passive;
 
+import cute.util.types.EntityType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +23,7 @@ public abstract class EntityAnimal extends EntityAgeable implements IAnimals
     public EntityAnimal(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PASSIVE;
     }
 
     protected void updateAITasks()

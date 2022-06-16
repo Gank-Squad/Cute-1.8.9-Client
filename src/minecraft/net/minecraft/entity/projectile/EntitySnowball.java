@@ -1,5 +1,6 @@
 package net.minecraft.entity.projectile;
 
+import cute.util.types.EntityType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.util.DamageSource;
@@ -12,16 +13,19 @@ public class EntitySnowball extends EntityThrowable
     public EntitySnowball(World worldIn)
     {
         super(worldIn);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntitySnowball(World worldIn, EntityLivingBase throwerIn)
     {
         super(worldIn, throwerIn);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     public EntitySnowball(World worldIn, double x, double y, double z)
     {
         super(worldIn, x, y, z);
+        super.entityType = EntityType.PROJECTILE;
     }
 
     /**
