@@ -63,11 +63,11 @@ public class Players extends Module
 						
 						if(e.added)
 						{
-							Players.playerNameBlacklist.add(StringUtil.clearNameFormat(s));
+							Players.playerNameBlacklist.add(StringUtil.clearNameFormat(s).toLowerCase().trim());
 						}
 						else 
 						{
-							Players.playerNameBlacklist.remove(StringUtil.clearNameFormat(s));
+							Players.playerNameBlacklist.remove(StringUtil.clearNameFormat(s.toLowerCase().trim()));
 						}
 					}
 				}
