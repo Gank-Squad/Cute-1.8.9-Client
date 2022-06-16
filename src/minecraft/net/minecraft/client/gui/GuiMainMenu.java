@@ -161,7 +161,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
     private boolean a()
     {
-        return Minecraft.getMinecraft().gameSettings.getOptionOrdinalValue(GameSettings.Options.enumFloat) && this.M != null;
+        return Minecraft.getMinecraft().gameSettings.getOptionOrdinalValue(GameSettings.Options.REALMS_NOTIFICATIONS) && this.M != null;
     }
 
     /**
@@ -246,7 +246,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
         this.mc.setConnectedToRealms(false);
 
-        if (Minecraft.getMinecraft().gameSettings.getOptionOrdinalValue(GameSettings.Options.enumFloat) && !this.L)
+        if (Minecraft.getMinecraft().gameSettings.getOptionOrdinalValue(GameSettings.Options.REALMS_NOTIFICATIONS) && !this.L)
         {
             RealmsBridge realmsbridge = new RealmsBridge();
             this.M = realmsbridge.getNotificationScreen(this);

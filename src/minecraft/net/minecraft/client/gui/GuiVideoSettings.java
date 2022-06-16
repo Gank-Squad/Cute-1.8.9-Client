@@ -102,7 +102,7 @@ public class GuiVideoSettings extends GuiScreenOF
     {
         if (p_actionPerformed_1_.enabled)
         {
-            int i = this.guiGameSettings.particleSetting;
+            int i = this.guiGameSettings.guiScale;
 
             if (p_actionPerformed_1_.id < 200 && p_actionPerformed_1_ instanceof GuiOptionButton)
             {
@@ -116,7 +116,7 @@ public class GuiVideoSettings extends GuiScreenOF
                 this.mc.displayGuiScreen(this.parentGuiScreen);
             }
 
-            if (this.guiGameSettings.particleSetting != i)
+            if (this.guiGameSettings.guiScale != i)
             {
                 ScaledResolution scaledresolution = new ScaledResolution(this.mc);
                 int j = scaledresolution.getScaledWidth();

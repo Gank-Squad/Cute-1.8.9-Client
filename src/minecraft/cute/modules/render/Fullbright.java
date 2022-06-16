@@ -51,7 +51,7 @@ public class Fullbright extends Module
 		if(this._oldBrightness == -1)
 			return;
 		
-		this.mc.gameSettings.saturation = this._oldBrightness;	
+		this.mc.gameSettings.gammaSetting = this._oldBrightness;	
 		this._oldBrightness = -1;
 	}
 	
@@ -73,7 +73,7 @@ public class Fullbright extends Module
 				// save the old brightness setting 
 				if(this._oldBrightness == -1) 
 				{
-					this._oldBrightness = this.mc.gameSettings.saturation;
+					this._oldBrightness = this.mc.gameSettings.gammaSetting;
 				}
 				
 				if(this.hadNV) 
@@ -85,7 +85,7 @@ public class Fullbright extends Module
 					}
 				}
 				
-				this.mc.gameSettings.saturation = 100;
+				this.mc.gameSettings.gammaSetting = 100;
 				return;
 		
 			case 1:

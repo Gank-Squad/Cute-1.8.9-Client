@@ -148,7 +148,7 @@ public class IntegratedServer extends MinecraftServer
 
             if (worldserver.getWorldInfo().getDifficulty() == null)
             {
-                this.setDifficultyForAllWorlds(this.mc.gameSettings.hideGUI);
+                this.setDifficultyForAllWorlds(this.mc.gameSettings.difficulty);
             }
         }
         else
@@ -192,7 +192,7 @@ public class IntegratedServer extends MinecraftServer
 
             if (this.worldServers[0].getWorldInfo().getDifficulty() == null)
             {
-                this.setDifficultyForAllWorlds(this.mc.gameSettings.hideGUI);
+                this.setDifficultyForAllWorlds(this.mc.gameSettings.difficulty);
             }
         }
 
@@ -318,7 +318,7 @@ public class IntegratedServer extends MinecraftServer
      */
     public EnumDifficulty getDifficulty()
     {
-        return this.mc.theWorld == null ? this.mc.gameSettings.hideGUI : this.mc.theWorld.getWorldInfo().getDifficulty();
+        return this.mc.theWorld == null ? this.mc.gameSettings.difficulty : this.mc.theWorld.getWorldInfo().getDifficulty();
     }
 
     /**

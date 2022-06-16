@@ -91,7 +91,7 @@ public class Tracers extends Module
 		double mz = vec.zCoord;
 		double my = vec.yCoord + mc.thePlayer.getEyeHeight() - 0.35;
 
-		if (mc.getRenderManager().options.showDebugInfo == 0) 
+		if (mc.getRenderManager().options.thirdPersonViewSetting == 0) 
 		{
 			double drawBeforeCameraDist = firstPersonRenderPoint.getValue();
 			double pitch = ((mc.thePlayer.rotationPitch + 90) * Math.PI) / 180;

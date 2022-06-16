@@ -393,7 +393,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         this.fogColor2 = this.fogColor1;
         this.thirdPersonDistanceTemp = this.thirdPersonDistance;
 
-        if (this.mc.gameSettings.debugCamEnable)
+        if (this.mc.gameSettings.isSmoothCamera)
         {
             float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
             float f1 = f * f * f * 8.0F;
@@ -624,7 +624,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
             if (useFOVSetting)
             {
-                f = this.mc.gameSettings.gammaSetting;
+                f = this.mc.gameSettings.fovSetting;
 
                 if (Config.isDynamicFov())
                 {
@@ -645,8 +645,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 if (!Config.zoomMode)
                 {
                     Config.zoomMode = true;
-                    Config.zoomSmoothCamera = this.mc.gameSettings.debugCamEnable;
-                    this.mc.gameSettings.debugCamEnable = true;
+                    Config.zoomSmoothCamera = this.mc.gameSettings.isSmoothCamera;
+                    this.mc.gameSettings.isSmoothCamera = true;
                     this.mc.renderGlobal.displayListEntitiesDirty = true;
                 }
 
@@ -658,7 +658,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             else if (Config.zoomMode)
             {
                 Config.zoomMode = false;
-                this.mc.gameSettings.debugCamEnable = Config.zoomSmoothCamera;
+                this.mc.gameSettings.isSmoothCamera = Config.zoomSmoothCamera;
                 this.mouseFilterXAxis = new MouseFilter();
                 this.mouseFilterYAxis = new MouseFilter();
                 this.mc.renderGlobal.displayListEntitiesDirty = true;
@@ -743,7 +743,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             f = (float)((double)f + 1.0D);
             GlStateManager.translate(0.0F, 0.3F, 0.0F);
 
-            if (!this.mc.gameSettings.fovSetting)
+            if (!this.mc.gameSettings.isSleeping)
             {
                 BlockPos blockpos = new BlockPos(entity);
                 IBlockState iblockstate = this.mc.theWorld.getBlockState(blockpos);
@@ -763,11 +763,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
             }
         }
-        else if (this.mc.gameSettings.showDebugInfo > 0)
+        else if (this.mc.gameSettings.thirdPersonViewSetting > 0)
         {
             double d3 = (double)(this.thirdPersonDistanceTemp + (this.thirdPersonDistance - this.thirdPersonDistanceTemp) * partialTicks);
 
-            if (this.mc.gameSettings.fovSetting)
+            if (this.mc.gameSettings.isSleeping)
             {
                 GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
             }
@@ -776,7 +776,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 float f1 = entity.rotationYaw;
                 float f2 = entity.rotationPitch;
 
-                if (this.mc.gameSettings.showDebugInfo == 2)
+                if (this.mc.gameSettings.thirdPersonViewSetting == 2)
                 {
                     f2 += 180.0F;
                 }
@@ -806,7 +806,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     }
                 }
 
-                if (this.mc.gameSettings.showDebugInfo == 2)
+                if (this.mc.gameSettings.thirdPersonViewSetting == 2)
                 {
                     GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
                 }
@@ -825,7 +825,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
         if (Reflector.EntityViewRenderEvent_CameraSetup_Constructor.exists())
         {
-            if (!this.mc.gameSettings.fovSetting)
+            if (!this.mc.gameSettings.isSleeping)
             {
                 float f6 = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F;
                 float f7 = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
@@ -848,7 +848,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 GlStateManager.rotate(f6, 0.0F, 1.0F, 0.0F);
             }
         }
-        else if (!this.mc.gameSettings.fovSetting)
+        else if (!this.mc.gameSettings.isSleeping)
         {
             GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
 
@@ -1021,7 +1021,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 flag = this.mc.getRenderViewEntity() instanceof EntityLivingBase && ((EntityLivingBase)this.mc.getRenderViewEntity()).isPlayerSleeping();
                 boolean flag1 = !ReflectorForge.renderFirstPersonHand(this.mc.renderGlobal, p_renderHand_1_, p_renderHand_2_);
 
-                if (flag1 && this.mc.gameSettings.showDebugInfo == 0 && !flag && !this.mc.gameSettings.thirdPersonView && !this.mc.playerController.isSpectator())
+                if (flag1 && this.mc.gameSettings.thirdPersonViewSetting == 0 && !flag && !this.mc.gameSettings.hideGUI && !this.mc.playerController.isSpectator())
                 {
                     this.enableLightmap();
 
@@ -1047,7 +1047,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
             this.disableLightmap();
 
-            if (this.mc.gameSettings.showDebugInfo == 0 && !flag)
+            if (this.mc.gameSettings.thirdPersonViewSetting == 0 && !flag)
             {
                 this.itemRenderer.renderOverlays(p_renderHand_1_);
                 this.hurtCameraEffect(p_renderHand_1_);
@@ -1198,7 +1198,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                         f10 = 1.0F;
                     }
 
-                    float f16 = this.mc.gameSettings.saturation;
+                    float f16 = this.mc.gameSettings.gammaSetting;
                     float f17 = 1.0F - f8;
                     float f13 = 1.0F - f9;
                     float f14 = 1.0F - f10;
@@ -1303,7 +1303,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 i = -1;
             }
 
-            if (this.mc.gameSettings.debugCamEnable)
+            if (this.mc.gameSettings.isSmoothCamera)
             {
                 this.smoothCamYaw += f2;
                 this.smoothCamPitch += f3;
@@ -1361,7 +1361,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 this.renderEndNanoTime = System.nanoTime();
                 this.mc.mcProfiler.endStartSection("gui");
 
-                if (!this.mc.gameSettings.thirdPersonView || this.mc.currentScreen != null)
+                if (!this.mc.gameSettings.hideGUI || this.mc.currentScreen != null)
                 {
                     GlStateManager.alphaFunc(516, 0.1F);
                     this.mc.ingameGUI.renderGameOverlay(partialTicks);
@@ -1465,7 +1465,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         else
         {
             Entity entity = this.mc.getRenderViewEntity();
-            boolean flag = entity instanceof EntityPlayer && !this.mc.gameSettings.thirdPersonView;
+            boolean flag = entity instanceof EntityPlayer && !this.mc.gameSettings.hideGUI;
 
             if (flag && !((EntityPlayer)entity).capabilities.allowEdit)
             {
@@ -1494,7 +1494,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private void renderWorldDirections(float partialTicks)
     {
-        if (this.mc.gameSettings.showDebugProfilerChart && !this.mc.gameSettings.thirdPersonView && !this.mc.thePlayer.hasReducedDebug() && !this.mc.gameSettings.reducedDebugInfo)
+        if (this.mc.gameSettings.showDebugProfilerChart && !this.mc.gameSettings.hideGUI && !this.mc.thePlayer.hasReducedDebug() && !this.mc.gameSettings.reducedDebugInfo)
         {
             Entity entity = this.mc.getRenderViewEntity();
             GlStateManager.enableBlend();
@@ -1596,7 +1596,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Shaders.setCamera(partialTicks);
         }
 
-        ActiveRenderInfo.updateRenderInfo(this.mc.thePlayer, this.mc.gameSettings.showDebugInfo == 2);
+        ActiveRenderInfo.updateRenderInfo(this.mc.thePlayer, this.mc.gameSettings.thirdPersonViewSetting == 2);
         this.mc.mcProfiler.endStartSection("frustum");
         ClippingHelper clippinghelper = ClippingHelperImpl.getInstance();
         this.mc.mcProfiler.endStartSection("culling");
@@ -1785,7 +1785,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.disableAlpha();
             this.mc.mcProfiler.endStartSection("outline");
 
-            if ((!Reflector.ForgeHooksClient_onDrawBlockHighlight.exists() || !Reflector.callBoolean(Reflector.ForgeHooksClient_onDrawBlockHighlight, new Object[] {renderglobal, entityplayer1, this.mc.objectMouseOver, Integer.valueOf(0), entityplayer1.getHeldItem(), Float.valueOf(partialTicks)})) && !this.mc.gameSettings.thirdPersonView)
+            if ((!Reflector.ForgeHooksClient_onDrawBlockHighlight.exists() || !Reflector.callBoolean(Reflector.ForgeHooksClient_onDrawBlockHighlight, new Object[] {renderglobal, entityplayer1, this.mc.objectMouseOver, Integer.valueOf(0), entityplayer1.getHeldItem(), Float.valueOf(partialTicks)})) && !this.mc.gameSettings.hideGUI)
             {
                 renderglobal.drawSelectionBox(entityplayer1, this.mc.objectMouseOver, 0, partialTicks);
             }

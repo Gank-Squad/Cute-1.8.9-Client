@@ -283,7 +283,7 @@ public class RenderManager
             this.playerViewX = livingPlayerIn.prevRotationPitch + (livingPlayerIn.rotationPitch - livingPlayerIn.prevRotationPitch) * partialTicks;
         }
 
-        if (optionsIn.showDebugInfo == 2)
+        if (optionsIn.thirdPersonViewSetting == 2)
         {
             this.playerViewY += 180.0F;
         }

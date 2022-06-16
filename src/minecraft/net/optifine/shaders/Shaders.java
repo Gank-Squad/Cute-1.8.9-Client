@@ -3478,8 +3478,8 @@ public class Shaders
                 setProgramUniform1i(uniform_isEyeInWater, isEyeInWater);
                 setProgramUniform1f(uniform_nightVision, nightVision);
                 setProgramUniform1f(uniform_blindness, blindness);
-                setProgramUniform1f(uniform_screenBrightness, mc.gameSettings.saturation);
-                setProgramUniform1i(uniform_hideGUI, mc.gameSettings.thirdPersonView ? 1 : 0);
+                setProgramUniform1f(uniform_screenBrightness, mc.gameSettings.gammaSetting);
+                setProgramUniform1i(uniform_hideGUI, mc.gameSettings.hideGUI ? 1 : 0);
                 setProgramUniform1f(uniform_centerDepthSmooth, centerDepthSmooth);
                 setProgramUniform2i(uniform_atlasSize, atlasSizeX, atlasSizeY);
 
@@ -4509,7 +4509,7 @@ public class Shaders
         setProgramUniformMatrix4ARB(uniform_shadowProjectionInverse, false, shadowProjectionInverse);
         setProgramUniformMatrix4ARB(uniform_shadowModelView, false, shadowModelView);
         setProgramUniformMatrix4ARB(uniform_shadowModelViewInverse, false, shadowModelViewInverse);
-        mc.gameSettings.showDebugInfo = 1;
+        mc.gameSettings.thirdPersonViewSetting = 1;
         checkGLError("setCamera");
     }
 

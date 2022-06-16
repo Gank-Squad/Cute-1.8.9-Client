@@ -1148,7 +1148,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (this.thePlayer != null && this.thePlayer.isEntityInsideOpaqueBlock())
         {
-            this.gameSettings.showDebugInfo = 0;
+            this.gameSettings.thirdPersonViewSetting = 0;
         }
 
         this.mcProfiler.endSection();
@@ -1162,7 +1162,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         this.mcProfiler.endSection();
 
-        if (this.gameSettings.showDebugProfilerChart && this.gameSettings.showLagometer && !this.gameSettings.thirdPersonView)
+        if (this.gameSettings.showDebugProfilerChart && this.gameSettings.showLagometer && !this.gameSettings.hideGUI)
         {
             if (!this.mcProfiler.profilingEnabled)
             {
@@ -1997,7 +1997,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 		
                 	case 59:
                 		System.out.println("f5 pressed");
-                		this.gameSettings.thirdPersonView = !this.gameSettings.thirdPersonView;
+                		this.gameSettings.hideGUI = !this.gameSettings.hideGUI;
                 		break;
                 		
                 	case 61:
@@ -2009,13 +2009,13 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
                     if (this.gameSettings.keyBindTogglePerspective.isPressed())
                     {                    	
-                    	this.gameSettings.showDebugInfo = (this.gameSettings.showDebugInfo + 1) % 3;
+                    	this.gameSettings.thirdPersonViewSetting = (this.gameSettings.thirdPersonViewSetting + 1) % 3;
 
-                        if (this.gameSettings.showDebugInfo == 0)
+                        if (this.gameSettings.thirdPersonViewSetting == 0)
                         {
                             this.entityRenderer.loadEntityShader(this.getRenderViewEntity());
                         }
-                        else if (this.gameSettings.showDebugInfo == 1)
+                        else if (this.gameSettings.thirdPersonViewSetting == 1)
                         {
                             this.entityRenderer.loadEntityShader((Entity)null);
                         }
@@ -2025,7 +2025,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     else 
                     if (this.gameSettings.keyBindSmoothCamera.isPressed())
                     {
-                        this.gameSettings.debugCamEnable = !this.gameSettings.debugCamEnable;
+                        this.gameSettings.isSmoothCamera = !this.gameSettings.isSmoothCamera;
                     }
                 }
 
@@ -2458,7 +2458,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
     public static boolean isGuiEnabled()
     {
-        return theMinecraft == null || !theMinecraft.gameSettings.thirdPersonView;
+        return theMinecraft == null || !theMinecraft.gameSettings.hideGUI;
     }
 
     public static boolean isFancyGraphicsEnabled()
