@@ -393,7 +393,7 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
             {            
 	            int i = 0;
 	            
-	            if (str.equals("deadmau5"))
+	            if (str.equals("firekitty"))
 	            {
 	                i = -10;
 	            }

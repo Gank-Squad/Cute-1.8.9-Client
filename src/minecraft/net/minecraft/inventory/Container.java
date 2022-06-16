@@ -182,40 +182,40 @@ public abstract class Container
             {
                 if (!this.dragSlots.isEmpty())
                 {
-                    ItemStack itemstack3 = inventoryplayer.getItemStack().copy();
+                    ItemStack inventoryCopy = inventoryplayer.getItemStack().copy();
                     int j = inventoryplayer.getItemStack().stackSize;
 
                     for (Slot slot1 : this.dragSlots)
                     {
                         if (slot1 != null && canAddItemToSlot(slot1, inventoryplayer.getItemStack(), true) && slot1.isItemValid(inventoryplayer.getItemStack()) && inventoryplayer.getItemStack().stackSize >= this.dragSlots.size() && this.canDragIntoSlot(slot1))
                         {
-                            ItemStack itemstack1 = itemstack3.copy();
+                            ItemStack inventoryLoopCopy = inventoryCopy.copy();
                             int k = slot1.getHasStack() ? slot1.getStack().stackSize : 0;
-                            computeStackSize(this.dragSlots, this.dragMode, itemstack1, k);
+                            computeStackSize(this.dragSlots, this.dragMode, inventoryLoopCopy, k);
 
-                            if (itemstack1.stackSize > itemstack1.getMaxStackSize())
+                            if (inventoryLoopCopy.stackSize > inventoryLoopCopy.getMaxStackSize())
                             {
-                                itemstack1.stackSize = itemstack1.getMaxStackSize();
+                                inventoryLoopCopy.stackSize = inventoryLoopCopy.getMaxStackSize();
                             }
 
-                            if (itemstack1.stackSize > slot1.getItemStackLimit(itemstack1))
+                            if (inventoryLoopCopy.stackSize > slot1.getItemStackLimit(inventoryLoopCopy))
                             {
-                                itemstack1.stackSize = slot1.getItemStackLimit(itemstack1);
+                                inventoryLoopCopy.stackSize = slot1.getItemStackLimit(inventoryLoopCopy);
                             }
 
-                            j -= itemstack1.stackSize - k;
-                            slot1.putStack(itemstack1);
+                            j -= inventoryLoopCopy.stackSize - k;
+                            slot1.putStack(inventoryLoopCopy);
                         }
                     }
 
-                    itemstack3.stackSize = j;
+                    inventoryCopy.stackSize = j;
 
-                    if (itemstack3.stackSize <= 0)
+                    if (inventoryCopy.stackSize <= 0)
                     {
-                        itemstack3 = null;
+                        inventoryCopy = null;
                     }
 
-                    inventoryplayer.setItemStack(itemstack3);
+                    inventoryplayer.setItemStack(inventoryCopy);
                 }
 
                 this.resetDrag();
