@@ -227,7 +227,7 @@ public class ConfigManager extends BaseManager
                 continue;
 
             InputStream inputStream = Files.newInputStream(Paths.get(modulePath));
-            JsonObject moduleObject = new JsonParser().parse(new InputStreamReader(inputStream)).getAsJsonObject();
+            JsonObject moduleObject = new JsonParser().parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).getAsJsonObject();
 
             if (moduleObject.get("Name") == null || 
         		moduleObject.get("Enabled") == null || 
@@ -385,6 +385,7 @@ public class ConfigManager extends BaseManager
     	                			try
     	                			{
     	                				name = items.get(i).getAsString();
+    	                				System.out.println(name);
     	                			}
     	                        	catch(Exception ignored)
     	                        	{
@@ -462,7 +463,7 @@ public class ConfigManager extends BaseManager
             return;
 
         InputStream inputStream = Files.newInputStream(Paths.get(path));
-        JsonArray blockListObject = new JsonParser().parse(new InputStreamReader(inputStream)).getAsJsonArray();
+        JsonArray blockListObject = new JsonParser().parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).getAsJsonArray();
 
         for (int i = 0; i < blockListObject.size(); i++) 
         {
@@ -537,7 +538,7 @@ public class ConfigManager extends BaseManager
 //            return;
 //
 //        InputStream inputStream = Files.newInputStream(Paths.get("cute/gui/GUI.json"));
-//        JsonObject guiObject = new JsonParser().parse(new InputStreamReader(inputStream)).getAsJsonObject();
+//        JsonObject guiObject = new JsonParser().parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).getAsJsonObject();
 //
 //        if (guiObject.get("Windows") == null)
 //            return;
@@ -597,7 +598,7 @@ public class ConfigManager extends BaseManager
 //            return;
 //
 //        InputStream inputStream = Files.newInputStream(Paths.get("cute/gui/HUD.json"));
-//        JsonObject guiObject = new JsonParser().parse(new InputStreamReader(inputStream)).getAsJsonObject();
+//        JsonObject guiObject = new JsonParser().parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).getAsJsonObject();
 //
 //        if (guiObject.get("Components") == null)
 //            return;
@@ -652,7 +653,7 @@ public class ConfigManager extends BaseManager
 //            return;
 //
 //        InputStream inputStream = Files.newInputStream(Paths.get("cute/social/Friends.json"));
-//        JsonObject mainObject = new JsonParser().parse(new InputStreamReader(inputStream)).getAsJsonObject();
+//        JsonObject mainObject = new JsonParser().parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).getAsJsonObject();
 //
 //        if (mainObject.get("Friends") == null)
 //            return;
@@ -689,7 +690,7 @@ public class ConfigManager extends BaseManager
 //            return;
 //
 //        InputStream inputStream = Files.newInputStream(Paths.get("cute/social/Enemies.json"));
-//        JsonObject mainObject = new JsonParser().parse(new InputStreamReader(inputStream)).getAsJsonObject();
+//        JsonObject mainObject = new JsonParser().parse(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).getAsJsonObject();
 //
 //        if (mainObject.get("Enemies") == null)
 //            return;

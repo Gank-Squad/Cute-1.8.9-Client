@@ -2,6 +2,9 @@ package cute;
 
 import java.awt.Color;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import cute.eventapi.EventManager;
 import cute.managers.ConfigManager;
 import cute.managers.HudManager;
@@ -10,10 +13,20 @@ import cute.util.Cache;
 
 public class Client 
 {
-	public static final String VERSION = "0.5.3";
+	public static final String VERSION = "0.6.0";
 	public static final String NAME    = "Cute";
 	
 	public static final Client INSTANCE = new Client();
+	
+	private static Logger LOGGER_INSTANCE = null;
+	
+	public static Logger getLogger()
+	{
+		if(LOGGER_INSTANCE == null)
+			LOGGER_INSTANCE = LogManager.getLogger("Cute");
+		
+		return LOGGER_INSTANCE;
+	}
 	
 	public static class GlobalColors 
 	{

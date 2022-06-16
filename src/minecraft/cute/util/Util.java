@@ -4,12 +4,13 @@ package cute.util;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class Util
@@ -122,12 +123,11 @@ public class Util
 		return ret;
 	}
 	
-	public static <T extends Comparable<T>> T clamp(T val, T min, T max) 
-	{
-		if(min.compareTo(val) > 0)
-			return min;
-		if(max.compareTo(val) < 0)
-			return max;
-		return val;
-	}
+	
+	
+   
 }
+
+
+
+

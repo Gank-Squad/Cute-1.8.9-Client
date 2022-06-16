@@ -12,6 +12,7 @@ import cute.modules.enums.Category;
 import cute.settings.ListSelection;
 import cute.settings.enums.ListInputType;
 import cute.settings.enums.ListType;
+import cute.util.StringUtil;
 
 public class Players extends Module 
 {
@@ -47,7 +48,7 @@ public class Players extends Module
 	@EventTarget
 	public void settingChanged(SettingChangedEvent e)
 	{
-		if(e.settingName != playerNames.getName())
+		if(e.settingID != playerNames.getId())
 			return;
 		
 		switch(e.type)
@@ -58,13 +59,15 @@ public class Players extends Module
 				{
 					if (o instanceof String)
 					{
+						String s = (String)o;
+						
 						if(e.added)
 						{
-							Players.playerNameBlacklist.add((String)o);
+							Players.playerNameBlacklist.add(StringUtil.clearNameFormat(s));
 						}
 						else 
 						{
-							Players.playerNameBlacklist.remove((String)o);
+							Players.playerNameBlacklist.remove(StringUtil.clearNameFormat(s));
 						}
 					}
 				}
