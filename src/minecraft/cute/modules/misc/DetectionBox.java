@@ -3,6 +3,7 @@ package cute.modules.misc;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL32;
 
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
@@ -36,7 +37,7 @@ public class DetectionBox extends Module
 	public static Checkbox vehicle = 	new Checkbox("Vehicles"		, 	true);
 	public static Checkbox projectile = new Checkbox("Projectiles"	, 	true);
 	public static Checkbox item = 		new Checkbox("Items"		, 	true);
-	public static Checkbox show = 	new Checkbox("Show Box"	,	true);
+	public static Checkbox show = 		new Checkbox("Show Boxes"	,	false);
 	public static Checkbox anchor = 	new Checkbox("Anchor on Player", true);
 	public static Checkbox add = 	new Checkbox("Create new Box"	,	false);
 	
@@ -60,11 +61,11 @@ public class DetectionBox extends Module
 		addSetting(vehicle);
 		addSetting(projectile);
 		addSetting(item);
-		addSetting(show);
 		addSetting(anchor);
 		addSetting(width);
 		addSetting(height);
 		addSetting(add);
+		addSetting(show);
 	}
 	
 	public void addBox(
@@ -182,8 +183,7 @@ public class DetectionBox extends Module
 
 					GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
-					Vec3[] x = l.getBounds();
-					RenderUtil.renderBoundingBox(x[0], x[1]);
+					RenderUtil.renderBoundingBox(l.getBoundsBB());
 					
 					GL11.glDisable(GL11.GL_LINE_SMOOTH);
 					
