@@ -225,11 +225,12 @@ public class RenderUtil
 			GL11.glEnd();
 	    }
 	    
-	    // sets the glColor4d to this color 
+
 	    public static void setColor(Color c) 
 	    {
 	        glColor4d(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f);
 	    }
+	    
 	    public static void setColor(int c)
 	    {
 	    	glColor4d(
@@ -249,113 +250,146 @@ public class RenderUtil
 
 	    public static void draw2dEsp(Entity e, float partialTicks, boolean usePlayerMid) 
 	    {
-	    	double doubleX = mc.thePlayer.lastTickPosX
+	    	final double doubleX = mc.thePlayer.lastTickPosX
 	                + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX)
 	                * partialTicks;
 
-	        double doubleY = mc.thePlayer.lastTickPosY
+	    	final double doubleY = mc.thePlayer.lastTickPosY
 	                + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY)
 	                * partialTicks;
 
-	        double doubleZ = mc.thePlayer.lastTickPosZ
+	    	final double doubleZ = mc.thePlayer.lastTickPosZ
 	                + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ)
 	                * partialTicks;
 	    	
-	        double x = e.posX - doubleX;
-	        double y = e.posY - doubleY;
-	        double z = e.posZ - doubleZ;
+	    	final double x = e.posX - mc.thePlayer.posX;
+	    	final double y = e.posY - mc.thePlayer.posY - (usePlayerMid ? mc.thePlayer.height / 2 : 0);
+	    	final double z = e.posZ - mc.thePlayer.posZ;
 
-	        Vec3 v = new Vec3(
-	        		e.posX - mc.thePlayer.posX,
-	        		e.posY - mc.thePlayer.posY - (usePlayerMid ? mc.thePlayer.height / 2 : 0),
-	        		e.posZ - mc.thePlayer.posZ
-	        		);
+	    	final float yaw = (float) Math.toDegrees(Math.atan2(z, x)) - 90.0F;
+	        final float pitch = (float) Math.toDegrees(Math.atan2(y, Math.sqrt(x * x + z * z)));
+	        
+	        final double pPercent = Math.abs(pitch) / 90d ;
+	        final double h = (1d - pPercent) * e.height + pPercent * e.width;
 	        
 	        GlStateManager.pushMatrix();
 	        
-	        GlStateManager.translate(x, y, z);
-	        
-	        final float yaw = (float) Math.toDegrees(Math.atan2(v.zCoord, v.xCoord)) - 90.0F;
-	        final float pitch = (float) Math.toDegrees(Math.atan2(v.yCoord, Math.sqrt(v.xCoord * v.xCoord + v.zCoord * v.zCoord)));
+	        GlStateManager.translate(
+	        		e.posX - doubleX, 
+	        		e.posY - doubleY, 
+	        		e.posZ - doubleZ);
 	        
 	        GlStateManager.rotate(-yaw, 0.0F, 1F, 0.0F);
 	        
-	        GlStateManager.translate(0, e.height/2, 0);
+	        GlStateManager.translate(0, e.height / 2, 0);
 
 	        GlStateManager.rotate(-pitch, 1F, 0.0F, 0.0F);
 
-	        double pPercent = Math.abs(pitch) / 90d ;
-	        double h = (1d - pPercent) * e.height + pPercent * e.width;
-	        
-			RenderUtil.renderRectTarget(-e.width/2f, -h/2, e.width/2f, h/2);
-//			RenderUtil.renderRectOutline(-e.width/2f, -h/2, e.width/2f, h/2);
+			RenderUtil.renderRectTarget(-e.width / 2f, -h / 2, e.width / 2f, h / 2);
+//			RenderUtil.renderRectOutline(-e.width / 2f, -h / 2, e.width / 2f, h / 2);
 			GlStateManager.popMatrix();
 		}
+	
+	    public static void renderBoundingBox(AxisAlignedBB b)
+	    {
+	    	GL11.glBegin(2);
+			
+			GL11.glVertex3d(b.minX, b.minY, b.minZ);
+			GL11.glVertex3d(b.maxX, b.minY, b.minZ);
+			GL11.glVertex3d(b.maxX, b.minY, b.maxZ);
+			GL11.glVertex3d(b.minX, b.minY, b.maxZ);
+			
+			GL11.glEnd();
+			
+			GL11.glBegin(1);
+			
+			GL11.glVertex3d(b.minX, b.minY, b.minZ);
+			GL11.glVertex3d(b.minX, b.maxY, b.minZ);
+			
+			GL11.glVertex3d(b.minX, b.minY, b.maxZ);
+			GL11.glVertex3d(b.minX, b.maxY, b.maxZ);
+			
+			GL11.glVertex3d(b.maxX, b.minY, b.minZ);
+			GL11.glVertex3d(b.maxX, b.maxY, b.minZ);
+			
+			GL11.glVertex3d(b.maxX, b.minY, b.maxZ);
+			GL11.glVertex3d(b.maxX, b.maxY, b.maxZ);
+			
+			GL11.glEnd();
+			
+			GL11.glBegin(2);
+			GL11.glVertex3d(b.maxX, b.maxY, b.minZ);
+			GL11.glVertex3d(b.maxX, b.maxY, b.minZ);
+			GL11.glVertex3d(b.maxX, b.maxY, b.maxZ);
+			GL11.glVertex3d(b.minX, b.maxY, b.maxZ);
+			
+			GL11.glEnd();
+	    }
 	    
-
-		public static void beginRenderHitbox(float lineWidth, Color c) 
-		{
-			beginRenderHitbox();
-			GL11.glLineWidth(lineWidth);
-			setColor(c);
-		}
-		
-		public static void beginRenderHitbox(float lineWidth) 
-		{
-			beginRenderHitbox();
-			GL11.glLineWidth(lineWidth);
-		}
-		
-		public static void beginRenderHitbox() 
-		{
-			GL11.glPushMatrix();
-	        
-	        GL11.glDisable(GL11.GL_TEXTURE_2D);
-	        GL11.glDisable(GL11.GL_DEPTH_TEST);
-	        
-	        GL11.glEnable(GL11.GL_BLEND);
-	        GL11.glEnable(GL11.GL_LINE_SMOOTH);
-	        
-	        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	        GL11.glDepthMask(false);        
-		}
-		
-		public static void endRenderHitbox() 
-		{
-			GL11.glDisable(GL11.GL_LINE_SMOOTH);
-	        GL11.glDisable(GL11.GL_BLEND);
-	        
-	        GL11.glEnable(GL11.GL_DEPTH_TEST);
-	        GL11.glEnable(GL11.GL_TEXTURE_2D);
-	        
-	        GL11.glDepthMask(true);
-	        GL11.glPopMatrix();	
-		}
-		
+	    public static void renderBoundingBox(Vec3 c1, Vec3 c2)
+	    {
+	    	GL11.glBegin(2);
+			
+			GL11.glVertex3d(c1.xCoord, c1.yCoord, c1.zCoord);
+			GL11.glVertex3d(c2.xCoord, c1.yCoord, c1.zCoord);
+			GL11.glVertex3d(c2.xCoord, c1.yCoord, c2.zCoord);
+			GL11.glVertex3d(c1.xCoord, c1.yCoord, c2.zCoord);
+			
+			GL11.glEnd();
+			
+			GL11.glBegin(1);
+			
+			GL11.glVertex3d(c1.xCoord, c1.yCoord, c1.zCoord);
+			GL11.glVertex3d(c1.xCoord, c2.yCoord, c1.zCoord);
+			
+			GL11.glVertex3d(c1.xCoord, c1.yCoord, c2.zCoord);
+			GL11.glVertex3d(c1.xCoord, c2.yCoord, c2.zCoord);
+			
+			GL11.glVertex3d(c2.xCoord, c1.yCoord, c1.zCoord);
+			GL11.glVertex3d(c2.xCoord, c2.yCoord, c1.zCoord);
+			
+			GL11.glVertex3d(c2.xCoord, c1.yCoord, c2.zCoord);
+			GL11.glVertex3d(c2.xCoord, c2.yCoord, c2.zCoord);
+			
+			GL11.glEnd();
+			
+			GL11.glBegin(2);
+			GL11.glVertex3d(c1.xCoord, c2.yCoord, c1.zCoord);
+			GL11.glVertex3d(c2.xCoord, c2.yCoord, c1.zCoord);
+			GL11.glVertex3d(c2.xCoord, c2.yCoord, c2.zCoord);
+			GL11.glVertex3d(c1.xCoord, c2.yCoord, c2.zCoord);
+			
+			GL11.glEnd();
+	    }
+	    
+	    /* 
+	     * render's the entities hitbox,
+	     * this function expects GL11.glPushMatrix(); or something similar has alreayd been used
+	     */
 		public static void renderEntityHitbox(Entity e, float partialTicks) 
 	    {
-			double doubleX = mc.thePlayer.lastTickPosX
+			final double doubleX = mc.thePlayer.lastTickPosX
 	                + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX)
 	                * partialTicks;
 
-	        double doubleY = mc.thePlayer.lastTickPosY
+	        final double doubleY = mc.thePlayer.lastTickPosY
 	                + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY)
 	                * partialTicks;
 
-	        double doubleZ = mc.thePlayer.lastTickPosZ
+	        final double doubleZ = mc.thePlayer.lastTickPosZ
 	                + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ)
 	                * partialTicks;
 	    	
-			double hw = e.width / 2;
+			final double hw = e.width / 2;
 			
-	    	double x1 = e.posX + hw - doubleX;
-			double x2 = e.posX - hw - doubleX;
+	    	final double x1 = e.posX + hw - doubleX;
+			final double x2 = e.posX - hw - doubleX;
 			
-			double y1 = e.posY            - doubleY;
-			double y2 = e.posY + e.height - doubleY;
+			final double y1 = e.posY            - doubleY;
+			final double y2 = e.posY + e.height - doubleY;
 			
-			double z1 = e.posZ + hw - doubleZ;
-			double z2 = e.posZ - hw - doubleZ;
+			final double z1 = e.posZ + hw - doubleZ;
+			final double z2 = e.posZ - hw - doubleZ;
 			
 			GL11.glBegin(2);
 			
@@ -390,22 +424,27 @@ public class RenderUtil
 			
 			GL11.glEnd();
 	    }
+		
+		/* 
+	     * render's the entities hitbox,
+	     * this function expects GL11.glPushMatrix(); or something similar has alreayd been used
+	     */
 	    public static void renderEntityHitbox(Entity e) 
 	    {
-	    	double renderPosX = mc.getRenderManager().viewerPosX;
-			double renderPosY = mc.getRenderManager().viewerPosY;
-			double renderPosZ = mc.getRenderManager().viewerPosZ;
+	    	final double renderPosX = mc.getRenderManager().viewerPosX;
+			final double renderPosY = mc.getRenderManager().viewerPosY;
+			final double renderPosZ = mc.getRenderManager().viewerPosZ;
 	        
-			double hw = e.width / 2;
+			final double hw = e.width / 2;
 			
-	    	double x1 = e.posX + hw - renderPosX;
-			double x2 = e.posX - hw - renderPosX;
+	    	final double x1 = e.posX + hw - renderPosX;
+			final double x2 = e.posX - hw - renderPosX;
 			
-			double y1 = e.posY            - renderPosY;
-			double y2 = e.posY + e.height - renderPosY;
+			final double y1 = e.posY            - renderPosY;
+			final double y2 = e.posY + e.height - renderPosY;
 			
-			double z1 = e.posZ + hw - renderPosZ;
-			double z2 = e.posZ - hw - renderPosZ;
+			final double z1 = e.posZ + hw - renderPosZ;
+			final double z2 = e.posZ - hw - renderPosZ;
 			
 			GL11.glBegin(2);
 			
@@ -440,22 +479,27 @@ public class RenderUtil
 			
 			GL11.glEnd();
 	    }
+	    
+	    /* 
+	     * render's the entities hitbox,
+	     * this function expects GL11.glPushMatrix(); or something similar has alreayd been used
+	     */
 	    public static void renderEntityHitbox(Entity e, double eOffX, double eOffY, double eOffZ)
 	    {
-	    	double renderPosX = mc.getRenderManager().viewerPosX;
-			double renderPosY = mc.getRenderManager().viewerPosY;
-			double renderPosZ = mc.getRenderManager().viewerPosZ;
+	    	final double renderPosX = mc.getRenderManager().viewerPosX;
+	    	final double renderPosY = mc.getRenderManager().viewerPosY;
+	    	final double renderPosZ = mc.getRenderManager().viewerPosZ;
 	        
-			double hw = e.width / 2;
+	    	final double hw = e.width / 2;
 			
-	    	double x1 = e.posX + hw - renderPosX + eOffX;
-			double x2 = e.posX - hw - renderPosX + eOffX;
+	    	final double x1 = e.posX + hw - renderPosX + eOffX;
+	    	final double x2 = e.posX - hw - renderPosX + eOffX;
 			
-			double y1 = e.posY            - renderPosY + eOffY;
-			double y2 = e.posY + e.height - renderPosY + eOffY;
+	    	final double y1 = e.posY            - renderPosY + eOffY;
+	    	final double y2 = e.posY + e.height - renderPosY + eOffY;
 			
-			double z1 = e.posZ + hw - renderPosZ + eOffZ;
-			double z2 = e.posZ - hw - renderPosZ + eOffZ;
+	    	final double z1 = e.posZ + hw - renderPosZ + eOffZ;
+	    	final double z2 = e.posZ - hw - renderPosZ + eOffZ;
 			
 			GL11.glBegin(2);
 			
@@ -490,22 +534,27 @@ public class RenderUtil
 			
 			GL11.glEnd();
 	    }
+	    
+	    /* 
+	     * render's the entities hitbox,
+	     * this function expects GL11.glPushMatrix(); or something similar has alreayd been used
+	     */
 	    public static void renderEntityHitboxAbs(Entity e, double x, double y, double z)
 	    {
-	    	double renderPosX = mc.getRenderManager().viewerPosX;
-			double renderPosY = mc.getRenderManager().viewerPosY;
-			double renderPosZ = mc.getRenderManager().viewerPosZ;
+	    	final double renderPosX = mc.getRenderManager().viewerPosX;
+	    	final double renderPosY = mc.getRenderManager().viewerPosY;
+	    	final double renderPosZ = mc.getRenderManager().viewerPosZ;
 	        
-			double hw = e.width / 2;
+	    	final double hw = e.width / 2;
 			
-	    	double x1 = x + hw - renderPosX;
-			double x2 = x - hw - renderPosX;
+	    	final double x1 = x + hw - renderPosX;
+	    	final double x2 = x - hw - renderPosX;
 			
-			double y1 = y            - renderPosY;
-			double y2 = y + e.height - renderPosY;
+	    	final double y1 = y            - renderPosY;
+	    	final double y2 = y + e.height - renderPosY;
 			
-			double z1 = z + hw - renderPosZ;
-			double z2 = z - hw - renderPosZ;
+	    	final double z1 = z + hw - renderPosZ;
+	    	final double z2 = z - hw - renderPosZ;
 			
 			GL11.glBegin(2);
 			
@@ -749,68 +798,5 @@ public class RenderUtil
 			GL11.glVertex3d(fx, fy, fz);
 			GL11.glVertex3d(entity.lastTickPosX, entity.posY + f2, entity.lastTickPosZ);
 	    }
-
-	    
-	    
-	    public static void entityESPBox(Entity entity, int mode)
-	    {
-	        GL11.glBlendFunc(770, 771);
-	        GL11.glEnable(GL11.GL_BLEND);
-	        GL11.glLineWidth(1.0F);
-	        GL11.glDisable(GL11.GL_TEXTURE_2D);
-	        GL11.glDisable(GL11.GL_DEPTH_TEST);
-	        GL11.glDepthMask(false);
-//	        
-	        if(mode == 0)// Enemy
-	            GL11.glColor4d(
-	                1 - Minecraft.getMinecraft().thePlayer
-	                    .getDistanceToEntity(entity) / 40,
-	                Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entity) / 40,
-	                0, 0.5F);
-	        else if(mode == 1)// Friend
-	            GL11.glColor4d(0, 0, 1, 0F);
-	        else if(mode == 2)// Other
-	            GL11.glColor4d(1, 1, 0, 0.5F);
-	        else if(mode == 3)// Target
-	            GL11.glColor4d(1, 0, 0, 0.5F);
-	        else if(mode == 4)// Team
-	            GL11.glColor4d(0, 1, 0, 0.5F);
-	
-	        RenderGlobal.drawSelectionBoundingBox(
-	                new AxisAlignedBB(
-	                entity.getCollisionBoundingBox().minX
-	                    - 0.05
-	                    - entity.posX
-	                    + (entity.posX - Minecraft.getMinecraft()
-	                        .getRenderManager().viewerPosX),
-	                entity.getCollisionBoundingBox().minY
-	                    - entity.posY
-	                    + (entity.posY - Minecraft.getMinecraft()
-	                        .getRenderManager().viewerPosY),
-	                entity.getCollisionBoundingBox().minZ
-	                    - 0.05
-	                    - entity.posZ
-	                    + (entity.posZ - Minecraft.getMinecraft()
-	                        .getRenderManager().viewerPosZ),
-	                entity.getCollisionBoundingBox().maxX
-	                    + 0.05
-	                    - entity.posX
-	                    + (entity.posX - Minecraft.getMinecraft()
-	                        .getRenderManager().viewerPosX),
-	                entity.getCollisionBoundingBox().maxY
-	                    + 0.1
-	                    - entity.posY
-	                    + (entity.posY - Minecraft.getMinecraft()
-	                        .getRenderManager().viewerPosY),
-	                entity.getCollisionBoundingBox().maxZ
-	                    + 0.05
-	                    - entity.posZ
-	                    + (entity.posZ - Minecraft.getMinecraft()
-	                        .getRenderManager().viewerPosZ)));
-	        GL11.glEnable(GL11.GL_TEXTURE_2D);
-	        GL11.glEnable(GL11.GL_DEPTH_TEST);
-	        GL11.glDepthMask(true);
-	        GL11.glDisable(GL11.GL_BLEND);
-	    } 
 }
 

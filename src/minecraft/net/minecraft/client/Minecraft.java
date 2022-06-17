@@ -1963,17 +1963,17 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 			this.refreshResources();
                 		break;
                 		
-                	case 33:
+                	case 33: // f3 + f
                 		if(Keyboard.isKeyDown(61))
                 			this.gameSettings.setOptionValue(GameSettings.Options.RENDER_DISTANCE, GuiScreen.isShiftKeyDown() ? -1 : 1);
                 		break;
                 		
-                	case 30:
+                	case 30: // f3 + a
                 		if(Keyboard.isKeyDown(61))
                 			this.renderGlobal.loadRenderers();
                 		break;
                 		
-                	case 35:
+                	case 35: // f3 + h
 						if(Keyboard.isKeyDown(61)) 
 						{
 							this.gameSettings.advancedItemTooltips = !this.gameSettings.advancedItemTooltips;
@@ -1981,13 +1981,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 						}
                 		break;
                 		
-                	case 48:
-                		System.out.println("b pressed");
+                	case 48: // b 
                 		if(Keyboard.isKeyDown(61)) 
                 			this.renderManager.setDebugBoundingBox(!this.renderManager.isDebugBoundingBox());
                 		break;
                 		
-                	case 25:
+                	case 25: // f3 + p
                 		if(Keyboard.isKeyDown(61)) 
                 		{
                     		this.gameSettings.pauseOnLostFocus = !this.gameSettings.pauseOnLostFocus;
@@ -1995,8 +1994,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 		}
                 		break;
                 		
-                	case 59:
-                		System.out.println("f5 pressed");
+                	case 59: // f1
                 		this.gameSettings.hideGUI = !this.gameSettings.hideGUI;
                 		break;
                 		
@@ -3102,84 +3100,91 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     {
         int i = Keyboard.getEventKey() == 0 ? Keyboard.getEventCharacter() : Keyboard.getEventKey();
 
-        if (i != 0 && !Keyboard.isRepeatEvent())
+        if (i == 0 || !Keyboard.isRepeatEvent())
+        	return;
+        
+        if (this.currentScreen instanceof GuiControls && ((GuiControls)this.currentScreen).time > getSystemTime() - 20L)
+        	return;
+        
+        if (!Keyboard.getEventKeyState()) 
         {
-            if (!(this.currentScreen instanceof GuiControls) || ((GuiControls)this.currentScreen).time <= getSystemTime() - 20L)
+        	if (i == this.gameSettings.keyBindStreamToggleMic.getKeyCode())
             {
-                if (Keyboard.getEventKeyState())
-                {
-                    if (i == this.gameSettings.keyBindStreamStartStop.getKeyCode())
-                    {
-                        if (this.getTwitchStream().isBroadcasting())
-                        {
-                            this.getTwitchStream().stopBroadcasting();
-                        }
-                        else if (this.getTwitchStream().isReadyToBroadcast())
-                        {
-                            this.displayGuiScreen(new GuiYesNo(new GuiYesNoCallback()
-                            {
-                                public void confirmClicked(boolean result, int id)
-                                {
-                                    if (result)
-                                    {
-                                        Minecraft.this.getTwitchStream().func_152930_t();
-                                    }
+                this.stream.muteMicrophone(false);
+            }
+        	return;
+        }
+        	
 
-                                    Minecraft.this.displayGuiScreen((GuiScreen)null);
-                                }
-                            }, I18n.format("stream.confirm_start", new Object[0]), "", 0));
-                        }
-                        else if (this.getTwitchStream().func_152928_D() && this.getTwitchStream().func_152936_l())
-                        {
-                            if (this.theWorld != null)
-                            {
-                                this.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("Not ready to start streaming yet!"));
-                            }
-                        }
-                        else
-                        {
-                            GuiStreamUnavailable.func_152321_a(this.currentScreen);
-                        }
-                    }
-                    else if (i == this.gameSettings.keyBindStreamPauseUnpause.getKeyCode())
-                    {
-                        if (this.getTwitchStream().isBroadcasting())
-                        {
-                            if (this.getTwitchStream().isPaused())
-                            {
-                                this.getTwitchStream().unpause();
-                            }
-                            else
-                            {
-                                this.getTwitchStream().pause();
-                            }
-                        }
-                    }
-                    else if (i == this.gameSettings.keyBindStreamCommercials.getKeyCode())
-                    {
-                        if (this.getTwitchStream().isBroadcasting())
-                        {
-                            this.getTwitchStream().requestCommercial();
-                        }
-                    }
-                    else if (i == this.gameSettings.keyBindStreamToggleMic.getKeyCode())
-                    {
-                        this.stream.muteMicrophone(true);
-                    }
-                    else if (i == this.gameSettings.keyBindFullscreen.getKeyCode())
-                    {
-                        this.toggleFullscreen();
-                    }
-                    else if (i == this.gameSettings.keyBindScreenshot.getKeyCode())
-                    {
-                        this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(this.mcDataDir, this.displayWidth, this.displayHeight, this.framebufferMc));
-                    }
-                }
-                else if (i == this.gameSettings.keyBindStreamToggleMic.getKeyCode())
+        if (i == this.gameSettings.keyBindStreamStartStop.getKeyCode())
+        {
+            if (this.getTwitchStream().isBroadcasting())
+            {
+                this.getTwitchStream().stopBroadcasting();
+                return;
+            }
+            
+            if (this.getTwitchStream().isReadyToBroadcast())
+            {
+                this.displayGuiScreen(new GuiYesNo(new GuiYesNoCallback()
                 {
-                    this.stream.muteMicrophone(false);
+                    public void confirmClicked(boolean result, int id)
+                    {
+                        if (result)
+                        {
+                            Minecraft.this.getTwitchStream().func_152930_t();
+                        }
+
+                        Minecraft.this.displayGuiScreen((GuiScreen)null);
+                    }
+                }, I18n.format("stream.confirm_start", new Object[0]), "", 0));
+                return;
+            }
+            
+            if (this.getTwitchStream().func_152928_D() && this.getTwitchStream().func_152936_l())
+            {
+                if (this.theWorld != null)
+                {
+                    this.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("Not ready to start streaming yet!"));
                 }
             }
+            else
+            {
+                GuiStreamUnavailable.func_152321_a(this.currentScreen);
+            }
+        }
+        else if (i == this.gameSettings.keyBindStreamPauseUnpause.getKeyCode())
+        {
+            if (this.getTwitchStream().isBroadcasting())
+            {
+                if (this.getTwitchStream().isPaused())
+                {
+                    this.getTwitchStream().unpause();
+                }
+                else
+                {
+                    this.getTwitchStream().pause();
+                }
+            }
+        }
+        else if (i == this.gameSettings.keyBindStreamCommercials.getKeyCode())
+        {
+            if (this.getTwitchStream().isBroadcasting())
+            {
+                this.getTwitchStream().requestCommercial();
+            }
+        }
+        else if (i == this.gameSettings.keyBindStreamToggleMic.getKeyCode())
+        {
+            this.stream.muteMicrophone(true);
+        }
+        else if (i == this.gameSettings.keyBindFullscreen.getKeyCode())
+        {
+            this.toggleFullscreen();
+        }
+        else if (i == this.gameSettings.keyBindScreenshot.getKeyCode())
+        {
+            this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(this.mcDataDir, this.displayWidth, this.displayHeight, this.framebufferMc));
         }
     }
 

@@ -2,6 +2,8 @@ package cute.modules.misc;
 
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
 import cute.events.SettingChangedEvent;
@@ -10,6 +12,7 @@ import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.Slider;
 import cute.util.EntityUtil;
+import cute.util.RenderUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +32,7 @@ public class DetectionBox extends Module
 	public static Checkbox vehicle = 	new Checkbox("Vehicles"		, 	true);
 	public static Checkbox projectile = new Checkbox("Projectiles"	, 	true);
 	public static Checkbox item = 		new Checkbox("Items"		, 	true);
+	public static Checkbox show = 	new Checkbox("Show Box"	,	true);
 	public static Checkbox anchor = 	new Checkbox("Anchor on Player", true);
 	public static Checkbox add = 	new Checkbox("Create new Box"	,	true);
 	
@@ -49,6 +53,7 @@ public class DetectionBox extends Module
 		addSetting(vehicle);
 		addSetting(projectile);
 		addSetting(item);
+		addSetting(show);
 		addSetting(anchor);
 		addSetting(width);
 		addSetting(height);
@@ -120,6 +125,43 @@ public class DetectionBox extends Module
 				{
 					label = l.label;
 					alerts++;
+				}
+				
+				if(show.getValue())
+				{
+					GL11.glPushMatrix();
+					GL11.glEnable(GL11.GL_BLEND);
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+					GL11.glDepthMask(false);
+
+					GL11.glDisable(GL11.GL_TEXTURE_2D);
+					GL11.glDisable(GL11.GL_DEPTH_TEST);
+					GL11.glDisable(GL11.GL_ALPHA_TEST);
+
+					GL11.glEnable(GL11.GL_LINE_SMOOTH);
+//
+//					GL11.glLineWidth((float)lineWidth.getValue());
+//					
+//					
+//					RenderUtil.render
+//					
+					Vec3[] x = l.getBounds();
+					RenderUtil.renderBoundingBox(x[0], x[1]);
+					
+					GL11.glDisable(GL11.GL_LINE_SMOOTH);
+					
+					GL11.glEnable(GL11.GL_ALPHA_TEST);
+					GL11.glEnable(GL11.GL_DEPTH_TEST);
+					GL11.glEnable(GL11.GL_TEXTURE_2D);
+					
+					GL11.glDisable(GL11.GL_BLEND);
+					
+					GL11.glDepthMask(true);
+					GL11.glPopMatrix();	
+					
+					// prevents hotbar / hand from being messed up by color changes 
+					RenderUtil.resetColor();
 				}
 			}
 		}

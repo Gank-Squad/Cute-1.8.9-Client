@@ -90,67 +90,66 @@ public class EntityItem extends Entity
         if (this.getEntityItem() == null)
         {
             this.setDead();
+            return;
         }
-        else
+        
+        super.onUpdate();
+
+        if (this.delayBeforeCanPickup > 0 && this.delayBeforeCanPickup != 32767)
         {
-            super.onUpdate();
+            --this.delayBeforeCanPickup;
+        }
 
-            if (this.delayBeforeCanPickup > 0 && this.delayBeforeCanPickup != 32767)
+        this.prevPosX = this.posX;
+        this.prevPosY = this.posY;
+        this.prevPosZ = this.posZ;
+        this.motionY -= 0.03999999910593033D;
+        this.noClip = this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        boolean flag = (int)this.prevPosX != (int)this.posX || (int)this.prevPosY != (int)this.posY || (int)this.prevPosZ != (int)this.posZ;
+
+        if (flag || this.ticksExisted % 25 == 0)
+        {
+            if (this.worldObj.getBlockState(new BlockPos(this)).getBlock().getMaterial() == Material.lava)
             {
-                --this.delayBeforeCanPickup;
+                this.motionY = 0.20000000298023224D;
+                this.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+                this.motionZ = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
+                this.playSound("random.fizz", 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
             }
 
-            this.prevPosX = this.posX;
-            this.prevPosY = this.posY;
-            this.prevPosZ = this.posZ;
-            this.motionY -= 0.03999999910593033D;
-            this.noClip = this.pushOutOfBlocks(this.posX, (this.getEntityBoundingBox().minY + this.getEntityBoundingBox().maxY) / 2.0D, this.posZ);
-            this.moveEntity(this.motionX, this.motionY, this.motionZ);
-            boolean flag = (int)this.prevPosX != (int)this.posX || (int)this.prevPosY != (int)this.posY || (int)this.prevPosZ != (int)this.posZ;
-
-            if (flag || this.ticksExisted % 25 == 0)
+            if (!this.worldObj.isRemote)
             {
-                if (this.worldObj.getBlockState(new BlockPos(this)).getBlock().getMaterial() == Material.lava)
-                {
-                    this.motionY = 0.20000000298023224D;
-                    this.motionX = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-                    this.motionZ = (double)((this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F);
-                    this.playSound("random.fizz", 0.4F, 2.0F + this.rand.nextFloat() * 0.4F);
-                }
-
-                if (!this.worldObj.isRemote)
-                {
-                    this.searchForOtherItemsNearby();
-                }
+                this.searchForOtherItemsNearby();
             }
+        }
 
-            float f = 0.98F;
+        float f = 0.98F;
 
-            if (this.onGround)
-            {
-                f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.98F;
-            }
+        if (this.onGround)
+        {
+            f = this.worldObj.getBlockState(new BlockPos(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.getEntityBoundingBox().minY) - 1, MathHelper.floor_double(this.posZ))).getBlock().slipperiness * 0.98F;
+        }
 
-            this.motionX *= (double)f;
-            this.motionY *= 0.9800000190734863D;
-            this.motionZ *= (double)f;
+        this.motionX *= (double)f;
+        this.motionY *= 0.9800000190734863D;
+        this.motionZ *= (double)f;
 
-            if (this.onGround)
-            {
-                this.motionY *= -0.5D;
-            }
+        if (this.onGround)
+        {
+            this.motionY *= -0.5D;
+        }
 
-            if (this.age != -32768)
-            {
-                ++this.age;
-            }
+        if (this.age != -32768)
+        {
+            ++this.age;
+        }
 
-            this.handleWaterMovement();
+        this.handleWaterMovement();
 
-            if (!this.worldObj.isRemote && this.age >= 6000)
-            {
-                this.setDead();
-            }
+        if (!this.worldObj.isRemote && this.age >= 6000)
+        {
+            this.setDead();
         }
     }
 
@@ -378,27 +377,27 @@ public class EntityItem extends Entity
                 {
                     entityIn.triggerAchievement(AchievementList.mineWood);
                 }
-
+                else
                 if (itemstack.getItem() == Item.getItemFromBlock(Blocks.log2))
                 {
                     entityIn.triggerAchievement(AchievementList.mineWood);
                 }
-
+                else
                 if (itemstack.getItem() == Items.leather)
                 {
                     entityIn.triggerAchievement(AchievementList.killCow);
                 }
-
+                else
                 if (itemstack.getItem() == Items.diamond)
                 {
                     entityIn.triggerAchievement(AchievementList.diamonds);
                 }
-
+                else
                 if (itemstack.getItem() == Items.blaze_rod)
                 {
                     entityIn.triggerAchievement(AchievementList.blazeRod);
                 }
-
+                else
                 if (itemstack.getItem() == Items.diamond && this.getThrower() != null)
                 {
                     EntityPlayer entityplayer = this.worldObj.getPlayerEntityByName(this.getThrower());
