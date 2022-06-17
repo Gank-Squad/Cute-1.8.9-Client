@@ -88,6 +88,11 @@ public class KeyBinding implements Comparable<KeyBinding>
     {
         return this.pressed;
     }
+    
+    public void setKeyDown(boolean tf)
+    {
+    	this.pressed = tf;
+    }
 
     public String getKeyCategory()
     {

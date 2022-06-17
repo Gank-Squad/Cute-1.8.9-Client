@@ -17,6 +17,7 @@ import cute.modules.gui.ClickGUI;
 import cute.modules.gui.Hud;
 import cute.modules.misc.DetectionBox;
 import cute.modules.misc.Sounds;
+import cute.modules.misc.Sprint;
 import cute.modules.render.DataViewer;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
@@ -80,7 +81,7 @@ public class ModuleManager extends BaseManager
 		modules.add(new XRay());
 		
 		modules.add(new Sounds());
-		
+		modules.add(new Sprint());
 		modules.add(new DetectionBox());
 	}
 	
