@@ -40,6 +40,9 @@ public class TextInputButton extends TextButtonBase
 	@Override
 	public void onEnter(String input)
 	{
+		this.setting.term = this.searchTerm;
+		if (this.type == ListType.PLAYERNAME)
+			return;
 		if(input == null || input.length() == 0 || this.type != ListType.PLAYERNAME)
 			return;
 		

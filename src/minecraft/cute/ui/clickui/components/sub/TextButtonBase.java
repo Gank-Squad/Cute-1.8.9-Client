@@ -22,7 +22,7 @@ public class TextButtonBase extends Component
 	protected int x;
 	protected int y;
 	
-	protected String searchTerm = "";
+	public String searchTerm = "";
 	
 	private boolean backSpaceDown = false;
 	private Long backSpaceDelay = Minecraft.getSystemTime(); 
@@ -52,7 +52,7 @@ public class TextButtonBase extends Component
 	
 	@Override
 	public void renderComponent() 
-	{
+	{	
 		RenderUtil.beginRenderRect();
 		
 		// background 

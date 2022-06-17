@@ -10,7 +10,10 @@ import cute.events.SettingChangedEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
+import cute.settings.ListSelection;
 import cute.settings.Slider;
+import cute.settings.enums.ListInputType;
+import cute.settings.enums.ListType;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
 import net.minecraft.entity.Entity;
@@ -34,10 +37,12 @@ public class DetectionBox extends Module
 	public static Checkbox item = 		new Checkbox("Items"		, 	true);
 	public static Checkbox show = 	new Checkbox("Show Box"	,	true);
 	public static Checkbox anchor = 	new Checkbox("Anchor on Player", true);
-	public static Checkbox add = 	new Checkbox("Create new Box"	,	true);
+	public static Checkbox add = 	new Checkbox("Create new Box"	,	false);
 	
 	public static Slider width = 		new Slider("Width", 1, 5, 160, 1);
 	public static Slider height = 		new Slider("Height", 1, 5, 512, 1);
+	
+	public static ListSelection inputLabel = new ListSelection<String>("Box List", new ArrayList<String>(), ListType.PLAYERNAME, ListInputType.TEXT);
 	public DetectionBox() 
 	{
 		super("Detection Box", Category.MISC, "a box that sends an alert when an entity enters it");
@@ -46,6 +51,7 @@ public class DetectionBox extends Module
 	@Override
 	public void setup()
 	{
+		addSetting(inputLabel);
 		addSetting(players);
 		addSetting(hostile);
 		addSetting(passive);
@@ -92,10 +98,13 @@ public class DetectionBox extends Module
 	@EventTarget
 	public void settingChanged(SettingChangedEvent e)
 	{
-		if(e.settingID == add.getId())
+		
+		if(e.settingID != add.getId())
 			return;
 		if (!add.getValue())
 			return;
+		inputLabel.term = inputLabel.term == null ? "no name" : inputLabel.term;
+		inputLabel.enableItem(inputLabel.term);
 		addBox(
 				players.getValue(),hostile.getValue(),passive.getValue(),neutral.getValue(),
 				vehicle.getValue(), projectile.getValue(), item.getValue(), anchor.getValue(),
@@ -105,7 +114,7 @@ public class DetectionBox extends Module
 				new Vec3(width.getValue() / 2, 
 						 height.getValue() / 2, 
 						 width.getValue() / 2),
-				"label;3c"
+				inputLabel.term
 				);
 	}
 	

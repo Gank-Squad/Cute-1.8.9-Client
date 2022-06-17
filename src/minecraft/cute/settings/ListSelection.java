@@ -11,6 +11,7 @@ public class ListSelection<T> extends Setting
 {
 	private ListType _type;
 	private ArrayList<T> enabledItems;
+	public String term;
 	public boolean canToggleItems = false;
 	
 	public final ListInputType listInputType;
@@ -62,6 +63,8 @@ public class ListSelection<T> extends Setting
 	
 	public void enableItem(T item)
 	{
+		if (item == null)
+			return;
 		if(this.enabledItems.contains(item))
 			return;
 		
