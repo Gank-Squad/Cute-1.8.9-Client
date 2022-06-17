@@ -98,7 +98,6 @@ public class DetectionBox extends Module
 	
 	public boolean removeBox(String label)
 	{
-		System.out.println("remove");
 		for (DetectionBoxes i : list)
 		{
 			if (label == i.label)
@@ -110,12 +109,16 @@ public class DetectionBox extends Module
 	@EventTarget
 	public void settingChanged(SettingChangedEvent e)
 	{
+		inputLabel.term = inputLabel.term == null ? "no name" : inputLabel.term;
 		if(e.settingID == inputLabel.getID())
 		{
-			// check that its removing thing from dropdown list somehow
-			// then remove the box with that label
-			inputLabel.term = inputLabel.term == null ? "no name" : inputLabel.term;
-			removeBox(inputLabel.term);
+			for (Object i : e.args)
+			{
+				if (i instanceof CustomListItem)
+				{
+					removeBox(((CustomListItem)i).toString());
+				}
+			}
 			return;
 		}
 		
@@ -124,8 +127,6 @@ public class DetectionBox extends Module
 		
 		if (!add.getValue())
 			return;
-		
-		inputLabel.term = inputLabel.term == null ? "no name" : inputLabel.term;
 		
 		for (DetectionBoxes i : list)
 		{
