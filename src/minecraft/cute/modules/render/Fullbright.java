@@ -58,7 +58,7 @@ public class Fullbright extends Module
 	@EventTarget
 	public void modeChangedEvent(SettingChangedEvent e)
 	{
-		if (e.settingID != Mode.getId())
+		if (e.settingID != Mode.getID())
 			return;
 		
 		enable(Fullbright.Mode.getValue());

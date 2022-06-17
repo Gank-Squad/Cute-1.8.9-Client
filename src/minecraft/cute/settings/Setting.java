@@ -24,7 +24,7 @@ public class Setting
 		this.SETTING_ID = (++SETTING_ID_COUNTER);
 	}
 	
-	public final int getId()
+	public final int getID()
 	{
 		return this.SETTING_ID;
 	}

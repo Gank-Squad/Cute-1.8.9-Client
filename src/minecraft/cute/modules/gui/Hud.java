@@ -212,7 +212,7 @@ public class Hud extends Module
 	@EventTarget
 	public void modeChangedEvent(SettingChangedEvent e)
 	{
-		if(e.settingID == armorStatusCheck.getId())
+		if(e.settingID == armorStatusCheck.getID())
 		{
 			if(armorStatusCheck.getValue())
 			{
@@ -225,7 +225,7 @@ public class Hud extends Module
 			return;
 		}
 		
-		if(e.settingID == positionCheck.getId())
+		if(e.settingID == positionCheck.getID())
 		{
 			if(positionCheck.getValue())
 			{
@@ -238,7 +238,7 @@ public class Hud extends Module
 			return;
 		}
 		
-		if(e.settingID == arrowCheck.getId())
+		if(e.settingID == arrowCheck.getID())
 		{
 			if(arrowCheck.getValue())
 			{
@@ -251,7 +251,7 @@ public class Hud extends Module
 			return;
 		}
 		
-		if(e.settingID == arrowCountCheck.getId())
+		if(e.settingID == arrowCountCheck.getID())
 		{
 			if(arrowCountCheck.getValue())
 			{
@@ -264,7 +264,7 @@ public class Hud extends Module
 			return;
 		}
 		
-		if(e.settingID == alertCheck.getId())
+		if(e.settingID == alertCheck.getID())
 		{
 			if(alertCheck.getValue())
 			{
@@ -277,7 +277,7 @@ public class Hud extends Module
 			return;
 		}
 		
-		if(e.settingID != draggable.getId())
+		if(e.settingID != draggable.getID())
 			return;
 
 		HudManager.INSTANCE.openConfigScreen();

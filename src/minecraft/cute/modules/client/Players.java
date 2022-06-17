@@ -48,7 +48,7 @@ public class Players extends Module
 	@EventTarget
 	public void settingChanged(SettingChangedEvent e)
 	{
-		if(e.settingID != playerNames.getId())
+		if(e.settingID != playerNames.getID())
 			return;
 		
 		switch(e.type)

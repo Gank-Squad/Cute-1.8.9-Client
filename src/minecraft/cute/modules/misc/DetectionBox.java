@@ -12,6 +12,7 @@ import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.ListSelection;
 import cute.settings.Slider;
+import cute.settings.custom.CustomListItem;
 import cute.settings.enums.ListInputType;
 import cute.settings.enums.ListType;
 import cute.util.EntityUtil;
@@ -42,7 +43,7 @@ public class DetectionBox extends Module
 	public static Slider width = 		new Slider("Width", 1, 5, 160, 1);
 	public static Slider height = 		new Slider("Height", 1, 5, 512, 1);
 	
-	public static ListSelection inputLabel = new ListSelection<String>("Box List", new ArrayList<String>(), ListType.PLAYERNAME, ListInputType.TEXT);
+	public static ListSelection inputLabel = new ListSelection<String>("Box List", new ArrayList<String>(), ListType.CUSTOM, ListInputType.TEXT);
 	public DetectionBox() 
 	{
 		super("Detection Box", Category.MISC, "a box that sends an alert when an entity enters it");
@@ -95,17 +96,45 @@ public class DetectionBox extends Module
 		
 	}
 	
+	public boolean removeBox(String label)
+	{
+		System.out.println("remove");
+		for (DetectionBoxes i : list)
+		{
+			if (label == i.label)
+				return list.remove(i);
+		}
+		return false;
+	}
+	
 	@EventTarget
 	public void settingChanged(SettingChangedEvent e)
 	{
-		if(e.settingID != add.getId())
+		if(e.settingID == inputLabel.getID())
+		{
+			// check that its removing thing from dropdown list somehow
+			// then remove the box with that label
+			inputLabel.term = inputLabel.term == null ? "no name" : inputLabel.term;
+			removeBox(inputLabel.term);
+			return;
+		}
+		
+		if(e.settingID != add.getID())
 			return;
 		
 		if (!add.getValue())
 			return;
 		
 		inputLabel.term = inputLabel.term == null ? "no name" : inputLabel.term;
-		inputLabel.enableItem(inputLabel.term);
+		
+		for (DetectionBoxes i : list)
+		{
+			if (inputLabel.term == i.label)
+				return;
+		}
+		
+		CustomListItem custom = new CustomListItem(inputLabel.term);
+		inputLabel.enableItem(custom);
 		
 		addBox(
 				players.getValue(), hostile.getValue()   , passive.getValue(), neutral.getValue(),
