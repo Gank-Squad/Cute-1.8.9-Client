@@ -204,12 +204,13 @@ public class EntityUtil
    
    public static boolean isInTab(AbstractClientPlayer entity) 
 	{
-		for (NetworkPlayerInfo p : mc.getNetHandler().getPlayerInfoMap()) 
-		{
-			if (p.equals(entity.getPlayerInfo()))
-				return true; 
-		}  
-		return false;
+	   return mc.getNetHandler().getPlayerInfo(entity.getUniqueID()) != null;
+//		for (NetworkPlayerInfo p : mc.getNetHandler().getPlayerInfoMap()) 
+//		{
+//			if (p.equals(entity.getPlayerInfo()))
+//				return true; 
+//		}  
+//		return false;
 	}
 }
 
