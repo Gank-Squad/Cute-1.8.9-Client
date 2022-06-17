@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 import cute.Client;
 import cute.settings.ColorPicker;
 import cute.settings.ListSelection;
+import cute.settings.custom.CustomListItem;
 import cute.settings.enums.ListType;
 import cute.ui.clickui.components.Button;
 import cute.ui.clickui.components.Component;
@@ -119,8 +120,6 @@ public class DropDownButton extends Component
 		
 		if(showPicker)
 		{
-//			colorP.x = x;
-//			colorP.y = y;
 			colorP.setOff(this.offset + this.getListHeight() + this.height/2);
 			colorP.renderComponent();
 		}
@@ -173,6 +172,10 @@ public class DropDownButton extends Component
 				case POTION:
 					display = ((Potion)this.setting.getItem(i)).getName();
 					break;
+					
+				case CUSTOM:
+					display = ((CustomListItem)this.setting.getItem(i)).toString();
+					break;
 			}
 			
 			FontUtil.drawStringWithShadow(
@@ -207,6 +210,20 @@ public class DropDownButton extends Component
 					default:
 					case PLAYERNAME:						
 					case POTION:
+						
+					case CUSTOM:
+						
+						CustomListItem cl = (CustomListItem)this.colorPickerItem;
+						
+						ColorPicker cp = cl.getColorPicker();
+						
+						if(cp == null)
+							return;
+						
+						cp.setRed(this.csetting.getRed());
+						cp.setGreen(this.csetting.getGreen());
+						cp.setBlue(this.csetting.getBlue());
+						cp.setAlpha(this.csetting.getAlpha());
 						break;
 						
 					case BLOCK:
@@ -259,17 +276,18 @@ public class DropDownButton extends Component
 		
 		if(button == 2)
 		{
-			switch(this.type)
+			int index = this.getListHoverIndex(mouseX, mouseY);
+			
+			if(index >= 0 && index < this.setting.getSize())
 			{
-				default:
-					this.colorPickerItem = null;
-					break;
-					
-				case BLOCK:
-					int index = this.getListHoverIndex(mouseX, mouseY);
-					
-					if(index >= 0 && index < this.setting.getSize())
-					{
+				switch(this.type)
+				{
+					default:
+						this.colorPickerItem = null;
+						break;
+						
+					case BLOCK:
+											
 						VirtualBlock vb = ((VirtualBlock)this.setting.getItem(index));
 						
 						this.colorPickerItem = vb;
@@ -280,17 +298,34 @@ public class DropDownButton extends Component
 						this.csetting.setAlpha(vb.getAlpha());
 						this.colorP.setColor(this.csetting.getColor());
 						this.showPicker = true;
-					}
-					
-					break;
-					
-				case PLAYERNAME:
-					this.colorPickerItem = null;
-					break;
-					
-				case POTION:
-					this.colorPickerItem = null;
-					break;
+						
+						break;
+						
+					case CUSTOM:
+						
+						CustomListItem cl = ((CustomListItem)this.setting.getItem(index));
+						
+						if(!cl.hasColorPicker || cl.getColorPicker() == null)
+							break;
+						
+						ColorPicker cp = cl.getColorPicker();
+						
+						this.colorPickerItem = cl;
+	
+						this.csetting.setRed(cp.getRed());
+						this.csetting.setGreen(cp.getGreen());
+						this.csetting.setBlue(cp.getBlue());
+						this.csetting.setAlpha(cp.getAlpha());
+						this.colorP.setColor(this.csetting.getColor());
+						this.showPicker = true;
+						
+						break;
+						
+					case PLAYERNAME:
+					case POTION:
+						this.colorPickerItem = null;
+						break;
+				}
 			}
 			return;
 		}
@@ -348,9 +383,8 @@ public class DropDownButton extends Component
 							}
 							break;
 							
+						case CUSTOM:
 						case POTION:
-							break;
-							
 						case PLAYERNAME:
 							break;
 					}

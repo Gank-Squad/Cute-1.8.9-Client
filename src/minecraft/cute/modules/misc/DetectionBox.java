@@ -98,16 +98,18 @@ public class DetectionBox extends Module
 	@EventTarget
 	public void settingChanged(SettingChangedEvent e)
 	{
-		
 		if(e.settingID != add.getId())
 			return;
+		
 		if (!add.getValue())
 			return;
+		
 		inputLabel.term = inputLabel.term == null ? "no name" : inputLabel.term;
 		inputLabel.enableItem(inputLabel.term);
+		
 		addBox(
-				players.getValue(),hostile.getValue(),passive.getValue(),neutral.getValue(),
-				vehicle.getValue(), projectile.getValue(), item.getValue(), anchor.getValue(),
+				players.getValue(), hostile.getValue()   , passive.getValue(), neutral.getValue(),
+				vehicle.getValue(), projectile.getValue(), item.getValue()   , anchor.getValue(),
 				new Vec3(-width.getValue() / 2, 
 						 -height.getValue() / 2, 
 						 -width.getValue() / 2),
@@ -149,12 +151,7 @@ public class DetectionBox extends Module
 					GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 					GL11.glEnable(GL11.GL_LINE_SMOOTH);
-//
-//					GL11.glLineWidth((float)lineWidth.getValue());
-//					
-//					
-//					RenderUtil.render
-//					
+
 					Vec3[] x = l.getBounds();
 					RenderUtil.renderBoundingBox(x[0], x[1]);
 					

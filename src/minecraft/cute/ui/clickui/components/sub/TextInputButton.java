@@ -1,6 +1,7 @@
 package cute.ui.clickui.components.sub;
 
 import cute.settings.ListSelection;
+import cute.settings.custom.CustomListItem;
 import cute.settings.enums.ListType;
 import cute.ui.clickui.components.Button;
 
@@ -40,15 +41,30 @@ public class TextInputButton extends TextButtonBase
 	@Override
 	public void onEnter(String input)
 	{
+		if(input == null || input.length() == 0)
+			return;
+		
 		this.setting.term = this.searchTerm;
-		if (this.type == ListType.PLAYERNAME)
-			return;
-		if(input == null || input.length() == 0 || this.type != ListType.PLAYERNAME)
-			return;
 		
-		this.setting.enableItem(input.trim().toLowerCase());
-		
-		this.searchTerm = "";
+		switch(this.type)
+		{
+			case PLAYERNAME:
+				this.setting.enableItem(input.trim().toLowerCase());
+				
+				this.searchTerm = "";
+				break;
+				
+			case CUSTOM:
+				
+				CustomListItem cli = new CustomListItem(input);
+				
+				this.setting.sendUpdate(cli);
+				
+				break;
+				
+			default:
+				break;
+		}
 	}
 }
 

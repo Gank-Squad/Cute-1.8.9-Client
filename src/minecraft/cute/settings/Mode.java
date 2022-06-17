@@ -44,9 +44,20 @@ public class Mode extends Setting
 		return this._mode + 1 >= this._modes.length ? 0 : this._mode + 1;
 	}
 	
+	public int getPrevMode() 
+	{
+		return this._mode - 1 >= 0 ? this._mode - 1 : this._modes.length - 1;
+	}
+	
 	public void nextMode()
 	{
 		this._mode = this.getNextMode();
+		super.update(true, this._mode);
+	}
+	
+	public void prevMode()
+	{
+		this._mode = this.getPrevMode();
 		super.update(true, this._mode);
 	}
 }

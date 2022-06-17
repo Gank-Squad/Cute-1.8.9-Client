@@ -96,6 +96,11 @@ public class ListSelection<T> extends Setting
 	{
 		return this.enabledItems.size();
 	}
+	
+	public void sendUpdate(Object item)
+	{
+		this.update(true, item);
+	}
 }
 
 

@@ -99,10 +99,14 @@ public class ModeButton extends Component {
 	@Override
 	public void mouseClicked(int mouseX, int mouseY, int button) 
 	{
-		if(button != 0 || !this.parent.isOpen() || !isMouseOnButton(mouseX, mouseY))
+		if(!this.parent.isOpen() || !isMouseOnButton(mouseX, mouseY))
 			return;
 		
-		this.setting.nextMode();
+		if(button == 0)
+			this.setting.nextMode();
+		
+		else if(button == 1)
+			this.setting.prevMode();
 	}
 	
 	public boolean isMouseOnButton(int x, int y) 
