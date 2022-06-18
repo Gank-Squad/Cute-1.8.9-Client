@@ -318,7 +318,7 @@ public class RenderUtil
 			GL11.glEnd();
 			
 			GL11.glBegin(2);
-			GL11.glVertex3d(b.maxX, b.maxY, b.minZ);
+			GL11.glVertex3d(b.minX, b.maxY, b.minZ);
 			GL11.glVertex3d(b.maxX, b.maxY, b.minZ);
 			GL11.glVertex3d(b.maxX, b.maxY, b.maxZ);
 			GL11.glVertex3d(b.minX, b.maxY, b.maxZ);
