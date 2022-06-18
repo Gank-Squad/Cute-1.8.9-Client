@@ -21,6 +21,7 @@ import cute.util.RenderUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Vec3;
 
 public class DetectionBox extends Module
@@ -77,8 +78,7 @@ public class DetectionBox extends Module
 			boolean projectile,
 			boolean item,
 			boolean anchorPlayer,
-			Vec3 corner1,
-			Vec3 corner2,
+			AxisAlignedBB box,
 			String label)
 	{
 		list.add(new DetectionBoxes(
@@ -90,8 +90,7 @@ public class DetectionBox extends Module
 				projectile,
 				item,
 				anchorPlayer,
-				corner1,
-				corner2,
+				box,
 				label
 				));
 		
@@ -141,10 +140,10 @@ public class DetectionBox extends Module
 		addBox(
 				players.getValue(), hostile.getValue()   , passive.getValue(), neutral.getValue(),
 				vehicle.getValue(), projectile.getValue(), item.getValue()   , anchor.getValue(),
-				new Vec3(-width.getValue() / 2, 
+				new AxisAlignedBB(-width.getValue() / 2, 
 						 -height.getValue() / 2, 
-						 -width.getValue() / 2),
-				new Vec3(width.getValue() / 2, 
+						 -width.getValue() / 2,
+						 width.getValue() / 2, 
 						 height.getValue() / 2, 
 						 width.getValue() / 2),
 				inputLabel.term

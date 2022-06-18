@@ -10,8 +10,6 @@ import net.minecraft.util.Vec3;
 
 public class DetectionBoxes 
 {
-	private Vec3 corner1;
-	private Vec3 corner2;
 	private AxisAlignedBB box;
 	
 	// if this is false, corner1/2 will have the absolute positions
@@ -70,71 +68,7 @@ public class DetectionBoxes
 		}
 		this.label = label;
 	}
-	DetectionBoxes(
-			boolean players,
-			boolean hostile,
-			boolean passive,
-			boolean neutral,
-			boolean vehicle,
-			boolean projectile,
-			boolean item,
-			boolean anchorPlayer,
-			Vec3 corner1,
-			Vec3 corner2,
-			String label
-			)
-	{
-		this.players = players;
-		this.hostile = hostile;
-		this.passive = passive;
-		this.neutral = neutral;
-		this.vehicle = vehicle;
-		this.projectile = projectile;
-		this.item = item;
-		this.corner1 = corner1;
-		this.corner2 = corner2;
-		this.anchorPlayer = anchorPlayer;
-		
-		if (!anchorPlayer)
-		{
-			this.corner1 = new Vec3(
-					mc.thePlayer.posX - corner1.xCoord,
-					mc.thePlayer.posY - corner1.yCoord,
-					mc.thePlayer.posZ - corner1.zCoord
-					);
-			this.corner2 = new Vec3(
-					mc.thePlayer.posX + corner1.xCoord,
-					mc.thePlayer.posY + corner1.yCoord,
-					mc.thePlayer.posZ + corner1.zCoord
-					);
-		}
-		
-		
-		this.label = label;
-	}
 	
-	Vec3[] getBounds()
-	{
-		Vec3[] arr = new Vec3[2];
-		
-		if (anchorPlayer)
-		{
-			arr[0] = new Vec3(
-					mc.thePlayer.posX - corner1.xCoord,
-					mc.thePlayer.posY - corner1.yCoord,
-					mc.thePlayer.posZ - corner1.zCoord
-					);
-			arr[1] = new Vec3(
-					mc.thePlayer.posX + corner1.xCoord,
-					mc.thePlayer.posY + corner1.yCoord,
-					mc.thePlayer.posZ + corner1.zCoord
-					);
-			return arr;
-		}
-		arr[0] = corner1;
-		arr[1] = corner2;
-		return arr;
-	}
 	AxisAlignedBB getBoundsBB()
 	{
 		if (anchorPlayer)
@@ -152,51 +86,17 @@ public class DetectionBoxes
 		return box;
 	}
 	
-	public void unAnchor()
-	{
-		if (!anchorPlayer)
-			return;
-		
-		anchorPlayer = false;
-		corner1 = new Vec3(
-				corner1.xCoord + mc.thePlayer.posX,
-				corner1.yCoord + mc.thePlayer.posY,
-				corner1.zCoord + mc.thePlayer.posZ
-				);
-		corner2 = new Vec3(
-				corner2.xCoord + mc.thePlayer.posX,
-				corner2.yCoord + mc.thePlayer.posY,
-				corner2.zCoord + mc.thePlayer.posZ
-				);
-	}
-	public void anchor()
-	{
-		if (anchorPlayer)
-			return;
-		
-		anchorPlayer = true;
-		corner1 = new Vec3(
-				corner1.xCoord - mc.thePlayer.posX,
-				corner1.yCoord - mc.thePlayer.posY,
-				corner1.zCoord - mc.thePlayer.posZ
-				);
-		corner2 = new Vec3(
-				corner2.xCoord - mc.thePlayer.posX,
-				corner2.yCoord - mc.thePlayer.posY,
-				corner2.zCoord - mc.thePlayer.posZ
-				);
-	}
-	
 	public boolean trigger(Entity e)
 	{
-		Vec3[] bounds = getBounds();
+//		return box.intersectsWith(e.getCollisionBox(e));
+		AxisAlignedBB boundsBB = getBoundsBB();
 		if (e == mc.thePlayer)
 			return false;
-		if (e.posX > bounds[0].xCoord || e.posX < bounds[1].xCoord)
+		if (e.posX < boundsBB.minX || e.posX > boundsBB.maxX)
 			return false;
-		if (e.posY > bounds[0].yCoord || e.posY < bounds[1].yCoord)
+		if (e.posY < boundsBB.minY || e.posY > boundsBB.maxY)
 			return false;
-		if (e.posZ > bounds[0].zCoord || e.posZ < bounds[1].zCoord)
+		if (e.posZ < boundsBB.minZ || e.posZ > boundsBB.maxZ)
 			return false;
 		
 		if(e instanceof EntityPlayer 	&& !players)
@@ -213,7 +113,6 @@ public class DetectionBoxes
 			return false;
 		if(e instanceof EntityItem		&& !item)
 			return false;
-		
 		return true;
 	}
 }
