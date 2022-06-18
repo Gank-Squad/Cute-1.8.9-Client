@@ -112,9 +112,8 @@ public class NameTags extends Module
     	// untested but i think when in pvp on hypixel the anti ka bots copy the player gear
     	// so it renders twice the armor above their head, this is supposed to avoid bots now idk if it works
     	if(!(event.entity instanceof EntityPlayer) || 
-    	     event.entity.isDead || 
-    	    !event.entity.isEntityAlive() || 
-    	    event.entity instanceof EntityLivingBase && AntiBot.isBot((EntityLivingBase)event.entity))
+    	     event.entity.isDead ||  
+    	    AntiBot.isBot((EntityLivingBase)event.entity))
     		return;
     	
     	event.setCancelled(true);

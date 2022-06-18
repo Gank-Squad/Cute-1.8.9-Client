@@ -160,33 +160,36 @@ public class DetectionBox extends Module
     	alerts = 0;
     	label = "";
     	
-    	GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
-		GL11.glDepthMask(false);
-
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
-
-		GL11.glEnable(GL11.GL_LINE_SMOOTH);
-		
-		double doubleX = this.mc.thePlayer.lastTickPosX
-                + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
-                * event.partialTicks;
-
-        double doubleY = this.mc.thePlayer.lastTickPosY
-                + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY)
-                * event.partialTicks;
-
-        double doubleZ = this.mc.thePlayer.lastTickPosZ
-                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
-                * event.partialTicks;
-//
-//        
-        GL11.glTranslated(-doubleX, -doubleY, -doubleZ);
-        
+    	if(show.getValue())
+		{
+	    	GL11.glPushMatrix();
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+			GL11.glDepthMask(false);
+	
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GL11.glDisable(GL11.GL_ALPHA_TEST);
+	
+			GL11.glEnable(GL11.GL_LINE_SMOOTH);
+			
+			double doubleX = this.mc.thePlayer.lastTickPosX
+	                + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
+	                * event.partialTicks;
+	
+	        double doubleY = this.mc.thePlayer.lastTickPosY
+	                + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY)
+	                * event.partialTicks;
+	
+	        double doubleZ = this.mc.thePlayer.lastTickPosZ
+	                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
+	                * event.partialTicks;
+	
+	        
+	        GL11.glTranslated(-doubleX, -doubleY, -doubleZ);
+		}
+    	
 		for(Entity e : this.mc.theWorld.loadedEntityList) 
 		{
 			for (DetectionBoxes l : list)
@@ -199,29 +202,26 @@ public class DetectionBox extends Module
 				
 				if(show.getValue())
 				{
-					
-					
-					AxisAlignedBB b = l.getBoundsBB();
-					
-//					System.out.println(b);
-					RenderUtil.renderBoundingBox(b);
-					
-					
+					RenderUtil.renderBoundingBox(l.getBoundsBB());	
 				}
 			}
 		}
-		GL11.glDisable(GL11.GL_LINE_SMOOTH);
 		
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		
-		GL11.glDisable(GL11.GL_BLEND);
-		
-		GL11.glDepthMask(true);
-		GL11.glPopMatrix();	
-		
-		// prevents hotbar / hand from being messed up by color changes 
-		RenderUtil.resetColor();
+		if(show.getValue())
+		{
+			GL11.glDisable(GL11.GL_LINE_SMOOTH);
+			
+			GL11.glEnable(GL11.GL_ALPHA_TEST);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			
+			GL11.glDisable(GL11.GL_BLEND);
+			
+			GL11.glDepthMask(true);
+			GL11.glPopMatrix();	
+			
+			// prevents hotbar / hand from being messed up by color changes 
+			RenderUtil.resetColor();
+		}
 	}
 }

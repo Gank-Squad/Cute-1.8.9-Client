@@ -115,18 +115,10 @@ public class ESPBlocks extends Module
         if (nullCheck() || flush)
             return;
         
-        double doubleX = this.mc.thePlayer.lastTickPosX
-                + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
-                * evt.partialTicks;
-
-        double doubleY = this.mc.thePlayer.lastTickPosY
-                + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY)
-                * evt.partialTicks;
-
-        double doubleZ = this.mc.thePlayer.lastTickPosZ
-                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
-                * evt.partialTicks;
-
+        double doubleX = mc.getRenderManager().viewerPosX;
+        double doubleY =  mc.getRenderManager().viewerPosY;
+        double doubleZ = mc.getRenderManager().viewerPosZ;
+        
         GL11.glLineWidth((float)ESPBlocks.lineWidth.getValue());
         GL11.glPushMatrix();
         GL11.glTranslated(-doubleX, -doubleY, -doubleZ);

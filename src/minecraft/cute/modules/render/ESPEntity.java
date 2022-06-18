@@ -325,47 +325,7 @@ public class ESPEntity<T extends Entity> extends Module
 	    		return;
     	}
     }
-    
-    public void draw2dEsp(Entity e, float viewerYaw, float lineWidth, float partialTicks) 
-    {
-    	double doubleX = this.mc.thePlayer.lastTickPosX
-                + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX)
-                * partialTicks;
-
-        double doubleY = this.mc.thePlayer.lastTickPosY
-                + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY)
-                * partialTicks;
-
-        double doubleZ = this.mc.thePlayer.lastTickPosZ
-                + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ)
-                * partialTicks;
-    	
-        double x = e.posX - doubleX;
-        double y = e.posY - doubleY;
-        double z = e.posZ - doubleZ;
-
-        Vec3 v = new Vec3(
-        		e.posX - mc.thePlayer.posX,
-        		e.posY - mc.thePlayer.posY ,
-        		e.posZ - mc.thePlayer.posZ
-        		);
-        
-        GlStateManager.pushMatrix();
-		
-        GlStateManager.translate(x, y, z);
-        
-        final float yaw = (float) Math.toDegrees(Math.atan2(v.zCoord, v.xCoord)) - 90.0F;
-        final float pitch = (float) Math.toDegrees(Math.atan2(y, Math.sqrt(v.xCoord * v.xCoord + v.zCoord * v.zCoord)));
-        
-        GlStateManager.rotate(-yaw, 0.0F, 1F, 0.0F);
-        GlStateManager.rotate(-pitch, 1F, 0.0F, 0.0F);
-
-//        RenderUtil.renderRectTarget(-e.width/1.5f, 0, e.width/1.5f, e.height);
-		RenderUtil.renderRectTarget(-e.width/1.5f, 0, e.width/1.5f, e.height - 0.6*Math.abs((e.height * (pitch/90))));
-
-		GlStateManager.popMatrix();
-	}
-    
+  
     @EventTarget
 	public void onRenderWorld(RenderWorldLastEvent event) 
 	{
@@ -420,7 +380,7 @@ public class ESPEntity<T extends Entity> extends Module
 	        		{
 	        			RenderUtil.setColor(mobsPicker.getColor());
 	        			if(mode.getValue() == 0)
-	        				RenderUtil.renderEntityHitbox(entity);
+	        				RenderUtil.renderEntityHitbox(entity, event.partialTicks);
 	        			else 
 	        				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
 	        		}
@@ -432,7 +392,7 @@ public class ESPEntity<T extends Entity> extends Module
             		{
             			RenderUtil.setColor(neutralPicker.getColor());
             			if(mode.getValue() == 0)
-            				RenderUtil.renderEntityHitbox(entity);
+            				RenderUtil.renderEntityHitbox(entity, event.partialTicks);
             			else 
             				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
             		}
@@ -445,7 +405,7 @@ public class ESPEntity<T extends Entity> extends Module
             		{
             			RenderUtil.setColor(animalPicker.getColor());
             			if(mode.getValue() == 0)
-            				RenderUtil.renderEntityHitbox(entity);
+            				RenderUtil.renderEntityHitbox(entity, event.partialTicks);
             			else 
             				RenderUtil.draw2dEsp(entity, event.partialTicks, false);
             		}

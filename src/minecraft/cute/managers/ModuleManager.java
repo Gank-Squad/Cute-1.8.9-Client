@@ -61,7 +61,7 @@ public class ModuleManager extends BaseManager
 	public static void initModule()
 	{
 		modules.add(new FakePlayer());
-		modules.add(new BowAimbot());
+//		modules.add(new BowAimbot());
 		modules.add(new AntiBot());
 		
 		modules.add(new ClickGUI());

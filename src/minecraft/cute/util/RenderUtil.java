@@ -250,17 +250,9 @@ public class RenderUtil
 
 	    public static void draw2dEsp(Entity e, float partialTicks, boolean usePlayerMid) 
 	    {
-	    	final double doubleX = mc.thePlayer.lastTickPosX
-	                + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX)
-	                * partialTicks;
-
-	    	final double doubleY = mc.thePlayer.lastTickPosY
-	                + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY)
-	                * partialTicks;
-
-	    	final double doubleZ = mc.thePlayer.lastTickPosZ
-	                + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ)
-	                * partialTicks;
+	    	final double doubleX = e.posX - mc.getRenderManager().viewerPosX;// + ((e.posX - e.lastTickPosX) * partialTicks);
+	    	final double doubleY = e.posY - mc.getRenderManager().viewerPosY;// + ((e.posY - e.lastTickPosY) * partialTicks);
+	    	final double doubleZ = e.posZ - mc.getRenderManager().viewerPosZ;// + ((e.posZ - e.lastTickPosZ) * partialTicks);
 	    	
 	    	final double x = e.posX - mc.thePlayer.posX;
 	    	final double y = e.posY - mc.thePlayer.posY - (usePlayerMid ? mc.thePlayer.height / 2 : 0);
@@ -274,10 +266,7 @@ public class RenderUtil
 	        
 	        GlStateManager.pushMatrix();
 	        
-	        GlStateManager.translate(
-	        		e.posX - doubleX, 
-	        		e.posY - doubleY, 
-	        		e.posZ - doubleZ);
+	        GlStateManager.translate(doubleX, doubleY, doubleZ);
 	        
 	        GlStateManager.rotate(-yaw, 0.0F, 1F, 0.0F);
 	        
@@ -286,7 +275,7 @@ public class RenderUtil
 	        GlStateManager.rotate(-pitch, 1F, 0.0F, 0.0F);
 
 			RenderUtil.renderRectTarget(-e.width / 2f, -h / 2, e.width / 2f, h / 2);
-//			RenderUtil.renderRectOutline(-e.width / 2f, -h / 2, e.width / 2f, h / 2);
+
 			GlStateManager.popMatrix();
 		}
 	
@@ -368,28 +357,21 @@ public class RenderUtil
 	     */
 		public static void renderEntityHitbox(Entity e, float partialTicks) 
 	    {
-			final double doubleX = mc.thePlayer.lastTickPosX
-	                + (mc.thePlayer.posX - mc.thePlayer.lastTickPosX)
-	                * partialTicks;
-
-	        final double doubleY = mc.thePlayer.lastTickPosY
-	                + (mc.thePlayer.posY - mc.thePlayer.lastTickPosY)
-	                * partialTicks;
-
-	        final double doubleZ = mc.thePlayer.lastTickPosZ
-	                + (mc.thePlayer.posZ - mc.thePlayer.lastTickPosZ)
-	                * partialTicks;
-	    	
+			final double doubleX = mc.getRenderManager().viewerPosX;
+	        final double doubleY = mc.getRenderManager().viewerPosY;
+	        final double doubleZ = mc.getRenderManager().viewerPosZ;
+	        
 			final double hw = e.width / 2;
 			
-	    	final double x1 = e.posX + hw - doubleX;
-			final double x2 = e.posX - hw - doubleX;
+//			final float u = e.motionX
+	    	final double x1 = e.posX + hw - doubleX ;// ((e.posX - e.lastTickPosX) * partialTicks);
+			final double x2 = e.posX - hw - doubleX ; //((e.posX - e.lastTickPosX) * partialTicks);
 			
-			final double y1 = e.posY            - doubleY;
-			final double y2 = e.posY + e.height - doubleY;
+			final double y1 = e.posY            - doubleY ;// + ((e.posY - e.lastTickPosY) * partialTicks);
+			final double y2 = e.posY + e.height - doubleY ; //+ ((e.posY - e.lastTickPosY) * partialTicks);
 			
-			final double z1 = e.posZ + hw - doubleZ;
-			final double z2 = e.posZ - hw - doubleZ;
+			final double z1 = e.posZ + hw - doubleZ ;//+ ((e.posZ - e.lastTickPosZ) * partialTicks);
+			final double z2 = e.posZ - hw - doubleZ ;//+ ((e.posZ - e.lastTickPosZ) * partialTicks);
 			
 			GL11.glBegin(2);
 			
