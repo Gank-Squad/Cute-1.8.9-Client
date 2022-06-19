@@ -88,7 +88,6 @@ public class DetectionBoxes
 	
 	public boolean trigger(Entity e)
 	{
-//		return box.intersectsWith(e.getCollisionBox(e));
 		AxisAlignedBB boundsBB = getBoundsBB();
 		if (e == mc.thePlayer)
 			return false;

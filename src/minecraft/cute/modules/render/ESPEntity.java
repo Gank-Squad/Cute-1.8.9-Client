@@ -19,6 +19,7 @@ import cute.settings.Mode;
 import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
+import cute.util.StringUtil;
 import cute.util.types.EntityType;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
@@ -60,6 +61,8 @@ public class ESPEntity<T extends Entity> extends Module
     
     public static Checkbox forceRender = new Checkbox("Force Render", true);
     
+    public static Checkbox nameColor = new Checkbox("Name Color Outline", true);
+    
     private static boolean globalEnabled = false;
     
  	public static boolean isOn()
@@ -80,6 +83,7 @@ public class ESPEntity<T extends Entity> extends Module
         addSetting(invisAlpha);
         addSetting(lineWidth);
         addSetting(forceRender);
+        addSetting(nameColor);
     }
     
 
@@ -127,7 +131,11 @@ public class ESPEntity<T extends Entity> extends Module
         	case PLAYER:
         		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
         			return;
-        		RenderUtil.setColor(playerPicker.getColor());
+        		int c = StringUtil.getNameColor(entity.getName());
+        		if(nameColor.getValue() && c != 0)
+        			RenderUtil.setColor(c);
+        		else
+        			RenderUtil.setColor(playerPicker.getColor());
         		break;
         		
         	case HOSTILE:

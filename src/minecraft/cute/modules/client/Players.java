@@ -60,7 +60,7 @@ public class Players extends Module
 					if (o instanceof String)
 					{
 						String s = (String)o;
-						
+						StringUtil.getNameColor(s);
 						if(e.added)
 						{
 							Players.playerNameBlacklist.add(StringUtil.clearNameFormat(s).toLowerCase().trim());
