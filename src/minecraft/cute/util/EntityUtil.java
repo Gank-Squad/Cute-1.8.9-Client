@@ -201,6 +201,15 @@ public class EntityUtil
        
        return i;
    }
+
+   /**
+    * Returns the name that should be renderd for the player supplied
+    */
+   public static String getPlayerTabMenuName(NetworkPlayerInfo networkPlayerInfoIn)
+   {
+       return networkPlayerInfoIn.getDisplayName() != null ? networkPlayerInfoIn.getDisplayName().getFormattedText() : ScorePlayerTeam.formatPlayerName(networkPlayerInfoIn.getPlayerTeam(), networkPlayerInfoIn.getGameProfile().getName());
+   }
+
    
    public static boolean isInTab(AbstractClientPlayer entity) 
 	{

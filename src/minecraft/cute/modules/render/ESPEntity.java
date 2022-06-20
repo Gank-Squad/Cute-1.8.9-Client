@@ -131,9 +131,16 @@ public class ESPEntity<T extends Entity> extends Module
         	case PLAYER:
         		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
         			return;
-        		int c = StringUtil.getNameColor(entity.getName());
-        		if(nameColor.getValue() && c != 0)
-        			RenderUtil.setColor(c);
+        		
+        		if(nameColor.getValue()) 
+        		{
+        			int c = StringUtil.getNameColor(EntityUtil.getPlayerTabMenuName(mc.getNetHandler().getPlayerInfo(entity.getUniqueID())));
+        			
+        			if(c != -1)
+        				RenderUtil.setColor(c);
+        			else
+        				RenderUtil.setColor(playerPicker.getColor());
+        		}
         		else
         			RenderUtil.setColor(playerPicker.getColor());
         		break;
@@ -374,7 +381,17 @@ public class ESPEntity<T extends Entity> extends Module
 	        	case PLAYER:
 	        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
 	        		{
-	        			RenderUtil.setColor(playerPicker.getColor());
+	        			if(nameColor.getValue()) 
+	            		{
+	            			int c = StringUtil.getNameColor(EntityUtil.getPlayerTabMenuName(mc.getNetHandler().getPlayerInfo(entity.getUniqueID())));
+	            			
+	            			if(c != -1)
+	            				RenderUtil.setColor(c);
+	            			else
+	            				RenderUtil.setColor(playerPicker.getColor());
+	            		}
+	            		else
+	            			RenderUtil.setColor(playerPicker.getColor());
 	        			
 	        			if(mode.getValue() == 0)
 	        				RenderUtil.renderEntityHitbox(entity);

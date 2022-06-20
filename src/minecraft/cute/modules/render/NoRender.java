@@ -17,8 +17,8 @@ public class NoRender extends Module
 	
 	public static Checkbox fog = new Checkbox("All Fog", true);
 	public static Checkbox blindnessFog = new Checkbox("Blindness Fog", true);
-	public static Checkbox water = new Checkbox("Water", true);
-	public static Checkbox blocks = new Checkbox("Blocks", true);
+	public static Checkbox water = new Checkbox("Water", false);
+	public static Checkbox blocks = new Checkbox("Blocks", false);
 	
 	@Override
     public void setup() 
