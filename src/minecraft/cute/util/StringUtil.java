@@ -11,50 +11,66 @@ public class StringUtil
         		// any color
         		.replaceAll("§.", "");
     }
+	public static boolean validNameChar(char c)
+	{
+		return "abcdefghijklmnopqrstuvwxyz_0123456789".contains("" + c);
+	}
+	public static boolean validColorCode(char c)
+	{
+		return "0123456789abcdef".contains(""+c);
+	}
+	
 	public static int getNameColor(String s)
 	{
-		// Â§cÂ§lR Â§rÂ§cGooseCosmos
-		s.replaceAll("(§.§.. §.§.)", "");
-		s.trim();
-		
-		// theoretically, next 2 chars should be &c
-		String c = s.substring(0, 2);
-		
-		if (c.equals("§4"))
-			return 0xBE0000;
-		if (c.equals("§c"))
-			return 0xFE3F3F;
-		if (c.equals("§6"))
-			return 0xD9A334;
-		if (c.equals("§e"))
-			return 0xFEFE3F;
-		if (c.equals("§2"))
-			return 0x00BE00;
-		if (c.equals("§a"))
-			return 0x3FFE3F;
-		if (c.equals("§b"))
-			return 0x3FFEFE;
-		if (c.equals("§3"))
-			return 0x00BEBE;
-		if (c.equals("§1"))
-			return 0x0000BE;
-		if (c.equals("§9"))
-			return 0x3F3FFE;
-		if (c.equals("§d"))
-			return 0xFE3FFE;
-		if (c.equals("§5"))
-			return 0xBE00BE;
-		if (c.equals("§f"))
+		s = s.trim().toLowerCase();
+		char c = ' ';
+		for (int i = 0; i < s.length() - 3; i++)
+		{
+			if (s.charAt(i) == '§')
+			{
+				c = s.charAt(i + 1);
+				if(!validColorCode(c))
+					continue;
+				if(validNameChar(c))
+					break;
+			}
+		}
+		switch(c)
+		{
+		case '0':
+			return 0;
+		case '1':
+			return 0x0000AA;
+		case '2':
+			return 0x00AA00;
+		case '3':
+			return 0x00AAAA;
+		case '4':
+			return 0xAA0000;
+		case '5':
+			return 0xAA00AA;
+		case '6':
+			return 0xFFAA00;
+		case '7':
+			return 0xAAAAAA;
+		case '8':
+			return 0x555555;
+		case '9':
+			return 0x5555FF;
+		case 'a':
+			return 0x55FF55;
+		case 'b':
+			return 0x55FFFF;
+		case 'c':
+			return 0xFF5555;
+		case 'd':
+			return 0xFF55FF;
+		case 'e':
+			return 0xFFFF55;
+		case 'f':
 			return 0xFFFFFF;
-		if (c.equals("§7"))
-			return 0xBEBEBE;
-		if (c.equals("§8"))
-			return 0x3F3F3F;
-		if (c.equals("§0"))
-			return 0x000000;
-		
-		
-		// not sure what default should be
-		return 0;
+		default:
+			return 0;
+		}
 	}
 }
