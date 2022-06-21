@@ -18,9 +18,9 @@ public class BedProtect extends Module {
 		super("Bed Protect", Category.BOT, "Protects your bed.");
 	}
 	
-	int[] bedPosition = new int[]{ -1699 , 76 , -96 };
-	int width = 5;
-	int length = 6;
+	int[] bedPosition = new int[]{ -1699 , 75 , -96 };
+	int zLen = 5;
+	int xLen = 6;
 	
 	
 	private void keyWrap(String action, Boolean toggle ) 
@@ -95,6 +95,17 @@ public class BedProtect extends Module {
 	
 	private boolean buildSwitch = false;
 	
+	//Fixing weird float manip
+	private static int smartRound(float value) 
+	{
+		float absolute = Math.abs(value);
+		
+		if(value > 0) {
+			return (int) absolute;
+		} else {
+			return (( (int) absolute )+1) * -1;
+		}	
+	}
 	
 	@EventTarget
 	public void render(RenderWorldLastEvent e) 
@@ -112,8 +123,8 @@ public class BedProtect extends Module {
 
 //		System.out.println(buildSwitch);
 			
-		int midWidth = (int) Math.floor( (width) / 2 );
-		int midLength = (int) Math.ceil( (length+1) / 2 );
+		int midWidth = (int) Math.floor( (zLen) / 2 );
+		int midLength = (int) Math.ceil( (xLen+1) / 2 );
 		
 		
 		if(!buildSwitch) 
@@ -147,11 +158,20 @@ public class BedProtect extends Module {
 						}
 						buildSwitch = true;
 					}
-		} else {
-//			System.out.println("Sequencing");
-			inv.setHeldItem(2);
+		} else { //Initialization block reached, sequencing
+			
+			//Set player view
 			mc.thePlayer.rotationYaw = 0F;
-			mc.thePlayer.rotationPitch = 0F;
+			mc.thePlayer.rotationPitch = 90F;
+			
+			int[] relativeInt = new int[] 
+					{
+						smartRound(relPos[0]),
+						smartRound(relPos[1]),
+						smartRound(relPos[2])
+					};
+			
+			System.out.println("X: "+relativeInt[0]+" Y: "+relativeInt[1]+" Z: "+relativeInt[2]);
 			
 		}
 		
