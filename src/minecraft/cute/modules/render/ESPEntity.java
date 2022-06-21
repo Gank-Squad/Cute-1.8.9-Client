@@ -20,15 +20,10 @@ import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
 import cute.util.StringUtil;
-import cute.util.types.EntityType;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
 
 
 public class ESPEntity<T extends Entity> extends Module
@@ -134,12 +129,13 @@ public class ESPEntity<T extends Entity> extends Module
         		
         		if(nameColor.getValue()) 
         		{
-        			int c = StringUtil.getNameColor(EntityUtil.getPlayerTabMenuName(mc.getNetHandler().getPlayerInfo(entity.getUniqueID())));
-        			
-        			if(c != -1)
-        				RenderUtil.setColor(c);
-        			else
-        				RenderUtil.setColor(playerPicker.getColor());
+        			int c = StringUtil.getNameColor(
+        						EntityUtil.getPlayerTabMenuName(mc.getNetHandler().getPlayerInfo(entity.getUniqueID()))
+							);
+					if(c != 0)
+						RenderUtil.setColor(c);
+					else
+						RenderUtil.setColor(playerPicker.getColor());
         		}
         		else
         			RenderUtil.setColor(playerPicker.getColor());
@@ -382,10 +378,11 @@ public class ESPEntity<T extends Entity> extends Module
 	        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
 	        		{
 	        			if(nameColor.getValue()) 
-	            		{
-	            			int c = StringUtil.getNameColor(EntityUtil.getPlayerTabMenuName(mc.getNetHandler().getPlayerInfo(entity.getUniqueID())));
-	            			
-	            			if(c != -1)
+	            		{	
+	        				int c = StringUtil.getNameColor(
+	        							EntityUtil.getPlayerTabMenuName(mc.getNetHandler().getPlayerInfo(entity.getUniqueID()))
+	        						);
+	            			if(c != 0)
 	            				RenderUtil.setColor(c);
 	            			else
 	            				RenderUtil.setColor(playerPicker.getColor());
