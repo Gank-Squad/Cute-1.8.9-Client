@@ -119,14 +119,14 @@ public class ESPEntity<T extends Entity> extends Module
     	
     	EntityLivingBase entity = e.entityLivingBaseIn;
     	
-    	if(entity instanceof EntityPlayerSP || AntiBot.isBot((EntityLivingBase)entity) || entity.isDead || !entity.isEntityAlive())
+    	if(entity instanceof EntityPlayerSP || AntiBot.isBot((EntityLivingBase)entity) || entity.isDead)
     		return;
 
 
     	switch(entity.getEntityType())
     	{
         	case PLAYER:
-        		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
+        		if(!players.getValue() || Players.playerNameBlacklist.contains(entity.getName().toLowerCase()))
         			return;
         		
         		if(teamColor.getValue()) 
@@ -141,8 +141,10 @@ public class ESPEntity<T extends Entity> extends Module
     					RenderUtil.setColor(t.playerTeam.getColor());
     				}
         		}
-        		else
+        		else 
+        		{
         			RenderUtil.setColor(playerPicker.getColor());
+        		}
         		break;
         		
         	case HOSTILE:
@@ -172,36 +174,7 @@ public class ESPEntity<T extends Entity> extends Module
         	case OTHER:
         			break;
     	}
-    	
-    	
-//    	if(entity instanceof EntityPlayer) 
-//    	{
-//    		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
-//    			return;
-//    		RenderUtil.setColor(playerPicker.getColor());
-//    	}
-//    	else
-//    	if(EntityUtil.isHostileMob(entity))
-//    	{
-//    		if(!mobs.getValue()) 
-//    			return;
-//    		RenderUtil.setColor(mobsPicker.getColor());
-//    	}
-//    	else
-//    	if(EntityUtil.isPassive(entity)) 
-//    	{
-//    		if(!animals.getValue()) 
-//    			return;
-//    		RenderUtil.setColor(animalPicker.getColor());
-//    	}
-//    	else
-//    	if(EntityUtil.isNeutralMob(entity)) 
-//    	{
-//    		if(!neutral.getValue()) 
-//    			return;
-//    		RenderUtil.setColor(neutralPicker.getColor());
-//    	}  
-    	
+   
     	GL11.glLineWidth((float)lineWidth.getValue());
     	
     	switch(mode.getValue())

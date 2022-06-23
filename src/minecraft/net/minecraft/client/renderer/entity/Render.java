@@ -392,11 +392,6 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
             if(!EVENT_.isCancelled())
             {            
 	            int i = 0;
-	            
-	            if (str.equals("deadmau5"))
-	            {
-	                i = -10;
-	            }
 	
 	            int j = fontrenderer.getStringWidth(str) / 2;
 	            GlStateManager.disableTexture2D();

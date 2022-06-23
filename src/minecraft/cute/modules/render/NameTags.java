@@ -13,6 +13,7 @@ import cute.modules.bot.AntiBot;
 import cute.modules.enums.Category;
 import cute.settings.Checkbox;
 import cute.settings.Slider;
+import cute.util.RenderUtil;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -40,6 +41,10 @@ public class NameTags extends Module
     
     public static Checkbox everything = new Checkbox("Everything", false);
     
+    public static Checkbox magaik = new Checkbox("Magic", false);
+    
+    public static Checkbox teamColor = new Checkbox("Team Color", false);
+    
     public static Slider scaleDistance = new Slider("Scale Distance", 1d, 20d, 100d, 1);
     public static Slider scale         = new Slider("Size Scale", 0.01d, 0.25d, 1d, 1);
 
@@ -57,7 +62,9 @@ public class NameTags extends Module
     	this.addSetting(names);
     	this.addSetting(armor);
     	this.addSetting(enchants);
+    	this.addSetting(teamColor);
     	this.addSetting(everything);
+    	this.addSetting(magaik);
     	this.addSetting(scaleDistance);
     	this.addSetting(scale);
     }
@@ -123,7 +130,15 @@ public class NameTags extends Module
     	Tessellator tessellator       = event.tessellator;
     	RenderItem renderitem = mc.getRenderItem();
     	
-    	String str = event.name;
+    	String str = magaik.getValue() ? "§k" + event.name : event.name;
+    	
+    	EntityPlayer player = (EntityPlayer)event.entity;
+    	
+    	
+    	if(teamColor.getValue() && player.playerTeam != null)
+    	{
+    		str = "§" + player.playerTeam.getColorCode() + str;
+    	}
     	
     	int i = 0;
         int j = fontrenderer.getStringWidth(str) / 2;
@@ -150,6 +165,8 @@ public class NameTags extends Module
 	        worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
 	        tessellator.draw();
 	
+//	        int c = fontrenderer.getColorCode('a');
+	        
 	        GlStateManager.enableTexture2D();
 	
 	        // this is here so that it goes through walls
@@ -170,7 +187,7 @@ public class NameTags extends Module
         
         
         
-    	EntityPlayer player = (EntityPlayer)event.entity;
+    	
 
 		int x = -j - 10;
 		

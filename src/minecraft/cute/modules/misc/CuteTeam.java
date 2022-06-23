@@ -5,17 +5,18 @@ import cute.util.StringUtil;
 public class CuteTeam 
 {
 	private int color;
-//	HashSet<String> playerNames = new HashSet();
+
 	public String teamName;
+	
 	private char colorCode;
 	
 	CuteTeam(int color, String teamName)
 	{
 		this.color = color;
-//		this.playerNames = players;
 		this.teamName = teamName;
 		this.colorCode = getColorCode(this.color);
 	}
+	
 	CuteTeam(char colorCode, String teamName)
 	{
 		this.colorCode = colorCode;
@@ -95,6 +96,7 @@ public class CuteTeam
 				return 0;
 		}
 	}
+	
 	public char getColorCode(int color)
 	{
 		// find color code closest to given color
