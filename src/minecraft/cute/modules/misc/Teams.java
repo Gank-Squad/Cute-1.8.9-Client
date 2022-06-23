@@ -22,7 +22,6 @@ public class Teams extends Module
 	
 	public static Checkbox update = new Checkbox("update teams", false);
 	
-	public static Checkbox tabColor = new Checkbox("Use Tab Menu Color", false);
 	
     public static Map<String, CuteTeam> players = new HashMap<>();
     
@@ -35,9 +34,8 @@ public class Teams extends Module
 	@Override
 	public void setup()
 	{
-//		addSetting(mode);
+		addSetting(mode);
 		addSetting(update);
-		addSetting(tabColor);
 	}
 	
 	
