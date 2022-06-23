@@ -8,6 +8,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.block.Block;
+import net.minecraft.client.settings.KeyBinding;
 
 public class BedProtect extends Module {
 
@@ -91,7 +92,9 @@ public class BedProtect extends Module {
 		},
 	};
 	
-	private static int _cooldownTicks = 0; 
+	int bedVertiOffset = 3;
+	int bedHorizOffset = 2;
+	
 	
 	private boolean buildSwitch = false;
 	
@@ -106,6 +109,17 @@ public class BedProtect extends Module {
 			return (( (int) absolute )+1) * -1;
 		}	
 	}
+	
+	public int[] relative2index(int relX, int relZ)
+	{
+		int nX = ( relX * -1 ) + bedVertiOffset;
+		int nZ = relZ + bedHorizOffset;
+		
+		return new int[] {nX, nZ};
+	}
+	
+	private static int _cooldownTicks = 0; 
+	private boolean isJumping = false;
 	
 	@EventTarget
 	public void render(RenderWorldLastEvent e) 
@@ -172,9 +186,54 @@ public class BedProtect extends Module {
 					};
 			
 			System.out.println("X: "+relativeInt[0]+" Y: "+relativeInt[1]+" Z: "+relativeInt[2]);
+
+		//Get block 
+			
+			int[] relIndex = relative2index(relativeInt[0],relativeInt[2]);
+			
+			int height = (relativeInt[1]+1)*-1;
+			
+			System.out.println("H: "+height);
+			System.out.println(relIndex[0] + " - "+relIndex[1]);
+			
+			int block = layout[ 0 ][ relIndex[0] ][ relIndex[1]  ];
+			
+			inv.setHeldItem(block);
+			
+			
+		//Jump and place
+			if(_cooldownTicks == 0) 
+			{
+				_cooldownTicks = 20;
+				
+				if(relIndex[1] == 4) 
+				{
+					mc.gameSettings.keyBindSneak.setPressed(true);
+					mc.gameSettings.keyBindForward_.setPressed(true);
+//					System.out.println("BUILDING UP...");
+					mc.gameSettings.keyBindJump.setPressed(true);
+					mc.gameSettings.keyBindUseItem.setPressed(true);
+				} 
+				else if (relIndex[1] == 0) {
+					KeyBinding.unPressAllKeys();
+					mc.gameSettings.keyBindUseItem.setPressed(true);
+				}
+				
+				
+				else
+				{
+					mc.gameSettings.keyBindJump.setPressed(false);
+				}
+				
+			
+			} else if (_cooldownTicks == 1){
+				_cooldownTicks--;
+				mc.gameSettings.keyBindJump.setPressed(false);
+			} else {
+				_cooldownTicks--;	
+			}
 			
 		}
-		
 		//Finding sweet spot
 
 		

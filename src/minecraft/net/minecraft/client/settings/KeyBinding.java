@@ -24,6 +24,7 @@ public class KeyBinding implements Comparable<KeyBinding>
     public void setPressed(boolean isPressed)
     {
     	this.pressed = isPressed;
+    	this.pressTime = 5;
     }
 
     public static void onTick(int keyCode)
