@@ -41,18 +41,31 @@ public class StringUtil
 			   'a' <= c && c <= 'f' ||
 			   'A' <= c && c <= 'F';
 	}
+	public static boolean isColorCode(char c)
+	{
+		return '0' <= c && c <= '9' || 
+			   'a' <= c && c <= 'f' ||
+			   'A' <= c && c <= 'F' ||
+			   'k' <= c && c <= 'o' ||
+			   'K' <= c && c <= 'O' ||
+			   'r' == c || c == 'R';
+	}
 	
-	
-	public static int getNameColor(String s)
+	public static char getNameColorCode(String s)
 	{
 		Matcher m = LAST_COLOR.matcher(s.trim());
 		
 		if(!m.find())
 		{
-			return -1;
+			return 'r';
 		}
 		
-		char c = m.group(1).toLowerCase().charAt(0);
+		return m.group(1).toLowerCase().charAt(0);
+	}
+	
+	public static int getNameColor(String s)
+	{
+		char c = getNameColorCode(s);
 		
 		switch(c)
 		{
