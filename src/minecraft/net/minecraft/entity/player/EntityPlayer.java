@@ -79,6 +79,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 
 import cute.modules.misc.CuteTeam;
+import cute.modules.misc.Teams;
 
 @SuppressWarnings("incomplete-switch")
 public abstract class EntityPlayer extends EntityLivingBase
@@ -278,6 +279,11 @@ public abstract class EntityPlayer extends EntityLivingBase
     {
         this.noClip = this.isSpectator();
 
+        if(Teams.players.containsKey(this.getName()))
+        {
+        	this.playerTeam = Teams.players.get(this.getName());
+        }
+        
         if (this.isSpectator())
         {
             this.onGround = false;
