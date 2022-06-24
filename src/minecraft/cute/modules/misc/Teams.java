@@ -17,8 +17,7 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 
 public class Teams extends Module
 {
-//	genuinely cannot think of any other possible modes, other than manually adding people in
-	public static Mode mode = new Mode("Mode", "Scoreboard Teams", "Tab Name Color");
+	public static Mode mode = new Mode("Mode", "Scoreboard", "Tab Color");
 	
 	public static Checkbox update = new Checkbox("update teams", false);
 	
