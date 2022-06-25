@@ -73,7 +73,9 @@ public class Teams extends Module
 			{
 
 				color = StringUtil.getNameColor(i);
-				players.put(StringUtil.clearNameFormat(i), new CuteTeam(color, Integer.toString(color)));
+				CuteTeam c = new CuteTeam(color,"");
+				c.teamName = StringUtil.getColorCodeNameStr(c.getColorCode());
+				players.put(StringUtil.clearNameFormat(i), c);
 			}
 			break;
 		}

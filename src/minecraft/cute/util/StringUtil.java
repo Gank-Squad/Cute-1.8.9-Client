@@ -51,6 +51,79 @@ public class StringUtil
 			   'r' == c || c == 'R';
 	}
 	
+	public static String getColorCodeNameStr(char c)
+	{
+		switch(c)
+		{
+		// 0 Black 0,0,0
+		case '0':
+			return "black";
+			
+		// 1 Dark Blue 0,0,170	
+		case '1':
+			return "dark blue";
+			
+		// 2 Dark Green 0,170,0
+		case '2':
+			return "dark green";
+			
+		// 3 Dark Aqua	0, 170, 170
+		case '3':
+			return "dark aqua";
+			
+		// 4 Dark Red 170, 0, 0
+		case '4':
+			return "dark red";
+			
+		// 5 Dark Purple 170, 0, 170
+		case '5':
+			return "dark purple";
+			
+		// 6 Gold 255, 170, 0
+		case '6':
+			return "gold";
+			
+		// 7 Gray 170, 170, 170
+		case '7':
+			return "grey";
+			
+		// 8 Dark Gray 85, 85, 85
+		case '8':
+			return "dark grey";
+			
+		// 9 Blue 85, 85, 255
+		case '9':
+			return "blue";
+			
+		// a Green 85, 255, 85
+		case 'a':
+			return "green";
+			
+		// b Aqua 85, 255, 255
+		case 'b':
+			return "aqua";
+			
+		// c Red 255, 85, 85
+		case 'c':
+			return "red";
+			
+		// d Light Purple 255, 85, 255
+		case 'd':
+			return "light purple";
+			
+		// e Yellow 255, 255, 85
+		case 'e':
+			return "yellow";
+			
+		// f White 255, 255, 255
+		case 'f':
+			return "white";
+			
+		default:
+			return "none";
+		}
+	}
+	
 	public static char getNameColorCode(String s)
 	{
 		Matcher m = LAST_COLOR.matcher(s.trim());

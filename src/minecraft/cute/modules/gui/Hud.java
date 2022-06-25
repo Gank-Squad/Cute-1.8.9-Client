@@ -1,13 +1,19 @@
 package cute.modules.gui;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import cute.eventapi.EventTarget;
 import cute.events.SettingChangedEvent;
 import cute.managers.HudManager;
 import cute.modules.Module;
 import cute.modules.enums.Category;
+import cute.modules.misc.CuteTeam;
 import cute.modules.misc.DetectionBox;
+import cute.modules.misc.Teams;
 import cute.modules.render.ProjectileTracer;
 import cute.settings.Checkbox;
+import cute.ui.hud.display.DraggableComponent;
 import cute.ui.hud.display.DraggableObj;
 import cute.ui.hud.display.components.ItemComponent;
 import cute.ui.hud.display.components.RectComponent;
@@ -58,6 +64,9 @@ public class Hud extends Module
 	public static DraggableObj alert = new DraggableObj();
 	public static TextComponent alertText;
 	
+	public static DraggableObj leaderboard = new DraggableObj();
+	public static TextComponent names;
+	
 	@Override
 	public void delayedSetup()
 	{
@@ -81,6 +90,8 @@ public class Hud extends Module
 		
 		alertText = new TextComponent(0,0,1f,1f,"",0xFFFFFFFF);
 		alert.addComponent(alertText);
+		
+		HudManager.INSTANCE.register(leaderboard);
 		
 		if(armorStatusCheck.getValue())
 			HudManager.INSTANCE.register(armorStatus);
@@ -143,6 +154,18 @@ public class Hud extends Module
 		HudManager.INSTANCE.unregister(alert);
 	}
 	
+	class teamList
+	{
+		public String name;
+		public ArrayList<String> members;
+		public int color;
+		teamList(String name, ArrayList<String> members, int color)
+		{
+			this.name = name;
+			this.members = members;
+			this.color = color;
+		}
+	}
 	
 	@Override
 	public void onUpdate()
@@ -150,8 +173,54 @@ public class Hud extends Module
 		if(nullCheck())
 			return;
 		
-		positionHudText.setText(String.format("%.02f %.02f %.02f", mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
+		leaderboard.setComponents(new ArrayList<DraggableComponent>());
+		// background ig ? needs to be first since no way to set z level
+		leaderboard.addComponent(new RectComponent(0,0,50,0,0x8d8d8d8d));
+		ArrayList<teamList> list = new ArrayList<teamList>();
 		
+		// go through every value in hashmap
+		for (Map.Entry<String, CuteTeam> s : Teams.players.entrySet())
+		{
+			boolean add = true;
+			for(teamList l : list)
+			{
+				if (s.getValue().teamName.equals(l.name))
+				{
+					l.members.add(s.getKey());
+					add = false;
+					break;
+				}
+			}
+			if (add)
+				list.add(new teamList(
+						s.getValue().teamName,
+						new ArrayList<String>(),
+						s.getValue().getColor()
+					));
+		}
+		// iterate through list and add each component
+		int y = 0;
+		for (teamList l : list)
+		{
+			leaderboard.addComponent(new TextComponent(0,y,1f,1f,l.name,l.color));
+			y += mc.fontRendererObj.FONT_HEIGHT;
+			for(String s : l.members)
+			{
+				leaderboard.addComponent(new TextComponent(0,y,1f,1f,s,l.color));
+				y += mc.fontRendererObj.FONT_HEIGHT;
+			}
+		}
+		// this 100% doesn't work but I don't really have a way of testing it
+		// its also completely useless since its basically just a colored tab menu
+		// this needs to display what armor they have, if they're alive, dead, disconnected, or out of render distance
+		// may also need to switch off of a hashmap though because honestly its a big pain to work with for little to no advantage
+		// since I'm not taking advantage of its perks at all
+		ArrayList<DraggableComponent> h = leaderboard.getComponents();
+		DraggableComponent o = h.get(0);
+		o.setHeight(leaderboard.getHeight());
+		h.set(0, o);
+		
+		positionHudText.setText(String.format("%.02f %.02f %.02f", mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ));
 		
 		alertText.setText(DetectionBox.label);
 		if (DetectionBox.label.equals(""))

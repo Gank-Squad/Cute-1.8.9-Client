@@ -224,5 +224,22 @@ public class DraggableObj implements IRender
 		updateHeight(component);
 		
 	}
+	public void removeComponent(DraggableComponent component)
+	{
+		components.remove(component);
+		calcWidth();
+		calcHeight();
+	}
+	public ArrayList<DraggableComponent> getComponents()
+	{
+		return components;
+	}
+	public void setComponents(ArrayList<DraggableComponent> list)
+	{
+		components = list;
+		calcWidth();
+		calcHeight();
+		return;
+	}
 	
 }
