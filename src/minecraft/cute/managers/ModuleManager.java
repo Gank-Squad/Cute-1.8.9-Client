@@ -11,7 +11,6 @@ import cute.modules.Module;
 import cute.modules.bot.AntiBot;
 import cute.modules.bot.FakePlayer;
 import cute.modules.client.Players;
-import cute.modules.combat.BowAimbot;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
 import cute.modules.gui.Hud;
@@ -30,6 +29,7 @@ import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
 import cute.modules.render.XRay;
 import cute.modules.test.BedProtect;
+import cute.modules.test.SpeedBridge;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ModuleManager extends BaseManager
@@ -54,7 +54,6 @@ public class ModuleManager extends BaseManager
 //					new NameTags(),
 //					new NoRender(),
 //					new XRay(),
-//					
 //					new Sounds()
 //				);
 //	
@@ -85,6 +84,7 @@ public class ModuleManager extends BaseManager
 		modules.add(new Sprint());
 		modules.add(new DetectionBox());
 		modules.add(new BedProtect());
+		modules.add(new SpeedBridge());
 	}
 	
 	public static List<Module> getModules()

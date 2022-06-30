@@ -1,14 +1,20 @@
 package cute.modules.test;
 
+import com.google.common.collect.ImmutableMap;
+
 import cute.eventapi.EventTarget;
 import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.block.Block;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
 
 public class BedProtect extends Module {
 
@@ -16,64 +22,38 @@ public class BedProtect extends Module {
 	
 	public BedProtect()
 	{
-		super("Bed Protect", Category.BOT, "Protects your bed.");
+		super("Bed Place Assist", Category.BOT, "Protects your bed.");
 	}
 	
-	int[] bedPosition = new int[]{ -1699 , 75 , -96 };
-	int zLen = 5;
-	int xLen = 6;
+//	public static Slider SearchRadi  = new Slider("X-Z Radius", 0.0D, 45D, 200D, 1);
 	
+	// GL11 Buffer 
+	public static int DisplayListId = 0; 
 	
-	private void keyWrap(String action, Boolean toggle ) 
-	{	
-		switch(action)
-		{
-		case "forward":
-			mc.gameSettings.keyBindLeft.setPressed(toggle);
-			break;
-			
-		case "backward":
-			mc.gameSettings.keyBindRight.setPressed(toggle);
-			break;
-			
-		case "left":
-			mc.gameSettings.keyBindBack.setPressed(toggle);
-			break;	
-			
-		case "right":
-			mc.gameSettings.keyBindJump.setPressed(toggle);
-			break;
-		
-		case "place":
-			mc.gameSettings.keyBindDrop.setPressed(toggle);
-			break;	
-			
-		case "jump":
-			mc.gameSettings.keyBindSneak.setPressed(toggle);
-			break;	
-		}	
-	}
+	int zLen = 7;
+	int xLen = 8;
 	
-	private Item STONE_item = Item.getItemById(1);
-	
-	private ItemStack STONE_itemstack = new ItemStack(STONE_item, 1);
-	
+	private static int _cooldownTicks = 0; 
+	private static boolean bedFind = false;
 	
 	Item[] ItemMaterials = new Item[] 
 	{
-		 Item.getItemById(1), //Stone
+		 Item.getItemById(121), //Endstone
+		 
 		 Item.getItemById(5), //Wood
+		 
 		 Item.getItemById(20), //Glass
+		 
 		 Item.getItemById(35), //Wool
 	};
 	
-	int[] ItemIndices = new int[] 
+	int[] ItemIndices = new int[] //Hotbar slots 
 	{
-		0, 1 , 2 , 3
+		0, 1 , 2 , 3, 4
 	};
 	
 	
-	int[][][] layout = {
+	int[][][] x = {
 		{
 		{0,0,0,0,0},
 		{0,1,2,1,0},
@@ -85,21 +65,66 @@ public class BedProtect extends Module {
 		{
 		{0,0,0,0,0},
 		{0,1,2,1,0},
-		{0,2,2,2,0},
-		{0,2,2,2,0},
+		{0,2,0,2,0},
+		{0,2,0,2,0},
 		{0,1,2,1,0},
 		{0,0,0,0,0},
 		},
 	};
 	
-	int bedVertiOffset = 3;
-	int bedHorizOffset = 2;
+	int [][][] layout = {
+			{ //Base layer
+				{3,3,1,1,1,3,3},
+				{3,1,1,0,1,1,3},
+				{3,1,0,2,0,1,3},
+				{1,0,2,-1,2,0,1},
+				{1,0,2,-1,2,0,1},
+				{3,1,0,2,0,1,3},
+				{3,1,1,0,1,1,3},
+				{3,3,1,1,1,3,3}
+			},
+			{ //1
+				{3,3,3,1,3,3,3},	
+				{3,3,1,1,1,3,3},
+				{3,1,1,0,1,1,3},
+				{3,1,0,2,0,1,3},
+				{3,1,0,2,0,1,3},
+				{3,1,1,0,1,1,3},
+				{3,3,1,1,1,3,3},
+				{3,3,3,1,3,3,3},
+			},
+			{
+				{3,3,3,3,3,3,3},
+				{3,3,3,3,3,3,3},
+				{3,3,1,1,1,3,3},
+				{3,3,1,0,1,3,3},
+				{3,3,1,0,1,3,3},
+				{3,3,1,1,1,3,3},
+				{3,3,3,3,3,3,3},
+				{3,3,3,3,3,3,3},
+			},
+			{
+				{4,4,4,4,4,4,4},
+				{4,4,4,4,4,4,4},
+				{4,4,4,1,4,4,4},
+				{4,4,1,1,1,4,4},
+				{4,4,1,1,1,4,4},
+				{4,4,4,1,4,4,4},
+				{4,4,4,4,4,4,4},
+				{4,4,4,4,4,4,4}
+			}
+			
+	};
+	
+	int bedVertiOffset = 4;
+	int bedHorizOffset = 3;
 	
 	
-	private boolean buildSwitch = false;
+	//Fixing Weird Rounding Errors 
 	
-	//Fixing weird float manip
-	private static int smartRound(float value) 
+	//Float -> Int Version
+	
+	private static int smartRoundInt(float value) 
 	{
 		float absolute = Math.abs(value);
 		
@@ -110,6 +135,16 @@ public class BedProtect extends Module {
 		}	
 	}
 	
+	//Float -> Float Version
+	
+	private static float smartRoundFloat(float value)
+	{
+		if(value > 0) {return value;} 
+		else {return value+1;}
+	}
+	
+	
+	
 	public int[] relative2index(int relX, int relZ)
 	{
 		int nX = ( relX * -1 ) + bedVertiOffset;
@@ -118,14 +153,176 @@ public class BedProtect extends Module {
 		return new int[] {nX, nZ};
 	}
 	
-	private static int _cooldownTicks = 0; 
-	private boolean isJumping = false;
+	
+	
+	
+//	@Override
+//	public void onUpdate() 
+//	{
+//		if(_cooldownTicks < 1) 
+//		{
+//			this.compileDL();
+//			_cooldownTicks = (int)10;
+//		}
+//		
+//		if(!ESPBlocks.IntervalRefresh.getValue()) 
+//		{
+//			return;
+//		}
+//		
+//		_cooldownTicks--;
+//	}
+	
+//	private void compileDL() {
+//		
+//		//ESP Render all beds, also get proximity positions for all beds
+//		int xyRadi = 10;
+//		VirtualBlock vb;
+//		Block proxbId;
+//		
+//		WorldClient world = this.mc.theWorld;
+//		
+//		GL11.glNewList(DisplayListId, GL11.GL_COMPILE);
+//
+//        GL11.glDisable( GL11.GL_TEXTURE_2D );
+//		GL11.glDisable( GL11.GL_DEPTH_TEST );
+//		GL11.glDisable( GL11.GL_CULL_FACE );
+//		GL11.glEnable( GL11.GL_BLEND );
+//		GL11.glBlendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
+//		GL11.glDepthMask(false);
+//		
+//		
+//        for (int i = (int)mc.thePlayer.posX - xyRadi; i <=  (int)mc.thePlayer.posX + xyRadi; ++i) 
+//        {
+//        	// z
+//            for (int j = (int)mc.thePlayer.posZ - xyRadi; j <= (int)mc.thePlayer.posZ + xyRadi; ++j) 
+//            {
+//                // y
+//                for (int k = Math.max(0, (int)mc.thePlayer.posY - xyRadi); k <= (int)mc.thePlayer.posY + xyRadi; ++k) 
+//                {
+//                    BlockPos blockPos = new BlockPos(	i , j , k  );
+//					IBlockState blockState = world.getBlockState(blockPos);
+//					proxbId = blockState.getBlock();
+//                    
+//                    if (proxbId == Blocks.air)
+//                        continue;
+//                    
+//                    //If it's a bed, render the esp
+//                    if(proxbId == Blocks.bed)
+//                    {
+//                    	System.out.println("Gets here! Compile");
+//                    	GL11.glColor4ub((byte)0, (byte)255, (byte)255, (byte)255);
+//            			RenderUtil.renderBlock(
+//            					i + 1, k + 1, j + 1, 
+//            					i , k , j);
+//                    }
+//                    
+//                }
+//                
+//            }
+//            
+//        }
+//        
+//        GL11.glEnd();
+//        GL11.glDepthMask(true);
+//		GL11.glDisable( GL11.GL_BLEND );
+//		GL11.glEnable( GL11.GL_TEXTURE_2D );
+//		GL11.glEnable( GL11.GL_DEPTH_TEST );
+//		GL11.glEnable( GL11.GL_CULL_FACE );
+//
+//        GL11.glEndList();
+//	}
+	
+	int[] bedPosition = new int[]{};
+	
+	public int[] bedInProximity(double[] playerCoords, int XYZradius) {
+		
+		WorldClient world = this.mc.theWorld;
+		
+	//Triple nest to find 	
+	      for (int x = (int)playerCoords[0] - XYZradius; x <=  (int)playerCoords[0] + XYZradius; ++x) 
+	      {
+	      	
+	          for (int y = Math.max(0, (int)playerCoords[1] - XYZradius); y <= (int)playerCoords[1] + XYZradius; ++y) 
+	          {
+	              for (int z = (int)playerCoords[2] - XYZradius; z <= (int)playerCoords[2] + XYZradius; ++z) 
+	              {
+	            	  	BlockPos blockPos = new BlockPos(	x , y , z  );
+						IBlockState blockState = world.getBlockState(blockPos);
+	        			ImmutableMap bStateProps = blockState.getProperties();
+						
+						Block proxbId = blockState.getBlock();
+						
+						if(proxbId == Blocks.air) {
+							continue;
+						}
+						else if(proxbId == Blocks.bed) {
+							
+							for(Object entry : bStateProps.entrySet()) 
+							{
+								String entryStr = entry.toString();
+								System.out.println(entryStr);
+								
+								//Take last 4 digits of entry stringified and compare it to head
+								String compareStr = entryStr.substring(entryStr.length()-4,entryStr.length() );
+								
+								
+								if(compareStr.equals("head")) {
+									int[] ret = {x+1,y,z+1};
+									return ret;
+								}
+								
+							}
+							
+						}
+	            	  
+	              }
+	          }
+	      }
+	      System.out.println("Returned null...");
+	      return null;
+		
+	}
+	// ############################################################################
+	//Module Hooks:
+	// ############################################################################
+	
+
+//	@Override
+//	public void onEnable() 
+//	{
+//		
+//		this.compileDL();
+//		
+//		double[] pC = {mc.thePlayer.posX,mc.thePlayer.posY,mc.thePlayer.posZ};
+//		
+//		bedPosition = bedInProximity( pC , 10 );
+//		mc.thePlayer.sendChatMessage("§a BED Found! ");
+//	}
+	
+	@Override
+	public void onDisable()
+	{
+		super.onDisable();
+		bedFind = false;
+	}
 	
 	@EventTarget
 	public void render(RenderWorldLastEvent e) 
 	{
-		boolean sortCheck = false;
+		
+		if(!bedFind) {
+			double[] pC = {mc.thePlayer.posX,mc.thePlayer.posY,mc.thePlayer.posZ};
+			
+			bedPosition = bedInProximity( pC , 10 );
+			mc.thePlayer.sendChatMessage("BED Found! ");
+			bedFind = true;
+		}
+		
 		InventoryPlayer inv = mc.thePlayer.getInventoryOfPlayer();
+//		System.out.println("BED POS: ");
+//		System.out.println(bedPosition);
+//		System.out.println(" ");
 		
 		//Relative positions from bed [ X , Y , Z ]
 		float[] relPos = new float[] 
@@ -136,18 +333,59 @@ public class BedProtect extends Module {
 		};
 
 //		System.out.println(buildSwitch);
-			
-		int midWidth = (int) Math.floor( (zLen) / 2 );
-		int midLength = (int) Math.ceil( (xLen+1) / 2 );
 		
 		
-		if(!buildSwitch) 
+		MovingObjectPosition mouseOver = mc.getMinecraft().objectMouseOver;
+		
+		float[] playerViewPos = new float[]
 		{
+			(float)	smartRoundFloat(mouseOver.getBlockPos().getX()),
+			(float)	mouseOver.getBlockPos().getY(),
+			(float)	smartRoundFloat(mouseOver.getBlockPos().getZ())
+		};
+		
+				
+		float[] relativeViewPos = new float[]
+		{
+			(float) (bedPosition[0] - playerViewPos[0]),
+			(float) (bedPosition[1] - playerViewPos[1]),
+			(float) (bedPosition[2] - playerViewPos[2]),
+			
+				
+		};
+		
+		
+//Check if the player is looking at a bed, if so make them sneak automatically
+		WorldClient world = this.mc.theWorld;
+		
+		if(mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+            BlockPos blockPos = new BlockPos(
+            		(int) mouseOver.getBlockPos().getX(),
+            		(int) mouseOver.getBlockPos().getY(),
+            		(int) mouseOver.getBlockPos().getZ()
+            );
+			IBlockState blockState = world.getBlockState(blockPos);
+			Block bId = blockState.getBlock();	
+			
+			if(bId == Blocks.bed) {
+				
+				mc.gameSettings.keyBindSneak.setPressed(true);
+			} else {
+				mc.gameSettings.keyBindSneak.setPressed(false);
+			}			
+			
+		} 
+
+        
+	
+//		System.out.println(playerViewPos[0]);
+//		System.out.println(playerViewPos[1]);
+//		System.out.println(playerViewPos[2]);
+//		
 			//Hits the sweet spot:
-			if(relPos[0] >= midLength && relPos[0] < midLength+1 
-			&& relPos[2] >= midWidth && relPos[2] < midWidth+1) 
+			if(relPos[0] < 1 && relPos[2] < 1)
 					{
-						if( sortCheck == false) {
+
 								
 							//Shift click all hotbar items to the top
 							for(int j = 36; j < 45; j++) {
@@ -165,75 +403,69 @@ public class BedProtect extends Module {
 								mc.getMinecraft().playerController.windowClick(
 										mc.getMinecraft().thePlayer.inventoryContainer.windowId,
 										itemLocation, 0, 1, mc.getMinecraft().thePlayer);
-							}
 							
-							sortCheck = true;
+							
 							
 						}
-						buildSwitch = true;
 					}
-		} else { //Initialization block reached, sequencing
+		 //Initialization block reached, sequencing
 			
-			//Set player view
-			mc.thePlayer.rotationYaw = 0F;
-			mc.thePlayer.rotationPitch = 90F;
 			
 			int[] relativeInt = new int[] 
 					{
-						smartRound(relPos[0]),
-						smartRound(relPos[1]),
-						smartRound(relPos[2])
+						(int) relativeViewPos[0],
+						(int) relativeViewPos[1],
+						(int) relativeViewPos[2]
 					};
 			
-			System.out.println("X: "+relativeInt[0]+" Y: "+relativeInt[1]+" Z: "+relativeInt[2]);
+//			System.out.println(mouseOver.typeOfHit);
+			
+			
+
+			//SideHit skewing:
+			switch(mouseOver.sideHit) {
+			case WEST:
+				relativeInt[0] += 1; 
+				break;
+			case EAST:
+				relativeInt[0] -= 1; 
+				break;
+			case NORTH:
+				relativeInt[2] += 1; 
+				break;
+			case SOUTH:
+				relativeInt[2] -= 1; 
+				break;
+			case UP:
+				relativeInt[1] -= 1;
+				break;
+			case DOWN:
+				relativeInt[1] += 1;
+				break;
+			default:
+			}
+			
+			
+//			System.out.println("X: "+relativeInt[0]+" Y: "+relativeInt[1]+" Z: "+relativeInt[2]);
 
 		//Get block 
 			
 			int[] relIndex = relative2index(relativeInt[0],relativeInt[2]);
 			
-			int height = (relativeInt[1]+1)*-1;
+			int height = ((relativeInt[1])*-1);
 			
 			System.out.println("H: "+height);
-			System.out.println(relIndex[0] + " - "+relIndex[1]);
+//			System.out.println(relIndex[0] + " - "+relIndex[1]);
 			
-			int block = layout[ 0 ][ relIndex[0] ][ relIndex[1]  ];
+			int block = layout[ height ][ relIndex[0] ][ relIndex[1]  ];
 			
 			inv.setHeldItem(block);
 			
 			
 		//Jump and place
-			if(_cooldownTicks == 0) 
-			{
-				_cooldownTicks = 20;
-				
-				if(relIndex[1] == 4) 
-				{
-					mc.gameSettings.keyBindSneak.setPressed(true);
-					mc.gameSettings.keyBindForward_.setPressed(true);
-//					System.out.println("BUILDING UP...");
-					mc.gameSettings.keyBindJump.setPressed(true);
-					mc.gameSettings.keyBindUseItem.setPressed(true);
-				} 
-				else if (relIndex[1] == 0) {
-					KeyBinding.unPressAllKeys();
-					mc.gameSettings.keyBindUseItem.setPressed(true);
-				}
-				
-				
-				else
-				{
-					mc.gameSettings.keyBindJump.setPressed(false);
-				}
-				
+
 			
-			} else if (_cooldownTicks == 1){
-				_cooldownTicks--;
-				mc.gameSettings.keyBindJump.setPressed(false);
-			} else {
-				_cooldownTicks--;	
-			}
-			
-		}
+		
 		//Finding sweet spot
 
 		
@@ -268,6 +500,7 @@ public class BedProtect extends Module {
 //		System.out.println("Z rel pos");
 //		System.out.println(relPos[2]);
 //		System.out.println(midLength);
+	        
 	}
 	
 }
