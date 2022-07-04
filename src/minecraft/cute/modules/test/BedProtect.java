@@ -7,11 +7,11 @@ import cute.events.RenderWorldLastEvent;
 import cute.modules.Module;
 import cute.modules.enums.Category;
 import net.minecraft.block.Block;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
@@ -52,26 +52,7 @@ public class BedProtect extends Module {
 		0, 1 , 2 , 3, 4
 	};
 	
-	
-	int[][][] x = {
-		{
-		{0,0,0,0,0},
-		{0,1,2,1,0},
-		{0,2,-1,2,0},
-		{0,2,-1,2,0},
-		{0,1,2,1,0},
-		{0,0,0,0,0},
-		},
-		{
-		{0,0,0,0,0},
-		{0,1,2,1,0},
-		{0,2,0,2,0},
-		{0,2,0,2,0},
-		{0,1,2,1,0},
-		{0,0,0,0,0},
-		},
-	};
-	
+		
 	int [][][] layout = {
 			{ //Base layer
 				{3,3,1,1,1,3,3},
@@ -233,11 +214,14 @@ public class BedProtect extends Module {
 //        GL11.glEndList();
 //	}
 	
-	int[] bedPosition = new int[]{};
+	int[][] bedPosition = new int[][]{};
 	
-	public int[] bedInProximity(double[] playerCoords, int XYZradius) {
+	public int[][] bedInProximity(double[] playerCoords, int XYZradius) {
 		
 		WorldClient world = this.mc.theWorld;
+		
+		int[] bed_head = {};
+		int [] bed_foot = {};
 		
 	//Triple nest to find 	
 	      for (int x = (int)playerCoords[0] - XYZradius; x <=  (int)playerCoords[0] + XYZradius; ++x) 
@@ -267,9 +251,12 @@ public class BedProtect extends Module {
 								String compareStr = entryStr.substring(entryStr.length()-4,entryStr.length() );
 								
 								
-								if(compareStr.equals("head")) {
-									int[] ret = {x+1,y,z+1};
-									return ret;
+								if(compareStr.equals("head")) { 
+									bed_head = new int[]{x+1,y,z+1};
+								}
+								
+								if(compareStr.equals("foot")) {
+									bed_foot = new int[]{x+1,y,z+1};
 								}
 								
 							}
@@ -280,7 +267,16 @@ public class BedProtect extends Module {
 	          }
 	      }
 	      System.out.println("Returned null...");
-	      return null;
+	      
+	      if(bed_foot != null && bed_head != null) {
+	    	  
+	    	 int[][] schema = {bed_head , bed_foot };
+	    	 return schema;
+	    	  
+	      } else {
+		     return null; 
+	      }
+
 		
 	}
 	// ############################################################################
@@ -327,9 +323,9 @@ public class BedProtect extends Module {
 		//Relative positions from bed [ X , Y , Z ]
 		float[] relPos = new float[] 
 		{
-				(float) (bedPosition[0]-mc.thePlayer.posX),
-				(float) (bedPosition[1]-mc.thePlayer.posY),
-				(float) (bedPosition[2]-mc.thePlayer.posZ)
+				(float) (bedPosition[0][0]-mc.thePlayer.posX),
+				(float) (bedPosition[0][1]-mc.thePlayer.posY),
+				(float) (bedPosition[0][2]-mc.thePlayer.posZ)
 		};
 
 //		System.out.println(buildSwitch);
@@ -347,9 +343,9 @@ public class BedProtect extends Module {
 				
 		float[] relativeViewPos = new float[]
 		{
-			(float) (bedPosition[0] - playerViewPos[0]),
-			(float) (bedPosition[1] - playerViewPos[1]),
-			(float) (bedPosition[2] - playerViewPos[2]),
+			(float) (bedPosition[0][0] - playerViewPos[0]),
+			(float) (bedPosition[0][1] - playerViewPos[1]),
+			(float) (bedPosition[0][2] - playerViewPos[2]),
 			
 				
 		};
@@ -397,31 +393,58 @@ public class BedProtect extends Module {
 							
 							for(int i = 0; i < ItemMaterials.length; i++)
 							{
+								
 								int itemLocation = inv.getInventorySlotContainItem(ItemMaterials[i]);
 								System.out.println("Item @ "+ itemLocation);
 								//Shift clicks all the items
+								if(itemLocation != -1) {
 								mc.getMinecraft().playerController.windowClick(
 										mc.getMinecraft().thePlayer.inventoryContainer.windowId,
 										itemLocation, 0, 1, mc.getMinecraft().thePlayer);
+								}
 							
-							
-							
-						}
+							}
 					}
+		//Check hotbar
+		for(int j = 36; j < 45; j++) {
+				Slot hotbarEntry = mc.getMinecraft().thePlayer.inventoryContainer.getSlot(j);
+				
+				int slotOffset = j-36;
+				
+				if(slotOffset < ItemMaterials.length && hotbarEntry.getHasStack() == false ) {
+					//Try and find the item again (maybe there is another stack in the player's inventory)
+					int itemLocation = inv.getInventorySlotContainItem(ItemMaterials[slotOffset]);
+					
+					
+					if(itemLocation != -1) {
+						mc.getMinecraft().playerController.windowClick(
+								mc.getMinecraft().thePlayer.inventoryContainer.windowId,
+								itemLocation, 0, 1, mc.getMinecraft().thePlayer);
+					}
+					
+
+				}
+				
+		}	
+			
+//			inv.getStackInSlot(36)
+		
 		 //Initialization block reached, sequencing
-			
-			
+				
 			int[] relativeInt = new int[] 
 					{
 						(int) relativeViewPos[0],
 						(int) relativeViewPos[1],
 						(int) relativeViewPos[2]
 					};
+		
+		//
 			
-//			System.out.println(mouseOver.typeOfHit);
+			
+	
 			
 			
-
+					
 			//SideHit skewing:
 			switch(mouseOver.sideHit) {
 			case WEST:
