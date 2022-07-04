@@ -1,4 +1,4 @@
-package cute.modules.test;
+package cute.modules.misc;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -218,7 +218,7 @@ public class BedProtect extends Module {
 	
 	public int[][] bedInProximity(double[] playerCoords, int XYZradius) {
 		
-		WorldClient world = this.mc.theWorld;
+		WorldClient world = this.mc.theWorld; 
 		
 		int[] bed_head = {};
 		int [] bed_foot = {};
@@ -245,7 +245,6 @@ public class BedProtect extends Module {
 							for(Object entry : bStateProps.entrySet()) 
 							{
 								String entryStr = entry.toString();
-								System.out.println(entryStr);
 								
 								//Take last 4 digits of entry stringified and compare it to head
 								String compareStr = entryStr.substring(entryStr.length()-4,entryStr.length() );
@@ -266,7 +265,6 @@ public class BedProtect extends Module {
 	              }
 	          }
 	      }
-	      System.out.println("Returned null...");
 	      
 	      if(bed_foot != null && bed_head != null) {
 	    	  
@@ -316,16 +314,15 @@ public class BedProtect extends Module {
 		}
 		
 		InventoryPlayer inv = mc.thePlayer.getInventoryOfPlayer();
-//		System.out.println("BED POS: ");
-//		System.out.println(bedPosition);
-//		System.out.println(" ");
 		
 		//Relative positions from bed [ X , Y , Z ]
 		float[] relPos = new float[] 
 		{
+				
 				(float) (bedPosition[0][0]-mc.thePlayer.posX),
 				(float) (bedPosition[0][1]-mc.thePlayer.posY),
 				(float) (bedPosition[0][2]-mc.thePlayer.posZ)
+				
 		};
 
 //		System.out.println(buildSwitch);
@@ -477,7 +474,6 @@ public class BedProtect extends Module {
 			
 			int height = ((relativeInt[1])*-1);
 			
-			System.out.println("H: "+height);
 //			System.out.println(relIndex[0] + " - "+relIndex[1]);
 			
 			int block = layout[ height ][ relIndex[0] ][ relIndex[1]  ];

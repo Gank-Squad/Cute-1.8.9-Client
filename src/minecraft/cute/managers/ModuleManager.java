@@ -14,6 +14,7 @@ import cute.modules.client.Players;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
 import cute.modules.gui.Hud;
+import cute.modules.misc.BedProtect;
 import cute.modules.misc.DetectionBox;
 import cute.modules.misc.Sounds;
 import cute.modules.misc.Sprint;
@@ -29,8 +30,6 @@ import cute.modules.render.PredictTargets;
 import cute.modules.render.ProjectileTracer;
 import cute.modules.render.Tracers;
 import cute.modules.render.XRay;
-import cute.modules.test.BedProtect;
-import cute.modules.test.SpeedBridge;
 import net.minecraft.client.gui.GuiScreen;
 
 public class ModuleManager extends BaseManager
@@ -85,7 +84,6 @@ public class ModuleManager extends BaseManager
 		modules.add(new Sprint());
 		modules.add(new DetectionBox());
 		modules.add(new BedProtect());
-		modules.add(new SpeedBridge());
 		modules.add(new Teams());
 	}
 	
