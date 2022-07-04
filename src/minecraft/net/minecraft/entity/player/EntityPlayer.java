@@ -78,6 +78,9 @@ import net.minecraft.world.LockCode;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 
+import cute.modules.misc.CuteTeam;
+import cute.modules.misc.Teams;
+
 @SuppressWarnings("incomplete-switch")
 public abstract class EntityPlayer extends EntityLivingBase
 {
@@ -175,6 +178,11 @@ public abstract class EntityPlayer extends EntityLivingBase
      * An instance of a fishing rod's hook. If this isn't null, the icon image of the fishing rod is slightly different
      */
     public EntityFishHook fishEntity;
+    
+    /**
+     * What cute team the player belonds to. If this is null they don't belong to a team
+     */
+    public CuteTeam playerTeam = null;
 
     public EntityPlayer(World worldIn, GameProfile gameProfileIn)
     {
@@ -271,6 +279,11 @@ public abstract class EntityPlayer extends EntityLivingBase
     {
         this.noClip = this.isSpectator();
 
+        if(Teams.players.containsKey(this.getName()))
+        {
+        	this.playerTeam = Teams.players.get(this.getName());
+        }
+        
         if (this.isSpectator())
         {
             this.onGround = false;

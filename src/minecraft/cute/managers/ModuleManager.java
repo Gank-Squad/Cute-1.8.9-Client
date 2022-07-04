@@ -17,6 +17,7 @@ import cute.modules.gui.Hud;
 import cute.modules.misc.DetectionBox;
 import cute.modules.misc.Sounds;
 import cute.modules.misc.Sprint;
+import cute.modules.misc.Teams;
 import cute.modules.render.DataViewer;
 import cute.modules.render.ESPBlocks;
 import cute.modules.render.ESPEntity;
@@ -85,6 +86,7 @@ public class ModuleManager extends BaseManager
 		modules.add(new DetectionBox());
 		modules.add(new BedProtect());
 		modules.add(new SpeedBridge());
+		modules.add(new Teams());
 	}
 	
 	public static List<Module> getModules()

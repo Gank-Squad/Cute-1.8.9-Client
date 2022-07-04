@@ -41,53 +41,173 @@ public class StringUtil
 			   'a' <= c && c <= 'f' ||
 			   'A' <= c && c <= 'F';
 	}
+	public static boolean isColorCode(char c)
+	{
+		return '0' <= c && c <= '9' || 
+			   'a' <= c && c <= 'f' ||
+			   'A' <= c && c <= 'F' ||
+			   'k' <= c && c <= 'o' ||
+			   'K' <= c && c <= 'O' ||
+			   'r' == c || c == 'R';
+	}
 	
+	public static String getColorCodeNameStr(char c)
+	{
+		switch(c)
+		{
+		// 0 Black 0,0,0
+		case '0':
+			return "black";
+			
+		// 1 Dark Blue 0,0,170	
+		case '1':
+			return "dark blue";
+			
+		// 2 Dark Green 0,170,0
+		case '2':
+			return "dark green";
+			
+		// 3 Dark Aqua	0, 170, 170
+		case '3':
+			return "dark aqua";
+			
+		// 4 Dark Red 170, 0, 0
+		case '4':
+			return "dark red";
+			
+		// 5 Dark Purple 170, 0, 170
+		case '5':
+			return "dark purple";
+			
+		// 6 Gold 255, 170, 0
+		case '6':
+			return "gold";
+			
+		// 7 Gray 170, 170, 170
+		case '7':
+			return "grey";
+			
+		// 8 Dark Gray 85, 85, 85
+		case '8':
+			return "dark grey";
+			
+		// 9 Blue 85, 85, 255
+		case '9':
+			return "blue";
+			
+		// a Green 85, 255, 85
+		case 'a':
+			return "green";
+			
+		// b Aqua 85, 255, 255
+		case 'b':
+			return "aqua";
+			
+		// c Red 255, 85, 85
+		case 'c':
+			return "red";
+			
+		// d Light Purple 255, 85, 255
+		case 'd':
+			return "light purple";
+			
+		// e Yellow 255, 255, 85
+		case 'e':
+			return "yellow";
+			
+		// f White 255, 255, 255
+		case 'f':
+			return "white";
+			
+		default:
+			return "none";
+		}
+	}
 	
-	public static int getNameColor(String s)
+	public static char getNameColorCode(String s)
 	{
 		Matcher m = LAST_COLOR.matcher(s.trim());
 		
 		if(!m.find())
-			return -1;
+		{
+			return 'r';
+		}
 		
-		char c = m.group(1).toLowerCase().charAt(0);
+		return m.group(1).toLowerCase().charAt(0);
+	}
+	
+	public static int getNameColor(String s)
+	{
+		char c = getNameColorCode(s);
 		
 		switch(c)
 		{
+			// 0 Black 0,0,0
 			case '0':
-				return 0;
+				return 0x000000FF;
+				
+			// 1 Dark Blue 0,0,170	
 			case '1':
-				return 0x0000AA;
+				return 0x0000AAFF;
+				
+			// 2 Dark Green 0,170,0
 			case '2':
-				return 0x00AA00;
+				return 0x00AA00FF;
+				
+			// 3 Dark Aqua	0, 170, 170
 			case '3':
-				return 0x00AAAA;
+				return 0x00AAAAFF;
+				
+			// 4 Dark Red 170, 0, 0
 			case '4':
-				return 0xAA0000;
+				return 0xAA0000FF;
+				
+			// 5 Dark Purple 170, 0, 170
 			case '5':
-				return 0xAA00AA;
+				return 0xAA00AAFF;
+				
+			// 6 Gold 255, 170, 0
 			case '6':
-				return 0xFFAA00;
+				return 0xFFAA00FF;
+				
+			// 7 Gray 170, 170, 170
 			case '7':
-				return 0xAAAAAA;
+				return 0xAAAAAAFF;
+				
+			// 8 Dark Gray 85, 85, 85
 			case '8':
-				return 0x555555;
+				return 0x555555FF;
+				
+			// 9 Blue 85, 85, 255
 			case '9':
-				return 0x5555FF;
+				return 0x5555FFFF;
+				
+			// a Green 85, 255, 85
 			case 'a':
-				return 0x55FF55;
+				return 0x55FF55FF;
+				
+			// b Aqua 85, 255, 255
 			case 'b':
-				return 0x55FFFF;
+				return 0x55FFFFFF;
+				
+			// c Red 255, 85, 85
 			case 'c':
-				return 0xFF5555;
+				return 0xFF5555FF;
+				
+			// d Light Purple 255, 85, 255
 			case 'd':
-				return 0xFF55FF;
+				return 0xFF55FFFF;
+				
+			// e Yellow 255, 255, 85
 			case 'e':
-				return 0xFFFF55;
+				return 0xFFFF55FF;
+				
+			// f White 255, 255, 255
 			case 'f':
-				return 0xFFFFFF;
+				return 0xFFFFFFFF;
+				
 			default:
-				return -1;
+				return 0;
 		}
 	}
 }

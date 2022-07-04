@@ -376,9 +376,9 @@ public class Scoreboard
     /**
      * Gets the ScorePlayerTeam object for the given username.
      */
-    public ScorePlayerTeam getPlayersTeam(String p_96509_1_)
+    public ScorePlayerTeam getPlayersTeam(String uuid)
     {
-        return (ScorePlayerTeam)this.teamMemberships.get(p_96509_1_);
+        return (ScorePlayerTeam)this.teamMemberships.get(uuid);
     }
 
     /**

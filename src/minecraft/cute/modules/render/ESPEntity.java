@@ -13,6 +13,7 @@ import cute.modules.Module;
 import cute.modules.bot.AntiBot;
 import cute.modules.client.Players;
 import cute.modules.enums.Category;
+import cute.modules.misc.Teams;
 import cute.settings.Checkbox;
 import cute.settings.ColorPicker;
 import cute.settings.Mode;
@@ -20,15 +21,11 @@ import cute.settings.Slider;
 import cute.util.EntityUtil;
 import cute.util.RenderUtil;
 import cute.util.StringUtil;
-import cute.util.types.EntityType;
 import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
 
 
 public class ESPEntity<T extends Entity> extends Module
@@ -61,7 +58,7 @@ public class ESPEntity<T extends Entity> extends Module
     
     public static Checkbox forceRender = new Checkbox("Force Render", true);
     
-    public static Checkbox nameColor = new Checkbox("Name Color Outline", true);
+    public static Checkbox teamColor = new Checkbox("Team Color Outline", true);
     
     private static boolean globalEnabled = false;
     
@@ -83,7 +80,7 @@ public class ESPEntity<T extends Entity> extends Module
         addSetting(invisAlpha);
         addSetting(lineWidth);
         addSetting(forceRender);
-        addSetting(nameColor);
+        addSetting(teamColor);
     }
     
 
@@ -122,27 +119,32 @@ public class ESPEntity<T extends Entity> extends Module
     	
     	EntityLivingBase entity = e.entityLivingBaseIn;
     	
-    	if(entity instanceof EntityPlayerSP || AntiBot.isBot((EntityLivingBase)entity) || entity.isDead || !entity.isEntityAlive())
+    	if(entity instanceof EntityPlayerSP || AntiBot.isBot((EntityLivingBase)entity) || entity.isDead)
     		return;
 
 
     	switch(entity.getEntityType())
     	{
         	case PLAYER:
-        		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
+        		if(!players.getValue() || Players.playerNameBlacklist.contains(entity.getName().toLowerCase()))
         			return;
         		
-        		if(nameColor.getValue()) 
+        		if(teamColor.getValue()) 
         		{
-        			int c = StringUtil.getNameColor(EntityUtil.getPlayerTabMenuName(mc.getNetHandler().getPlayerInfo(entity.getUniqueID())));
-        			
-        			if(c != -1)
-        				RenderUtil.setColor(c);
-        			else
-        				RenderUtil.setColor(playerPicker.getColor());
+        			EntityPlayer t = (EntityPlayer)entity;
+    				if (!Teams.players.containsKey(entity.getName()) || t.playerTeam == null)
+    				{
+    					RenderUtil.setColor(playerPicker.getColor());
+    				}
+    				else
+    				{
+    					RenderUtil.setColor(t.playerTeam.getColor());
+    				}
         		}
-        		else
+        		else 
+        		{
         			RenderUtil.setColor(playerPicker.getColor());
+        		}
         		break;
         		
         	case HOSTILE:
@@ -172,36 +174,7 @@ public class ESPEntity<T extends Entity> extends Module
         	case OTHER:
         			break;
     	}
-    	
-    	
-//    	if(entity instanceof EntityPlayer) 
-//    	{
-//    		if(!players.getValue() || entity.getName() == this.mc.thePlayer.getName()) 
-//    			return;
-//    		RenderUtil.setColor(playerPicker.getColor());
-//    	}
-//    	else
-//    	if(EntityUtil.isHostileMob(entity))
-//    	{
-//    		if(!mobs.getValue()) 
-//    			return;
-//    		RenderUtil.setColor(mobsPicker.getColor());
-//    	}
-//    	else
-//    	if(EntityUtil.isPassive(entity)) 
-//    	{
-//    		if(!animals.getValue()) 
-//    			return;
-//    		RenderUtil.setColor(animalPicker.getColor());
-//    	}
-//    	else
-//    	if(EntityUtil.isNeutralMob(entity)) 
-//    	{
-//    		if(!neutral.getValue()) 
-//    			return;
-//    		RenderUtil.setColor(neutralPicker.getColor());
-//    	}  
-    	
+   
     	GL11.glLineWidth((float)lineWidth.getValue());
     	
     	switch(mode.getValue())
@@ -381,14 +354,17 @@ public class ESPEntity<T extends Entity> extends Module
 	        	case PLAYER:
 	        		if(players.getValue() && !Players.playerNameBlacklist.contains(entity.getName().toLowerCase())) 
 	        		{
-	        			if(nameColor.getValue()) 
-	            		{
-	            			int c = StringUtil.getNameColor(EntityUtil.getPlayerTabMenuName(mc.getNetHandler().getPlayerInfo(entity.getUniqueID())));
-	            			
-	            			if(c != -1)
-	            				RenderUtil.setColor(c);
-	            			else
-	            				RenderUtil.setColor(playerPicker.getColor());
+	        			if(teamColor.getValue()) 
+	            		{	
+	        				EntityPlayer t = (EntityPlayer)entity;
+	        				if (!Teams.players.containsKey(entity.getName()) || t.playerTeam == null)
+	        				{
+	        					RenderUtil.setColor(playerPicker.getColor());
+	        				}
+	        				else
+	        				{
+	        					RenderUtil.setColor(t.playerTeam.getColor());
+	        				}
 	            		}
 	            		else
 	            			RenderUtil.setColor(playerPicker.getColor());

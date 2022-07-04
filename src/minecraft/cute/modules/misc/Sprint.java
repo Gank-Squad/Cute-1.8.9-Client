@@ -15,7 +15,7 @@ public class Sprint extends Module
 	 * Toggle Sprint: Not bannable on hypixel, basically just holds the sprint key for you
 	 * Auto Sprint: Bannable, sets the player sprinting
 	 */
-	public static Mode smode = new Mode("Mode", "Toggle Sprint", "Auto Sprint");
+	public static Mode smode = new Mode("Mode", "Toggle Sprint", "Auto Sprint", "Sprint + Jump");
 	
 	@Override
 	public void setup()
@@ -59,6 +59,13 @@ public class Sprint extends Module
 					mc.thePlayer.setSprinting(true);
 				}
 				break;
+				
+			case 2:
+				mc.gameSettings.keyBindSprint.setKeyDown(true);
+				mc.gameSettings.keyBindJump.setKeyDown(mc.gameSettings.keyBindForward_.isKeyDown() && 
+						  !mc.thePlayer.isSneaking() &&
+						  !mc.thePlayer.isUsingItem() &&
+						   mc.thePlayer.getFoodStats().getFoodLevel() > 6 );
 		}	
 	}
 }
