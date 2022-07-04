@@ -60,7 +60,7 @@ public class InventoryPlayer implements IInventory
         return 9;
     }
 
-    private int getInventorySlotContainItem(Item itemIn)
+    public int getInventorySlotContainItem(Item itemIn)
     {
         for (int i = 0; i < this.mainInventory.length; ++i)
         {
@@ -72,6 +72,21 @@ public class InventoryPlayer implements IInventory
 
         return -1;
     }
+    
+    public ItemStack getInventorySlotContainItemStack(Item itemIn)
+    {
+        for (int i = 0; i < this.mainInventory.length; ++i)
+        {
+            if (this.mainInventory[i] != null && this.mainInventory[i].getItem() == itemIn)
+            {
+                return this.mainInventory[i];
+            }
+        }
+
+        return null;
+    };
+    
+    
 
     private int getInventorySlotContainItemAndDamage(Item itemIn, int metadataIn)
     {
@@ -156,6 +171,17 @@ public class InventoryPlayer implements IInventory
         }
     }
 
+    
+    // Custom Func to set the player's hotbar selection based on an int (Minecraft API overcomplicates it so much)
+    
+    public void setHeldItem(int hotspot)
+    {
+        if (hotspot >= 0 && hotspot < 9)
+        {
+            this.currentItem = hotspot;
+        }
+    }
+    
     /**
      * Switch the current item to the next one or the previous one
      *  
@@ -539,7 +565,7 @@ public class InventoryPlayer implements IInventory
     public void setInventorySlotContents(int index, ItemStack stack)
     {
         ItemStack[] aitemstack = this.mainInventory;
-
+        
         if (index >= aitemstack.length)
         {
             index -= aitemstack.length;

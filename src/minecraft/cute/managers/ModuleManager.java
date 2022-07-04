@@ -11,10 +11,10 @@ import cute.modules.Module;
 import cute.modules.bot.AntiBot;
 import cute.modules.bot.FakePlayer;
 import cute.modules.client.Players;
-import cute.modules.combat.BowAimbot;
 import cute.modules.enums.Category;
 import cute.modules.gui.ClickGUI;
 import cute.modules.gui.Hud;
+import cute.modules.misc.BedProtect;
 import cute.modules.misc.DetectionBox;
 import cute.modules.misc.Sounds;
 import cute.modules.misc.Sprint;
@@ -54,7 +54,6 @@ public class ModuleManager extends BaseManager
 //					new NameTags(),
 //					new NoRender(),
 //					new XRay(),
-//					
 //					new Sounds()
 //				);
 //	
@@ -84,6 +83,7 @@ public class ModuleManager extends BaseManager
 		modules.add(new Sounds());
 		modules.add(new Sprint());
 		modules.add(new DetectionBox());
+		modules.add(new BedProtect());
 		modules.add(new Teams());
 	}
 	
