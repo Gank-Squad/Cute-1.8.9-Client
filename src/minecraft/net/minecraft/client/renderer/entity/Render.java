@@ -392,12 +392,6 @@ public abstract class Render<T extends Entity> implements IEntityRenderer
             if(!EVENT_.isCancelled())
             {            
 	            int i = 0;
-	            
-	            if (str.equals("firekitty"))
-	            {
-	                i = -10;
-	            }
-	
 	            int j = fontrenderer.getStringWidth(str) / 2;
 	            GlStateManager.disableTexture2D();
 	            worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
