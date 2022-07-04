@@ -239,7 +239,7 @@ public class BedProtect extends Module
 					
 					Block proxbId = blockState.getBlock();
 					
-					if(proxbId != Blocks.bed) 
+					if(proxbId == Blocks.bed) 
 					{
 						for(Object entry : bStateProps.entrySet()) 
 						{
